@@ -223,7 +223,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         elif (isinstance(node.test, Call) or isinstance(node.test, Compare)) and find:
             self.visit(node.test)
             write_command_by_id("18", [node.body[0].value.args[0], 2, 0])
-        elif (isinstance(node.test, Call) or isinstance(node.test, Compare)):
+        elif isinstance(node.test, Call) or isinstance(node.test, Compare):
             self.visit(node.test)
             write_command_by_name("if", [2, 0])
             self.visit_body(node.body)
@@ -288,8 +288,8 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         try:
             for childNode in nodebody:
                 self.visit(childNode)
-        except AttributeError as e:
-            print(e, astor.dump_tree(childNode))
+        except Exception as e:
+            print(e,"\n" + astor.dump_tree(childNode))
 
     def visit_Expr(self, node):
         self.visit(node.value)
