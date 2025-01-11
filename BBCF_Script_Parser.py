@@ -1,8 +1,6 @@
 import os, struct, json, astor, sys
 from ast import *
 
-from mercurial.templatekw import keywords
-
 pypath = os.path.dirname(sys.argv[0])
 json_data = open(os.path.join(pypath, "static_db/BBCF/command_db.json")).read()
 command_db = json.loads(json_data)
