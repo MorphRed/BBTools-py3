@@ -1,0 +1,22 @@
+{
+  "2": "Hitcount",
+  "12": "XVelocity",
+  "13": "YVelocity",
+  "15": "IsMovingForward",
+  "16": "IsMovingBackward",
+  "20": "YRelativeToOpponent",
+  "22": "XDistanceFromCenterOfStage",
+  "23": "YDistanceFromFloor",
+  "25": "XDistanceFromFowardCorner",
+  "26": "XDistanceFromBackCorner",
+  "30": "IsInHitstun",
+  "36": "IsAirborne",
+  "37": "IsGrounded",
+  "38": "IsFacing",
+  
+  "85": "IsUnlimited",
+  "110": "OverdriveTimer",
+  "122": "Meter",
+  "126": "IsOppAirborne",
+  "127": "IsOppCrouching"
+}

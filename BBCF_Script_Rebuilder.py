@@ -1,14 +1,6 @@
-import os, struct, json, astor, sys
+import os, struct, astor, sys
 from ast import *
-from BBCF_Script_Parser import upon_db, slot_db
-
-pypath = os.path.dirname(sys.argv[0])
-json_data = open(os.path.join(pypath,"Static_DB/BBCF/CommandDB.json")).read()
-command_db = json.loads(json_data)
-json_data = open(os.path.join(pypath,"Static_DB/BBCF/Named_Values/Move_Inputs.json")).read()
-move_inputs = json.loads(json_data)
-json_data = open(os.path.join(pypath,"Static_DB/BBCF/Named_Values/Normal_Inputs.json")).read()
-normal_inputs = json.loads(json_data)
+from BBCF_Script_Parser import upon_db, slot_db, command_db, move_inputs, normal_inputs
 
 command_db_lookup = {}
 slot_db_lookup = {}
@@ -28,9 +20,9 @@ for k, v in move_inputs.items():
     named_value_lookup[v] = k
 for k, v in normal_inputs['grouped_values'].items():
     named_value_lookup[v] = k
-for k, v in normal_inputs['buttonbyte'].items():
+for k, v in normal_inputs['button_byte'].items():
     named_button_lookup[v] = k
-for k, v in normal_inputs['directionbyte'].items():
+for k, v in normal_inputs['direction_byte'].items():
     named_direction_lookup[v] = k
 upon_db_lookup = {v: k for k, v in upon_db.items()}
 
@@ -39,11 +31,11 @@ GAME = "bb"
 bin = ""
 
 
-def decode_upon(node):
-    if node.name.replace("upon_", "") in upon_db_lookup:
-        return int(upon_db_lookup[node.name.replace("upon_", "")])
+def decode_upon(s):
+    if s.replace("upon_", "") in upon_db_lookup:
+        return int(upon_db_lookup[s.replace("upon_", "")])
     else:
-        return int(node.name.replace("upon_", ""))
+        return int(s.replace("upon_", ""))
 
 
 def decode_var(node):
@@ -80,19 +72,23 @@ def write_command_by_id(id, params):
             if temp is not None:
                 my_params[index] = int(temp)
             else:
-                buttonstr = oValue.id[-1]
-                directionstr = oValue.id[:-1]
-                my_params[index] = (int(named_button_lookup[buttonstr]) << 8) + int(
-                    named_direction_lookup[directionstr])
+                if int(id) in [17, 29, 30, 21007]:
+                    upon = decode_upon(oValue.id)
+                    my_params[index] = upon
+                if int(id) in [43, 14001, 14012]:
+                    buttonstr = oValue.id[-1]
+                    directionstr = oValue.id[:-1]
+                    my_params[index] = (int(named_button_lookup[buttonstr]) << 8) + int(
+                        named_direction_lookup[directionstr])
         elif isinstance(oValue, UnaryOp):
             my_params[index] = -oValue.operand.value
         else:
             raise Exception("Unknown Type" + str(type(oValue)))
     bin.write(struct.pack(MODE + "I", int(id)))
     if "format" in cmd_data:
-        for i, v in enumerate(my_params):
-            if isinstance(v, str):
-                my_params[i] = v.encode()
+        for i, v1 in enumerate(my_params):
+            if isinstance(v1, str):
+                my_params[i] = v1.encode()
         bin.write(struct.pack(MODE + cmd_data["format"], *my_params))
     else:
         debugtype = type(my_params[0])
@@ -190,7 +186,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
     def visit_FunctionDef(self, node):
         if "upon" not in node.name:
             raise Exception("inner functions are used for upon handlers only")
-        write_command_by_name("upon", [decode_upon(node)])
+        write_command_by_name("upon", [decode_upon(node.name)])
         self.visit_body(node.body)
         write_command_by_name("endUpon", [])
 
