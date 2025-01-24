@@ -4,6 +4,7 @@
   "2": "LANDING",
   "3": "EVERY_FRAME",
   "4": "FALLING",
+  "7": "CORNERED",
   "10": "HIT_OR_BLOCK_ANY",
   "11": "HIT_OR_BLOCK",
   "12": "HIT",
@@ -11,6 +12,11 @@
   "24": "RELEASE_B",
   "25": "RELEASE_C",
   "26": "RELEASE_D",
+  "42": "GUARDPOINT_ACTIVATION",
+  "43": "VALUE_RECEIVED",
+  "44": "PLAYER_DAMAGED",
+  "47": "PLAYER_BLOCKS",
+  "49": "PLAYER_BLOCKS2",
   "60": "COUNTER_HIT",
   "61": "BLOCK"
 }
