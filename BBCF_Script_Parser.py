@@ -14,17 +14,10 @@ json_data = open(os.path.join(pypath, "static_db/BBCF/slot_db/global.json")).rea
 slot_db = json.loads(json_data)
 MODE = "<"
 GAME = "bb"
-ast_root = Module([], [])
-empty_args = arguments(posonlyargs=[], args=[], kwonlyargs=[], kw_defaults=[], defaults=[])
 
 def find_named_value(command, value):
     str_value = str(value)
-    if command in [17, 29, 30, 21007]:
-        if str_value in upon_db:
-            return upon_db[str_value]
-        else:
-            return str_value
-    elif command in [43, 14012]:
+    if command in [43, 14012]:
         if str_value in move_inputs:
             return move_inputs[str_value]
 
@@ -52,7 +45,7 @@ def get_slot_name(cmd_data):
     return Name(id="SLOT_" + str_cmd_data)
 
 
-# Removes filler hex and converts hex inputs for AST
+# Changes numbers to their db value
 def sanitizer(command):
     def sanitize(values):
         i = values[0]
@@ -60,7 +53,7 @@ def sanitizer(command):
         if command in [43, 14001, 14012] and isinstance(value, int):
             return Name(find_named_value(command, value))
         elif command in [17, 29, 30, 21007] and i == 0:
-            return Name(find_named_value(command, value))
+            return Name(get_upon_name(value).replace("upon_", ""))
         elif command and not isinstance(value, str) and "hex" in command_db[str(command)]:
             return Name(hex(value))
         return Constant(value)
@@ -82,21 +75,27 @@ def function_clean(command):
     return command
 
 
-def parse_bbscript_routine(f, end=-1):
-    astor_handler = []
+def parse_bbscript_routine(file):
+    ast_root = Module([], [])
     ast_stack = [ast_root.body]
-
+    empty_args = arguments(posonlyargs=[], args=[], kwonlyargs=[], kw_defaults=[], defaults=[])
+    astor_handler = []
+    file.seek(0, os.SEEK_END)
+    end = file.tell()
+    file.seek(0)
+    FUNCTION_COUNT, = struct.unpack(MODE + "I", file.read(4))
+    file.seek(4 + 0x24 * FUNCTION_COUNT)
     # Going through the bin
-    while f.tell() != end:
-        loc = f.tell()  # Debug
-        current_cmd, = struct.unpack(MODE + "I", f.read(4))
+    while file.tell() != end:
+        loc = file.tell()  # Debug
+        current_cmd, = struct.unpack(MODE + "I", file.read(4))
         db_data = command_db[str(current_cmd)]
         if "name" not in db_data:
             db_data["name"] = "Unknown{0}".format(current_cmd)
         if "format" not in command_db[str(current_cmd)]:
-            cmd_data = [f.read(command_db[str(current_cmd)]["size"] - 4)]
+            cmd_data = [file.read(command_db[str(current_cmd)]["size"] - 4)]
         else:
-            cmd_data = list(struct.unpack(MODE + db_data["format"], f.read(struct.calcsize(db_data["format"]))))
+            cmd_data = list(struct.unpack(MODE + db_data["format"], file.read(struct.calcsize(db_data["format"]))))
         # Cleaning up the binary string
         for i, v in enumerate(cmd_data):
             if isinstance(v, bytes):
@@ -109,7 +108,7 @@ def parse_bbscript_routine(f, end=-1):
                     for j in v:
                         debug += chr(j)
                     cmd_data[i] = debug
-
+            
         # AST STUFF
         # 0 is startState
         if current_cmd == 0:
@@ -145,7 +144,7 @@ def parse_bbscript_routine(f, end=-1):
                 tmp = get_slot_name(cmd_data[1])
                 ast_stack[-1].append(If(tmp, [], []))
             ast_stack.append(ast_stack[-1][-1].body)
-        # 18 is label
+        # 18 is slotSendTolabel
         elif current_cmd == 18:
             if cmd_data[1] == 0:
                 tmp = ast_stack[-1].pop()
@@ -154,8 +153,8 @@ def parse_bbscript_routine(f, end=-1):
             else:
                 tmp = get_slot_name(cmd_data[2])
             ast_stack[-1].append(If(tmp, [], []))
-            ast_stack[-1][-1].body = [Expr(Call(Name(id="_gotolabel"), [Constant(cmd_data[0])], []))]
-        # 40 is operation type
+            ast_stack[-1][-1].body = [Expr(Call(Name(id=db_data["name"]), [Constant(cmd_data[0])], []))]
+        # 40 is operation type aka comparison
         elif current_cmd == 40 and cmd_data[0] in [9, 10, 11, 12, 13]:
             if cmd_data[1] == 2:
                 lval = get_slot_name(cmd_data[2])
@@ -177,7 +176,7 @@ def parse_bbscript_routine(f, end=-1):
                 op = LtE()
             tmp = Expr(Compare(lval, [op], [rval]))
             ast_stack[-1].append(tmp)
-        # 41 is StoreValue
+        # 41 is StoreValue aka SLOT assignment
         elif current_cmd == 41:
             if cmd_data[0] == 2:
                 lval = get_slot_name(cmd_data[1])
@@ -243,31 +242,24 @@ def parse_bbscript_routine(f, end=-1):
                 ast_stack.append(astor_handler)
             ast_stack[-1].append(
                 Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[])))
+    return ast_root
 
-
-def parse_bbscript(f, filename, filesize):
-    BASE = f.tell()
-    out_path, out_name = os.path.split(filename)
-    out_name = out_name[:-4] + ".py"
-    if len(sys.argv) == 3:
-        out_path = sys.argv[2]
-    output = os.path.join(out_path, out_name)
-    FUNCTION_COUNT, = struct.unpack(MODE + "I", f.read(4))
-    f.seek(BASE + 4 + 0x24 * FUNCTION_COUNT)
-    parse_bbscript_routine(f, filesize)
+def parse_bbscript(filename, output_path):
+    file = open(filename, 'rb')
+    ast_root = parse_bbscript_routine(file)
+    output = os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + ".py")
     py = open(output, "w")
     py.write(astor.to_source(ast_root))
     py.close()
 
 
 if __name__ == '__main__':
-    if len(sys.argv) not in [2, 3]:
+    if len(sys.argv) not in [2, 3] or sys.argv[1].split(".")[-1] != "bin":
         print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
         print("Default output directory if left blank is the input file's directory.")
+        sys.exit(1)
+    if len(sys.argv) == 2:
+        parse_bbscript(sys.argv[1], os.path.split(sys.argv[1])[0])
     else:
-        file = open(sys.argv[1], 'rb')
-        file.seek(0, os.SEEK_END)
-        size = file.tell()
-        file.seek(0)
-        parse_bbscript(file, file.name, size)
-        print("complete")
+        parse_bbscript(sys.argv[1], sys.argv[2])
+    print("\033[96mcomplete\033[0m")

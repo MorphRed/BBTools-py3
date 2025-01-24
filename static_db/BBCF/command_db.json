@@ -2007,7 +2007,8 @@
         "name": "AttackDefaults_Stage2ExceedAccel"
     },
     "18": {
-        "format": "3i"
+        "format": "3i",
+        "name": "conditionalSendToLabel"
     },
     "18001": {
         "format": "",

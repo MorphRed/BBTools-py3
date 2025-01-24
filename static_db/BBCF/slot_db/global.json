@@ -1,5 +1,4 @@
 {
-  "2": "Hitcount",
   "12": "XVelocity",
   "13": "YVelocity",
   "15": "IsMovingForward",
@@ -16,6 +15,7 @@
   
   "85": "IsUnlimited",
   "110": "OverdriveTimer",
+  "112": "IsUnlimited2",
   "122": "Meter",
   "126": "IsOppAirborne",
   "127": "IsOppCrouching"
