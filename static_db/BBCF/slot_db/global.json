@@ -1,5 +1,4 @@
 {
-  "2": "Hitcount",
   "12": "XVelocity",
   "13": "YVelocity",
   "15": "IsMovingForward",
@@ -12,7 +11,7 @@
   "30": "IsInHitstun",
   "36": "IsAirborne",
   "37": "IsGrounded",
-  "38": "IsFacing",
+  "38": "IsFacingRight",
   
   "85": "IsUnlimited",
   "110": "OverdriveTimer",

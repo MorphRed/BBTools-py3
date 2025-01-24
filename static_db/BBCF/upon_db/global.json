@@ -4,13 +4,13 @@
   "2": "LANDING",
   "3": "EVERY_FRAME",
   "4": "FALLING",
-  "10": "HIT_OR_BLOCK_ANY",
-  "11": "HIT_OR_BLOCK",
-  "12": "HIT",
+  "10": "OPPONENT_HIT_OR_BLOCK",
+  "11": "OPPONENT_CHAR_HIT_OR_BLOCK",
+  "12": "OPPONENT_HIT",
   "23": "RELEASE_A",
   "24": "RELEASE_B",
   "25": "RELEASE_C",
   "26": "RELEASE_D",
-  "60": "COUNTER_HIT",
-  "61": "BLOCK"
+  "60": "OPPONENT_COUNTER_HIT",
+  "61": "OPPONENT_BLOCKS"
 }
