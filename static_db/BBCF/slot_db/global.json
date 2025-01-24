@@ -4,6 +4,7 @@
   "13": "YVelocity",
   "15": "IsMovingForward",
   "16": "IsMovingBackward",
+  "18": "StateDuration",
   "20": "YRelativeToOpponent",
   "22": "XDistanceFromCenterOfStage",
   "23": "YDistanceFromFloor",
@@ -13,10 +14,19 @@
   "36": "IsAirborne",
   "37": "IsGrounded",
   "38": "IsFacing",
+  "48": "RecievedValue",
+  "75": "CurrentHealth",
+  "76": "MaxHealth",
+  "78": "DamageMultiplier",
   
   "85": "IsUnlimited",
+  "90": "InNeutral",
+  "99": "ObjectRotationAlongZ",
   "110": "OverdriveTimer",
+  "112": "IsUnlimited2",
   "122": "Meter",
+  "125": "CurrentHPPercentage",
   "126": "IsOppAirborne",
-  "127": "IsOppCrouching"
+  "127": "IsOppCrouching",
+  "135": "ComboCounter"
 }
