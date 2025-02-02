@@ -12,6 +12,19 @@ json_data = open(os.path.join(pypath, "static_db/BBCF/upon_db/global.json")).rea
 upon_db = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/BBCF/slot_db/global.json")).read()
 slot_db = json.loads(json_data)
+#Checking for a custom slot/upon db
+character_name = sys.argv[1].replace("scr_", "").split(".")[0]
+if character_name[:-2] == "ea":
+    character_name = character_name[:-2]
+try:
+    upon_db.update(json.loads(open(os.path.join(pypath, "static_db/BBCF/upon_db/" + character_name + ".json")).read()))
+except IOError:
+    pass
+try:
+    slot_db.update(json.loads(open(os.path.join(pypath, "static_db/BBCF/slot_db/" + character_name + ".json")).read()))
+except IOError:
+    pass
+
 MODE = "<"
 GAME = "bb"
 
@@ -262,4 +275,4 @@ if __name__ == '__main__':
         parse_bbscript(sys.argv[1], os.path.split(sys.argv[1])[0])
     else:
         parse_bbscript(sys.argv[1], sys.argv[2])
-    print("\033[96mcomplete\033[0m")
+    print("\033[96m" + "complete" + "\033[0m")

@@ -1,6 +1,29 @@
-import os, struct, astor, sys
+import os, struct, json, sys, astor
 from ast import *
-from BBCF_Script_Parser import upon_db, slot_db, command_db, move_inputs, normal_inputs
+
+pypath = os.path.dirname(sys.argv[0])
+json_data = open(os.path.join(pypath, "static_db/BBCF/command_db.json")).read()
+command_db = json.loads(json_data)
+json_data = open(os.path.join(pypath, "static_db/BBCF/named_values/move_inputs.json")).read()
+move_inputs = json.loads(json_data)
+json_data = open(os.path.join(pypath, "static_db/BBCF/named_values/normal_inputs.json")).read()
+normal_inputs = json.loads(json_data)
+json_data = open(os.path.join(pypath, "static_db/BBCF/upon_db/global.json")).read()
+upon_db = json.loads(json_data)
+json_data = open(os.path.join(pypath, "static_db/BBCF/slot_db/global.json")).read()
+slot_db = json.loads(json_data)
+#Checking for a custom slot/upon db
+character_name = sys.argv[1].replace("scr_", "").split(".")[0]
+if character_name[:-2] == "ea":
+    character_name = character_name[:-2]
+try:
+    upon_db.update(json.loads(open(os.path.join(pypath, "static_db/BBCF/upon_db/" + character_name + ".json")).read()))
+except IOError:
+    pass
+try:
+    slot_db.update(json.loads(open(os.path.join(pypath, "static_db/BBCF/slot_db/" + character_name + ".json")).read()))
+except IOError:
+    pass
 
 command_db_lookup = {}
 slot_db_lookup = {}
@@ -29,8 +52,7 @@ upon_db_lookup = {v.lower(): k for k, v in upon_db.items()}
 
 MODE = "<"
 GAME = "bb"
-binary_output = ""
-
+error = False
 
 def decode_upon(s):
     s = s.lower()
@@ -48,16 +70,19 @@ def decode_var(node):
     elif node.id.lower().replace("slot_", "") in slot_db_lookup:
         return [2, int(slot_db_lookup[node.id.lower().replace("slot_", "")])]
     else:
-        return [2, int(node.id.lower().replace("slot_", ""))]
+        try:
+            return [2, int(node.id.lower().replace("slot_", ""))]
+        except ValueError:
+            raise Exception("unknown SLOT " + node.id)
 
 
 def write_command_by_name(name, params):
-    cmdData = command_db_lookup[name.lower()]
-    write_command_by_id(cmdData["id"], params)
+    cmd_data = command_db_lookup[name.lower()]
+    write_command_by_id(cmd_data["id"], params)
 
 
 def write_command_by_id(id, params):
-    global binary_output
+    global output_buffer
     cmd_data = command_db[id]
     my_params = list(params)
     for index, oValue in enumerate(my_params):
@@ -85,28 +110,28 @@ def write_command_by_id(id, params):
         elif isinstance(oValue, UnaryOp):
             my_params[index] = -oValue.operand.value
         else:
-            raise Exception("Unknown Type" + str(type(oValue)))
-    binary_output.write(struct.pack(MODE + "I", int(id)))
+            raise Exception("unknown type" + str(type(oValue)))
+    output_buffer.write(struct.pack(MODE + "I", int(id)))
     if "format" in cmd_data:
         for i, v1 in enumerate(my_params):
             if isinstance(v1, str):
                 my_params[i] = v1.encode()
-        binary_output.write(struct.pack(MODE + cmd_data["format"], *my_params))
+        output_buffer.write(struct.pack(MODE + cmd_data["format"], *my_params))
     else:
-        binary_output.write(my_params[0].encode())
+        output_buffer.write(my_params[0].encode())
 
 
 class Rebuilder(astor.ExplicitNodeVisitor):
     def visit_Module(self, node):
-        global binary_output
+        global output_buffer
         global root
         root = node
         state_count = 0
-        binary_output.write(struct.pack(MODE + "I", state_count))
+        output_buffer.write(struct.pack(MODE + "I", state_count))
         for function in node.body:
             if type(function) != FunctionDef:
                 raise Exception("Root level elements must be functions")
-            if function.decorator_list[0].id != "State":
+            if function.decorator_list[0].id.lower() != "state":
                 continue
             function._index = state_count
             state_count += 1
@@ -121,26 +146,26 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             if "__ds__" in function.name:
                 function.name.replace('__ds__', '-' )
             bytelog = function.name.encode()
-            binary_output.write(struct.pack(MODE + "32sI", function.name.encode(), 0xFADEF00D))
-        node._dataStart = binary_output.tell()
-        binary_output.seek(0)
-        binary_output.write(struct.pack(MODE + "I", state_count))
-        for childNode in node.body:
-            self.visit_RootFunctionDef(childNode)
+            output_buffer.write(struct.pack(MODE + "32sI", function.name.encode(), 0xFADEF00D))
+        node._dataStart = output_buffer.tell()
+        output_buffer.seek(0)
+        output_buffer.write(struct.pack(MODE + "I", state_count))
+        for child_node in node.body:
+            self.visit_RootFunctionDef(child_node)
 
     def visit_Str(self, node):
         pass
 
     def visit_RootFunctionDef(self, node):
-        global binary_output, root
-        binary_output.seek(0, 2)
+        global output_buffer, root
+        output_buffer.seek(0, 2)
         if len(node.decorator_list) == 1:
-            if node.decorator_list[0].id == "State":
+            if node.decorator_list[0].id.lower() == "state":
                 # Write offset into state table
-                startOffset = binary_output.tell() - root._dataStart
-                binary_output.seek(4 + 36 * node._index + 32)
-                binary_output.write(struct.pack(MODE + "I", startOffset))
-                binary_output.seek(0, 2)
+                start_offset = output_buffer.tell() - root._dataStart
+                output_buffer.seek(4 + 36 * node._index + 32)
+                output_buffer.write(struct.pack(MODE + "I", start_offset))
+                output_buffer.seek(0, 2)
                 if node.name.startswith('__') and node.name[2].isdigit():
                     node.name = node.name[2:]
                 if '__sp__' in node.name:
@@ -178,13 +203,14 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         node.func.id = node.func.id.lower()
         # We have a function call. Is it a named function or is it UnknownXXXXX
         if "unknown" in node.func.id:
-            cmdId = node.func.id.replace("unknown", "")
+            cmd_id = node.func.id.replace("unknown", "")
         elif node.func.id in command_db_lookup:
-            cmdId = command_db_lookup[node.func.id]["id"]
+            cmd_id = command_db_lookup[node.func.id]["id"]
         else:
-            raise Exception("Unknown Command " + node.func.id)
-        write_command_by_id(cmdId, node.args)
+            raise Exception("unknown command " + node.func.id)
+        write_command_by_id(cmd_id, node.args)
 
+# Concerns def upon_
     def visit_FunctionDef(self, node):
         node.name = node.name.lower()
         if "upon" not in node.name:
@@ -198,7 +224,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         try:
             node.body[0].value.func.id = node.body[0].value.func.id.lower()
             find = node.body[0].value.func.id == "conditionalsendtolabel"
-        except:
+        except Exception:
             pass
         if isinstance(node.test, Name) and find:
             write_command_by_id("18", [node.body[0].value.args[0]] + decode_var(node.test))
@@ -262,7 +288,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 params.append(3)
             else:
                 print("UNIMPLEMENTED BINOP", astor.dump_tree(node))
-                raise Exception("Unknown Operation!")
+                raise Exception("unknown operation!")
             write_command_by_name("ModifyVar_", params + decode_var(node.targets[0]) + decode_var(node.value.right))
         else:
             write_command_by_name("StoreValue", decode_var(node.targets[0]) + decode_var(node.value))
@@ -281,15 +307,18 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             params.append(13)
         else:
             print("UNIMPLEMENTED BINOP", astor.dump_tree(node))
-            raise Exception("Unknown Compare")
+            raise Exception("unknown compare")
         write_command_by_name("op", params + decode_var(node.left) + decode_var(node.comparators[0]))
 
     def visit_body(self, nodebody):
-        try:
+        global output_buffer, error
+        try: 
             for childNode in nodebody:
                 self.visit(childNode)
         except Exception as e:
-            print(e, "\n" + astor.dump_tree(childNode))
+            # spaghetti pls don't kill me :3
+            error = True
+            print("\033[91m", e, "\n" + astor.to_source(childNode) + "\n" + astor.dump_tree(childNode) + "\033[0m", sep="")
 
     def visit_Expr(self, node):
         self.visit(node.value)
@@ -299,12 +328,17 @@ class Rebuilder(astor.ExplicitNodeVisitor):
 
 
 def rebuild_bbscript(filename, output_path):
-    global binary_output
-    output = os.path.join(output_path, os.path.split(filename)[1].split('.')[0]  + ".bin")
-    sourceAST = astor.code_to_ast.parse_file(filename)
-    binary_output = open(output, "wb")
-    Rebuilder().visit(sourceAST)
-    binary_output.close()
+    global output_buffer
+    output_name = os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + "_error.bin")
+    source_ast = astor.code_to_ast.parse_file(filename)
+    output_buffer = open(output_name, "wb")
+    Rebuilder().visit(source_ast)
+    output_buffer.close()
+    if not error:
+        os.replace(output_name, output_name.replace("_error.", "."))
+    else:
+        os.remove(output_name)
+        sys.exit(1)
 
 
 if __name__ == '__main__':
@@ -316,4 +350,4 @@ if __name__ == '__main__':
         rebuild_bbscript(sys.argv[1], os.path.split(sys.argv[1])[0])
     else:
         rebuild_bbscript(sys.argv[1], sys.argv[2])
-    print("\033[96mcomplete\033[0m")
+    print("\033[96m" + "complete" + "\033[0m")
