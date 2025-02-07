@@ -210,14 +210,20 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             raise Exception("unknown command " + node.func.id)
         write_command_by_id(cmd_id, node.args)
 
-# Concerns def upon_
+# Concerns def upon_ and applyFunctionToObject
     def visit_FunctionDef(self, node):
         node.name = node.name.lower()
-        if "upon" not in node.name:
-            raise Exception("inner functions are used for upon handlers only")
-        write_command_by_name("upon", [decode_upon(node.name)])
-        self.visit_body(node.body)
-        write_command_by_name("endUpon", [])
+        if "upon" not in node.name and "applyfunctionstoobject" not in node.name:
+            raise Exception("prohibited inner function")
+        if "upon" in node.name:
+            write_command_by_name("upon", [decode_upon(node.name)])
+            self.visit_body(node.body)
+            write_command_by_name("endUpon", [])
+        elif "applyfunctionstoobject" in node.name:
+            write_command_by_name("ApplyFunctionsToObject", [int(node.name.replace("applyfunctionstoobject_", ""))])
+            self.visit_body(node.body)
+            write_command_by_name("ApplyFunctionsToSelf", [])
+            
 
     def visit_If(self, node):
         find = False

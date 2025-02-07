@@ -3858,7 +3858,7 @@
     "36": {
         "format": "i",
         "size": 8,
-        "name": "ApplyFunctionsToObjects"
+        "name": "ApplyFunctionsToObject"
     },
     "38": {
         "format": "ii",

@@ -157,6 +157,11 @@ def parse_bbscript_routine(file):
                 tmp = get_slot_name(cmd_data[1])
                 ast_stack[-1].append(If(tmp, [], []))
             ast_stack.append(ast_stack[-1][-1].body)
+        # 35 is apply function to Object
+        elif current_cmd == 36:
+            ast_stack[-1].append(
+                FunctionDef(db_data["name"] + "_" + str(cmd_data[0]), empty_args, [], []))
+            ast_stack.append(ast_stack[-1][-1].body)
         # 18 is slotSendTolabel
         elif current_cmd == 18:
             if cmd_data[1] == 0:
@@ -242,7 +247,7 @@ def parse_bbscript_routine(file):
         elif current_cmd == 56:
             ifnode = ast_stack[-1][-1]
             ast_stack.append(ifnode.orelse)
-        elif current_cmd in [1, 5, 9, 16, 55, 57]:
+        elif current_cmd in [1, 5, 9, 16, 35, 55, 57]:
             if len(ast_stack[-1]) == 0:
                 ast_stack[-1].append(Pass())
             if len(ast_stack) > 1:
