@@ -110,7 +110,7 @@ def write_command_by_id(id, params):
         elif isinstance(oValue, UnaryOp):
             my_params[index] = -oValue.operand.value
         else:
-            raise Exception("unknown type" + str(type(oValue)))
+            raise Exception("unknown type " + str(type(oValue)))
     output_buffer.write(struct.pack(MODE + "I", int(id)))
     if "format" in cmd_data:
         for i, v1 in enumerate(my_params):
@@ -213,27 +213,31 @@ class Rebuilder(astor.ExplicitNodeVisitor):
 # Concerns def upon_ and applyFunctionToObject
     def visit_FunctionDef(self, node):
         node.name = node.name.lower()
-        if "upon" not in node.name and "applyfunctionstoobject" not in node.name:
+        if "upon" not in node.name and "runonobject" not in node.name:
             raise Exception("prohibited inner function")
         if "upon" in node.name:
             write_command_by_name("upon", [decode_upon(node.name)])
             self.visit_body(node.body)
             write_command_by_name("endUpon", [])
-        elif "applyfunctionstoobject" in node.name:
-            write_command_by_name("ApplyFunctionsToObject", [int(node.name.replace("applyfunctionstoobject_", ""))])
+        elif "runonobject" in node.name:
+            write_command_by_name("RunOnObject", [int(node.name.replace("runonobject_", ""))])
             self.visit_body(node.body)
-            write_command_by_name("ApplyFunctionsToSelf", [])
+            write_command_by_name("RunOnSelf", [])
             
 
     def visit_If(self, node):
-        find = False
+        find1 = False
+        find2 = False
         try:
             node.body[0].value.func.id = node.body[0].value.func.id.lower()
-            find = node.body[0].value.func.id == "conditionalsendtolabel"
+            find1 = node.body[0].value.func.id == "conditionalsendtolabel"
+            find2 = node.body[0].value.func.id == "notconditionalsendtolabel"
         except Exception:
             pass
-        if isinstance(node.test, Name) and find:
+        if isinstance(node.test, Name) and find1:
             write_command_by_id("18", [node.body[0].value.args[0]] + decode_var(node.test))
+        elif isinstance(node.test, UnaryOp) and isinstance(node.test.operand, Name) and find2:
+            write_command_by_id("19", [node.body[0].value.args[0]] + decode_var(node.test.operand))
         elif isinstance(node.test, Name):
             # This is if(SLOT) we need to find out slot index and write it as param of if
             write_command_by_name("if", decode_var(node.test))
@@ -252,9 +256,13 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_name("else", [])
                 self.visit_body(node.orelse)
                 write_command_by_name("endElse", [])
-        elif (isinstance(node.test, Call) or isinstance(node.test, Compare)) and find:
+        elif (isinstance(node.test, Call) or isinstance(node.test, Compare)) and find1:
             self.visit(node.test)
             write_command_by_id("18", [node.body[0].value.args[0], 2, 0])
+        elif isinstance(node.test, UnaryOp) and (
+                isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare)) and find2:
+            self.visit(node.test.operand)
+            write_command_by_id("19", [node.body[0].value.args[0], 2, 0])
         elif isinstance(node.test, Call) or isinstance(node.test, Compare):
             self.visit(node.test)
             write_command_by_name("if", [2, 0])
@@ -274,12 +282,20 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_name("else", [])
                 self.visit_body(node.orelse)
                 write_command_by_name("endElse", [])
+                '''
+        elif isinstance(node.test, BoolOp):
+            self.visit_If(If(node.test.values[0].values[0], [node.test.values[0].values[1]], [If(node.test.values[1].values[0], [node.test.values[1].values[1]])]))
+            write_command_by_name("if", [2, 0])
+            self.visit_body(node.body)
+            write_command_by_name("endIf", [])
+        elif isinstance(node.test, UnaryOp) and isinstance(node.test.operand, BoolOp):
+            self.visit_If(If(node.test.operand.values[0], [If(node.test.operand.values[1].values[0], [node.test.operand.values[1].values[1]])], []))
+            write_command_by_name("ifNot", [2, 0])
+            self.visit_body(node.body)
+            write_command_by_name("endIfNot", [])
+            '''
         else:
-            print("UNHANDLED IF"), astor.dump_tree(node)
-
-        # If(SLOT)
-        # If(Expr)
-        # If(UnaryOp(Expr))
+            raise Exception("UNHANDLED IF")
 
     def visit_Assign(self, node):
         if isinstance(node.value, BinOp):
@@ -293,8 +309,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             elif isinstance(node.value.op, Div):
                 params.append(3)
             else:
-                print("UNIMPLEMENTED BINOP", astor.dump_tree(node))
-                raise Exception("unknown operation!")
+                raise Exception("UNKNOWN OPERATION")
             write_command_by_name("ModifyVar_", params + decode_var(node.targets[0]) + decode_var(node.value.right))
         else:
             write_command_by_name("StoreValue", decode_var(node.targets[0]) + decode_var(node.value))
@@ -312,8 +327,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         elif isinstance(node.ops[0], LtE):
             params.append(13)
         else:
-            print("UNIMPLEMENTED BINOP", astor.dump_tree(node))
-            raise Exception("unknown compare")
+            raise Exception("UNKNOWN COMPARE")
         write_command_by_name("op", params + decode_var(node.left) + decode_var(node.comparators[0]))
 
     def visit_body(self, nodebody):

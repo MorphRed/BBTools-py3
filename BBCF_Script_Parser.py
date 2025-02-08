@@ -1,6 +1,8 @@
 import os, struct, json, astor, sys
 from ast import *
 
+from docutils.frontend import Values
+
 pypath = os.path.dirname(sys.argv[0])
 json_data = open(os.path.join(pypath, "static_db/BBCF/command_db.json")).read()
 command_db = json.loads(json_data)
@@ -143,35 +145,75 @@ def parse_bbscript_routine(file):
         # 4 is if
         elif current_cmd == 4:
             if cmd_data[1] == 0:
-                if not ast_stack[-1]:
-                    tmp = get_slot_name(cmd_data[1])
+                if isinstance(ast_stack[-1][-1], Expr):
+                    tmp = lastExpr.value
                     ast_stack[-1].append(If(tmp, [], []))
+                    ast_stack.append(ast_stack[-1][-1].body)
+                    ast_stack[-2].pop(-2)
                 else:
-                    tmp = ast_stack[-1].pop()
-                    if isinstance(tmp, Expr):
-                        tmp = tmp.value
-                        ast_stack[-1].append(If(tmp, [], []))
-                    else:
-                        ast_stack[-1].append(tmp)
+                    ast_stack[-1].append(If(get_slot_name(cmd_data[1])))
+                    '''
+                    ast_stack[-1][-1] = If(
+                        BoolOp(op=Or(), values=[
+                            BoolOp(op=And(), values=[Name(ast_stack[-1][-1].test.id), ast_stack[-1][-1].body[0].value]), 
+                            BoolOp(op=And(), values=[UnaryOp(Not(), Name(ast_stack[-1][-1].test.id)), ast_stack[-1][-1].orelse[0].value])]))
+                    '''
+                    ast_stack.append(ast_stack[-1][-1].body)
             else:
                 tmp = get_slot_name(cmd_data[1])
                 ast_stack[-1].append(If(tmp, [], []))
-            ast_stack.append(ast_stack[-1][-1].body)
+                ast_stack.append(ast_stack[-1][-1].body)
+        # 54 is ifNot
+        elif current_cmd == 54:
+            if cmd_data[1] == 0:
+                if isinstance(ast_stack[-1][-1], Expr):
+                    tmp = lastExpr.value
+                    ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
+                    ast_stack.append(ast_stack[-1][-1].body)
+                    ast_stack[-2].pop(-2)
+                else:
+                    ast_stack[-1].append(If(UnaryOp(Not(), get_slot_name(cmd_data[1])), [], []))
+                    ast_stack.append(ast_stack[-1][-1].body)
+                    '''
+                    ast_stack[-1][-1] = If(UnaryOp(Not(),
+                        BoolOp(op=Or(), values=[Name(ast_stack[-1][-2].value),
+                            BoolOp(op=And(), values=[Name(ast_stack[-1][-1].test.id), ast_stack[-1][-1].body[0].value])])))
+                    ast_stack.append(ast_stack[-1][-1].body)
+                    ast_stack[-2].pop(-2)
+                    '''
+            else:
+                tmp = get_slot_name(cmd_data[1])
+                ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
+                ast_stack.append(ast_stack[-1][-1].body)
+        # 56 is else
+        elif current_cmd == 56:
+            ifnode = ast_stack[-1][-1]
+            ast_stack.append(ifnode.orelse)
+        # 18 is ifSlotSendTolabel
+        elif current_cmd == 18:
+            if cmd_data[2] == 0:
+                tmp = lastExpr.value
+                ast_stack[-1].append(If(tmp, [], []))
+                ast_stack[-1].pop(-2)
+            else:
+                tmp = get_slot_name(cmd_data[2])
+                ast_stack[-1].append(If(tmp, [], []))
+            ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [Constant(cmd_data[0])], [])))
+        # 19 is ifSlotSendTolabel
+        elif current_cmd == 19:
+            if cmd_data[2] == 0:
+                tmp = lastExpr.value
+                ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
+                ast_stack[-1].pop(-2)
+            else:
+                tmp = get_slot_name(cmd_data[2])
+                ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
+            ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [Constant(cmd_data[0])], [])))
         # 35 is apply function to Object
         elif current_cmd == 36:
             ast_stack[-1].append(
                 FunctionDef(db_data["name"] + "_" + str(cmd_data[0]), empty_args, [], []))
             ast_stack.append(ast_stack[-1][-1].body)
-        # 18 is slotSendTolabel
-        elif current_cmd == 18:
-            if cmd_data[1] == 0:
-                tmp = ast_stack[-1].pop()
-                if isinstance(tmp, Expr):
-                    tmp = tmp.value
-            else:
-                tmp = get_slot_name(cmd_data[2])
-            ast_stack[-1].append(If(tmp, [], []))
-            ast_stack[-1][-1].body = [Expr(Call(Name(id=db_data["name"]), [Constant(cmd_data[0])], []))]
         # 40 is operation type aka comparison
         elif current_cmd == 40 and cmd_data[0] in [9, 10, 11, 12, 13]:
             if cmd_data[1] == 2:
@@ -192,8 +234,8 @@ def parse_bbscript_routine(file):
                 op = GtE()
             if cmd_data[0] == 13:
                 op = LtE()
-            tmp = Expr(Compare(lval, [op], [rval]))
-            ast_stack[-1].append(tmp)
+            lastExpr = Expr(Compare(lval, [op], [rval]))
+            ast_stack[-1].append(lastExpr)
         # 41 is StoreValue aka SLOT assignment
         elif current_cmd == 41:
             if cmd_data[0] == 2:
@@ -226,27 +268,7 @@ def parse_bbscript_routine(file):
                 op = Div()
             tmp = Assign([lval], BinOp(lval, op, rval))
             ast_stack[-1].append(tmp)
-        # 54 is ifNot
-        elif current_cmd == 54:
-            if cmd_data[1] == 0:
-                i = 1
-                tmp = ast_stack[-1]
-                # In case the Expr isn't directly behind the if not
-                while not isinstance(tmp, Expr):
-                    tmp = ast_stack[-1][-i]
-                    i = i + 1
-                tmp = tmp.value
-                ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                ast_stack.append(ast_stack[-1][-1].body)
-                ast_stack[-2].pop(-i)
-            else:
-                tmp = get_slot_name(cmd_data[1])
-                ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                ast_stack.append(ast_stack[-1][-1].body)
-        # 56 is else
-        elif current_cmd == 56:
-            ifnode = ast_stack[-1][-1]
-            ast_stack.append(ifnode.orelse)
+        # Indentation end
         elif current_cmd in [1, 5, 9, 16, 35, 55, 57]:
             if len(ast_stack[-1]) == 0:
                 ast_stack[-1].append(Pass())
@@ -256,6 +278,8 @@ def parse_bbscript_routine(file):
                 ast_stack[-1][-1].body.append(
                     Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[])))
         else:
+            if current_cmd in [43, 23145]:
+                lastExpr = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
             if len(ast_stack) == 1:
                 ast_stack.append(astor_handler)
             ast_stack[-1].append(

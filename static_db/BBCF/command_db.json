@@ -2059,7 +2059,7 @@
     "19": {
         "format": "3i",
         "size": 16,
-        "name": "GotoIf0"
+        "name": "notConditionalSendToLabel"
     },
     "19000": {
         "format": "i",
@@ -2533,7 +2533,7 @@
         "auto": "autostr",
         "format": "32si",
         "size": 40,
-        "name": "PassbackAddActionMarkToFunction"
+        "name": "TriggerUponForState"
     },
     "21013": {
         "format": "32si",
@@ -3853,12 +3853,12 @@
     },
     "35": {
         "format": "",
-        "name": "ApplyFunctionsToSelf"
+        "name": "RunOnSelf"
     },
     "36": {
         "format": "i",
         "size": 8,
-        "name": "ApplyFunctionsToObject"
+        "name": "RunOnObject"
     },
     "38": {
         "format": "ii",
