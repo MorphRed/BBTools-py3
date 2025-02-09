@@ -122,7 +122,7 @@ def parse_bbscript_routine(file):
         for i, v in enumerate(cmd_data):
             if isinstance(v, bytes):
                 try:
-                    cmd_data[i] = v.decode("shift-jis").strip("\x00")
+                    cmd_data[i] = v.decode().strip("\x00")
                 except UnicodeDecodeError:
                     # Handles unicode bug if it happens, eg kk400_13
                     v = v.strip(b"\x00")
@@ -340,7 +340,7 @@ def parse_bbscript(filename, output_path):
     file = open(filename, 'rb')
     ast_root = parse_bbscript_routine(file)
     output = os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + ".py")
-    py = open(output, "w")
+    py = open(output, "w", encoding="utf-8")
     py.write(astor.to_source(ast_root))
     py.close()
 

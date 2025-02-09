@@ -257,11 +257,11 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_name("else", [])
                 self.visit_body(node.orelse)
                 write_command_by_name("endElse", [])
-        elif (isinstance(node.test, Call) or isinstance(node.test, Compare)) and find1:
+        elif (isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp)) and find1:
             self.visit(node.test)
             write_command_by_id("18", [node.body[0].value.args[0], 2, 0])
         elif isinstance(node.test, UnaryOp) and (
-                isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare)) and find2:
+                isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)) and find2:
             self.visit(node.test.operand)
             write_command_by_id("19", [node.body[0].value.args[0], 2, 0])
         elif isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp):
@@ -319,7 +319,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             write_command_by_name("op", params + decode_var(node.values[0]) + decode_var(node.values[1]))
 
     def visit_UnaryOp(self, node):
-        pass
+        return
 
     def visit_BinOp(self, node):
         params = []
