@@ -8,7 +8,7 @@ asterror fixes <br/>
 auto upon and slot naming in commands <br/>
 support for character specific slots and upons <br/>
 case insensitivity for commands within the main functions<br/>
-and various other command related bugs <br/>
+and fixes for various other command related bugs <br/>
 
 ## Details
 ### Case insensitivity

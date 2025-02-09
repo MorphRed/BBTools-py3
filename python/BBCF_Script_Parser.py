@@ -16,7 +16,7 @@ json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.jso
 slot_db = json.loads(json_data)
 #Checking for a custom slot/upon db
 character_name = sys.argv[1].replace("scr_", "").split(".")[0]
-if character_name[:-2] == "ea":
+if character_name[:-2] == "ea" and len(character_name) > 2:
     character_name = character_name[:-2]
 try:
     upon_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/" + character_name + ".json")).read()))
