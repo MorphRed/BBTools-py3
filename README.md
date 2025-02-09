@@ -46,7 +46,7 @@ def NmlAtk6D():         !!! <-- Case sensitive
 ```
 
 ### How to use character specific slot and upon
-A json file using the character's code is searched in the `static_db/BBCF/(slot_db and upon_db)/` directory, `global.json` is required and will be searched first, then if the character file exists, the character json will be applied over <br/>
+A json file using the character's code is searched in the `static_db/XXX/(slot_db and upon_db)/` directory, `global.json` is required and will be searched first, then if the character file exists, the character json will be applied over <br/>
 Example: Terumi uses `tm` as his character code, so the script will look for `tm.json`
 
 Do remember that the overwritten slot/upon will no longer refer to their corresponding number, which can break rebuilding
