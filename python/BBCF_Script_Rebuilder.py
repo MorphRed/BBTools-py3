@@ -1,7 +1,7 @@
 import os, struct, json, sys, astor
 from ast import *
 
-GAME = "BBTAG"
+GAME = "BBCF"
 
 pypath = os.path.dirname(sys.argv[0])
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()

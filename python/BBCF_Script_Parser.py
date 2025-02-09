@@ -60,6 +60,7 @@ def get_slot_name(cmd_data):
         str_cmd_data = slot_db[str_cmd_data]
     return Name(id="SLOT_" + str_cmd_data)
 
+# Not used yet
 def get_object_name(cmd_data):
     str_cmd_data = str(cmd_data)
     if str_cmd_data in object_db:
@@ -159,11 +160,14 @@ def parse_bbscript_routine(file):
                 if isinstance(arcsysdoubleifspaghetti, Expr):
                     try: 
                         tmp = lastExpr.value
+                        ast_stack[-1].append(If(tmp, [], []))
+                        ast_stack.append(ast_stack[-1][-1].body)
+                        ast_stack[-2].pop(-2)
                     except Exception:
-                        print('test')
-                    ast_stack[-1].append(If(tmp, [], []))
-                    ast_stack.append(ast_stack[-1][-1].body)
-                    ast_stack[-2].pop(-2)
+                        print("Tell Morph to fix his script")
+                        tmp = get_slot_name(0)
+                        ast_stack[-1].append(If(tmp, [], []))
+                        ast_stack.append(ast_stack[-1][-1].body)
                 else:
                     ast_stack[-1].append(If(get_slot_name(cmd_data[1])))
                     '''
@@ -180,18 +184,22 @@ def parse_bbscript_routine(file):
         # 54 is ifNot
         elif current_cmd == 54:
             if cmd_data[1] == 0:
-                if isinstance(ast_stack[-1][-1], Expr):
+                try:
+                    if ast_stack[-1][-1]:
+                        arcsysdoubleifspaghetti = ast_stack[-1][-1]
+                except IndexError:
+                    arcsysdoubleifspaghetti = True
+                if isinstance(arcsysdoubleifspaghetti, Expr):
                     try:
                         tmp = lastExpr.value
+                        ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
+                        ast_stack.append(ast_stack[-1][-1].body)
+                        ast_stack[-2].pop(-2)
                     except Exception:
-                        print('test')
-                    tmp = lastExpr.value
-                    ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                    ast_stack.append(ast_stack[-1][-1].body)
-                    ast_stack[-2].pop(-2)
-                else:
-                    ast_stack[-1].append(If(UnaryOp(Not(), get_slot_name(cmd_data[1])), [], []))
-                    ast_stack.append(ast_stack[-1][-1].body)
+                        print("Tell Morph to fix his script")
+                        tmp = get_slot_name(0)
+                        ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
+                        ast_stack.append(ast_stack[-1][-1].body)
                     '''
                     ast_stack[-1][-1] = If(UnaryOp(Not(),
                         BoolOp(op=Or(), values=[Name(ast_stack[-1][-2].value),
@@ -242,6 +250,7 @@ def parse_bbscript_routine(file):
                 rval = get_slot_name(cmd_data[4])
             else:
                 rval = Constant(cmd_data[4])
+                
             if cmd_data[0] in [4]:
                 if cmd_data[0] == 4:
                     op = Mod()
@@ -314,7 +323,7 @@ def parse_bbscript_routine(file):
                     Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[])))
         else:
             # Things that affect slot_0
-            if current_cmd in [39, 40, 42, 43, 44, 45, 46, 23036, 23037, 23145, 23148]:
+            if current_cmd in [39, 40, 42, 43, 44, 45, 46, 23036, 23037, 23145, 23148, 23156]:
                 lastExpr = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
                 
             if len(ast_stack) == 1:
