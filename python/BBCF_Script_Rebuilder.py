@@ -302,7 +302,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         params = []
         if len(node.values) > 2:
             raise Exception("THERE CAN ONLY BE 2 AND/OR")
-        if type(node.values[0]) != type(node.values[1]):
+        if not (not isinstance(node.values[0], UnaryOp) and not isinstance(node.values[1], UnaryOp) or (isinstance(node.values[0], UnaryOp) and isinstance(node.values[1], UnaryOp))):
             raise Exception("BOTH VALUES NEED TO USE THE SAME OPERATOR")
         if isinstance(node.values[0], UnaryOp):
             if isinstance(node.op, And):
