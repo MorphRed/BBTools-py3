@@ -1,7 +1,7 @@
 import os, struct, json, sys, astor
 from ast import *
 
-GAME = "BBCF"
+GAME = "BBTAG"
 
 pypath = os.path.dirname(sys.argv[0])
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
@@ -208,7 +208,7 @@ def parse_bbscript_routine(file):
                 tmp = get_slot_name(cmd_data[2])
                 ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
             ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [Constant(cmd_data[0])], [])))
-        # 35 is apply function to Object
+        # 35 is RunOnObject
         elif current_cmd == 36:
             ast_stack[-1].append(
                 FunctionDef(db_data["name"] + "_" + str(cmd_data[0]), empty_args, [], []))

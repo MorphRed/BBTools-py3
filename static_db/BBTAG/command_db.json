@@ -1,57 +1,57 @@
 {
   "0": {
-    "format": "32s",
-    "name": "startState"
+    "name": "startState",
+    "format": "32s"
   },
   "1": {
-    "format": "",
-    "name": "endState"
+    "name": "endState",
+    "format": ""
   },
   "2": {
-    "format": "32si",
-    "name": "sprite"
+    "name": "sprite",
+    "format": "32si"
   },
   "3": {
-    "format": "",
-    "name": "loopRest"
+    "name": "loopRest",
+    "format": ""
   },
   "4": {
-    "format": "ii",
+    "startBlock": true,
     "name": "if",
-    "startBlock": true
+    "format": "ii"
   },
   "5": {
+    "name": "endIf",
     "endBlock": true,
-    "format": "",
-    "name": "endIf"
+    "format": ""
   },
   "6": {
-    "format": "i",
-    "name": "label"
+    "name": "label",
+    "format": "i"
   },
   "7": {
-    "format": "i",
-    "name": "gotoLabel"
+    "name": "gotoLabel",
+    "format": "i"
   },
   "8": {
-    "format": "32s",
-    "name": "startSubroutine"
+    "name": "startSubroutine",
+    "format": "32s"
   },
   "9": {
-    "format": "",
-    "name": "endSubroutine"
+    "name": "endSubroutine",
+    "format": ""
   },
   "10": {
-    "format": "32s",
-    "name": "callSubroutine"
+    "name": "callSubroutine",
+    "format": "32s"
   },
   "11": {
-    "format": "i",
-    "name": "sendToLabel"
+    "name": "sendToLabel",
+    "format": "i"
   },
   "12": {
-    "format": "",
-    "name": "ExitState"
+    "name": "ExitState",
+    "format": ""
   },
   "13": {
     "format": "i",
@@ -63,73 +63,68 @@
     "name": "EndObject"
   },
   "15": {
-    "format": "i",
-    "name": "upon"
+    "name": "upon",
+    "format": "i"
   },
   "16": {
-    "format": "",
-    "name": "endUpon"
+    "name": "endUpon",
+    "format": ""
   },
   "17": {
-    "format": "i",
+    "size": 8,
     "name": "clearUponHandler",
-    "size": 8
+    "format": "i"
   },
   "18": {
     "format": "3i",
     "name": "conditionalSendToLabel"
   },
   "19": {
-    "format": "3i",
     "size": 16,
+    "format": "3i",
     "name": "notConditionalSendToLabel"
   },
   "20": {
-    "format": "3i",
     "size": 16,
-    "name": "SpriteIfNot0"
+    "format": "iii"
   },
   "21": {
-    "format": "32s",
-    "name": "enterState"
+    "name": "enterState",
+    "format": "32s"
   },
   "22": {
     "auto": "autostr",
     "format": "32s",
-    "size": 36,
-    "name": "EnterStateIfNotInState"
+    "size": 36
   },
   "23": {
-    "size": 68,
-    "name": "EnterStateIfInState"
+    "size": 68
   },
   "24": {
-    "format": "32si",
-    "name": "PrivateFunction2"
+    "size": 40
   },
   "25": {
     "size": 40
   },
   "26": {
-    "format": "32s",
-    "name": "DespawnEAEffect"
+    "format": "32s"
   },
   "28": {
     "format": "i32s",
     "name": "EnterStateIfEventID"
   },
   "29": {
-    "format": "ii",
-    "name": "uponSendToLabel"
+    "name": "uponSendToLabel",
+    "format": "ii"
   },
   "30": {
-    "format": "ii",
+    "size": 12,
     "name": "RunLoopUpon",
-    "size": 12
+    "format": "ii"
   },
   "31": {
-    "format": "ii",
-    "size": 12
+    "size": 12,
+    "format": "ii"
   },
   "32": {
     "format": "16s",
@@ -141,8 +136,8 @@
     "name": "RunOnSelf"
   },
   "36": {
-    "format": "i",
     "size": 8,
+    "format": "i",
     "name": "RunOnObject"
   },
   "38": {
@@ -151,17 +146,17 @@
     "name": "RegisterObject"
   },
   "39": {
-    "format": "3i",
-    "name": "random_"
+    "name": "random_",
+    "format": "iii"
   },
   "40": {
-    "format": "5i",
+    "size": 24,
     "name": "op",
-    "size": 24
+    "format": "iiiii"
   },
   "41": {
-    "format": "4i",
-    "name": "StoreValue"
+    "name": "StoreValue",
+    "format": "iiii"
   },
   "42": {
     "format": "16s",
@@ -169,14 +164,13 @@
     "name": "CharacterIDCheck"
   },
   "43": {
-    "format": "i",
     "hex": true,
-    "name": "CheckInput"
+    "name": "CheckInput",
+    "format": "i"
   },
   "44": {
-    "format": "i",
     "size": 8,
-    "name": "CheckCondition"
+    "format": "i"
   },
   "45": {
     "size": 20,
@@ -198,90 +192,93 @@
     "name": "CopyFromRightToLeft"
   },
   "49": {
-    "format": "5i",
+    "size": 24,
     "name": "ModifyVar_",
-    "size": 24
+    "format": "iiiii"
   },
   "50": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "51": {
-    "format": "i",
     "size": 8,
-    "name": "EndSprite"
+    "format": "i"
   },
   "52": {
-    "format": "i",
     "size": 8,
-    "name": "ObjectPriority"
+    "format": "i"
   },
   "53": {
-    "format": "i",
     "size": 8,
-    "name": "CollideWithWall"
+    "format": "i"
   },
   "54": {
-    "format": "ii",
+    "size": 12,
     "name": "ifNot",
-    "size": 12
+    "format": "ii"
   },
   "55": {
-    "format": "",
-    "name": "endIfNot"
+    "name": "endIfNot",
+    "format": ""
   },
   "56": {
-    "format": "",
-    "name": "else"
+    "name": "else",
+    "format": ""
   },
   "57": {
-    "format": "",
-    "name": "endElse"
+    "name": "endElse",
+    "format": ""
   },
   "58": {
-    "format": "32sii",
     "size": 44,
-    "name": "TrainingModeSLOT"
+    "format": "32sii"
   },
   "59": {
-    "format": "iiii",
     "size": 20,
-    "name": "ObjectUpon24"
+    "format": "4i"
   },
   "60": {
-    "format": "16s",
-    "size": 20
+    "size": 20,
+    "format": "16s"
   },
   "61": {
-    "format": "12i",
-    "size": 52
+    "size": 52,
+    "format": "12i"
   },
   "62": {
     "size": 28
   },
   "63": {
-    "format": "16s",
     "size": 20
   },
   "64": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "65": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "66": {
-    "format": "16sii",
     "size": 28
   },
   "67": {
-    "format": "5i",
     "size": 24
   },
   "68": {
-    "format": "5i",
     "size": 24
+  },
+  "69": {
+    "name": "PartnerChar",
+    "format": "16s"
+  },
+  "70": {
+    "format": "16s16s16s16s",
+    "size": 68
+  },
+  "103": {
+    "size": 12,
+    "format": "ii"
   },
   "1000": {
     "format": "i",
@@ -493,187 +490,152 @@
     "name": "SetInertia"
   },
   "1046": {
-    "format": "i",
     "size": 8,
-    "name": "SetInertiaAbsolute"
+    "format": "i"
   },
   "1047": {
-    "format": "i",
-    "name": "AddInertia",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "1048": {
-    "format": "i",
     "size": 8,
-    "name": "AddInertiaAbsolute"
+    "format": "i"
   },
   "1049": {
-    "format": "",
-    "name": "PushInertia"
+    "format": ""
   },
   "1050": {
-    "format": "",
-    "name": "PopInertia"
+    "format": ""
   },
   "1051": {
-    "format": "i",
     "size": 8,
-    "name": "PerInertia"
+    "format": "i"
   },
   "1052": {
-    "format": "i",
     "size": 8,
-    "name": "IgnoreInertia"
+    "format": "i"
   },
   "1053": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddInertia"
+    "format": "ii"
   },
   "1054": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddInertiaAbsolute"
+    "format": "ii"
   },
   "1055": {
-    "format": "",
-    "name": "DamageGravity"
+    "format": ""
   },
   "1056": {
-    "format": "i",
     "size": 8,
-    "name": "SetScaleX"
+    "format": "i"
   },
   "1057": {
-    "format": "i",
     "size": 8,
-    "name": "AddScaleX"
+    "format": "i"
   },
   "1058": {
-    "format": "i",
     "size": 8,
-    "name": "PerScaleX"
+    "format": "i"
   },
   "1059": {
-    "format": "i",
     "size": 8,
-    "name": "SetScaleXPerFrame"
+    "format": "i"
   },
   "1060": {
-    "format": "i",
     "size": 8,
-    "name": "AddScaleSpeedX"
+    "format": "i"
   },
   "1061": {
-    "format": "i",
     "size": 8,
-    "name": "PerScaleSpeedX"
+    "format": "i"
   },
   "1062": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddScaleX"
+    "format": "ii"
   },
   "1063": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddScaleSpeedX"
+    "format": "ii"
   },
   "1064": {
-    "format": "i",
     "size": 8,
-    "name": "SetScaleY"
+    "format": "i"
   },
   "1065": {
-    "format": "i",
     "size": 8,
-    "name": "AddScaleY"
+    "format": "i"
   },
   "1066": {
-    "format": "i",
     "size": 8,
-    "name": "PerScaleY"
+    "format": "i"
   },
   "1067": {
-    "format": "i",
     "size": 8,
-    "name": "SetScaleSpeedY"
+    "format": "i"
   },
   "1068": {
-    "format": "i",
     "size": 8,
-    "name": "AddScaleSpeedY"
+    "format": "i"
   },
   "1069": {
-    "format": "i",
     "size": 8,
-    "name": "PerScaleSpeedY"
+    "format": "i"
   },
   "1070": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddScaleY"
+    "format": "ii"
   },
   "1071": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddScaleSpeedY"
+    "format": "ii"
   },
   "1072": {
-    "format": "i",
     "size": 8,
-    "name": "RotationAngle"
+    "format": "i"
   },
   "1073": {
-    "format": "i",
     "size": 8,
-    "name": "Rotation"
+    "format": "i"
   },
   "1074": {
-    "format": "i",
     "size": 8,
-    "name": "AddRotationPerFrame"
+    "format": "i"
   },
   "1075": {
-    "format": "i",
     "size": 8,
-    "name": "PerAngleSpeed"
+    "format": "i"
   },
   "1076": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "1077": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddRotation"
+    "format": "ii"
   },
   "1078": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddRotationSpeed"
+    "format": "ii"
   },
   "1079": {
-    "format": "",
-    "name": "RandRotationAngle"
+    "format": ""
   },
   "1080": {
-    "format": "i",
     "size": 8,
-    "name": "SetTransformCenterX"
+    "format": "i"
   },
   "1081": {
-    "format": "i",
     "size": 8,
-    "name": "SetTransformCenterY"
+    "format": "i"
   },
   "1082": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "1083": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "1084": {
     "format": "i",
@@ -741,171 +703,155 @@
     "name": "Size"
   },
   "1097": {
-    "format": "i",
     "size": 8,
-    "name": "AddScale"
+    "format": "i"
   },
   "1098": {
-    "format": "i",
     "size": 8,
-    "name": "PerScale"
+    "format": "i"
   },
   "1099": {
-    "format": "i",
     "size": 8,
-    "name": "SetScaleSpeed"
+    "format": "i"
   },
   "1100": {
-    "format": "i",
     "size": 8,
-    "name": "AddScaleSpeed"
+    "format": "i"
   },
   "1101": {
-    "format": "i",
     "size": 8,
-    "name": "PerScaleSpeed"
+    "format": "i"
   },
   "1102": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddScale"
+    "format": "ii"
   },
   "1103": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddScaleSpeed"
+    "format": "ii"
   },
   "1104": {
-    "format": "i",
     "size": 8,
-    "name": "SetAngleBySpeed"
+    "format": "i"
   },
   "1105": {
-    "format": "i",
     "size": 8,
-    "name": "SetSpeedByPolarCoordinate"
+    "format": "i"
   },
   "1108": {
-    "format": "i",
     "size": 8,
-    "name": "RotationSomething"
+    "format": "i"
   },
   "1109": {
-    "format": "ii",
     "size": 12,
-    "name": "HitboxMovement"
+    "format": "ii"
   },
   "1110": {
-    "format": "ii",
     "size": 12,
-    "name": "XSpeed2"
+    "format": "ii"
   },
   "1111": {
-    "format": "ii",
-    "size": 12
+    "size": 12,
+    "format": "ii"
+  },
+  "1112": {
+    "size": 4
+  },
+  "1114": {
+    "size": 4
+  },
+  "1116": {
+    "size": 4
   },
   "2000": {
-    "format": "",
-    "name": "RefreshMultihit"
+    "name": "RefreshMultihit",
+    "format": ""
   },
   "2001": {
-    "format": "",
-    "name": "EndAttack"
+    "format": ""
   },
   "2002": {
-    "format": "",
-    "name": "StartMultihit"
+    "name": "StartMultihit",
+    "format": ""
   },
   "2003": {
-    "format": "i",
     "size": 8,
-    "name": "NoAttackDuringAction"
+    "format": "i"
   },
   "2004": {
-    "format": "ii",
     "size": 12,
-    "name": "StayAfterMovement"
+    "format": "ii"
   },
   "2005": {
-    "format": "",
-    "name": "Flip"
+    "format": ""
   },
   "2006": {
-    "format": "",
-    "name": "ForceFaceSprite"
+    "format": ""
   },
   "2007": {
-    "format": "",
-    "name": "FaceLeft"
+    "format": ""
   },
   "2008": {
-    "format": "",
-    "name": "FaceRight"
+    "format": ""
   },
   "2009": {
-    "format": "",
-    "name": "AttackDefaults_Projectile"
+    "format": ""
   },
   "2010": {
-    "format": "",
-    "name": "AttackDefaults_SpecialProjectile"
+    "format": ""
   },
   "2011": {
-    "format": "",
-    "name": "AttackDefaults_SuperProjectile"
+    "format": ""
   },
   "2012": {
-    "format": "",
-    "name": "AttackDefaults_AstralHeatProjectile"
+    "format": ""
+  },
+  "2013": {
+    "format": "i",
+    "size": 8
   },
   "2015": {
-    "format": "i",
     "size": 8,
-    "name": "SetXCollisionFromOrigin"
+    "format": "i"
   },
   "2016": {
-    "format": "i",
     "size": 8,
-    "name": "SetYCollisionFromOrigin"
+    "format": "i"
   },
   "2017": {
-    "format": "i",
+    "name": "EnableCollision",
     "size": 8,
-    "name": "EnableCollision"
+    "format": "i"
   },
   "2018": {
-    "format": "ii",
     "size": 12,
-    "name": "SetZLine"
+    "format": "ii"
   },
   "2019": {
-    "format": "i",
     "size": 8,
-    "name": "SetZVal"
+    "format": "i"
   },
   "2020": {
-    "format": "i",
     "size": 8,
-    "name": "AddZVal"
+    "format": "i"
   },
   "2021": {
-    "format": "i",
     "size": 8,
-    "name": "PreventSelfPush"
+    "format": "i"
   },
   "2022": {
-    "format": "",
-    "name": "InitializeForLockObject"
+    "format": ""
+  },
+  "2023": {
+    "size": 12
   },
   "2034": {
-    "format": "i",
     "size": 8,
-    "name": "ScreenCollision"
+    "format": "i"
   },
   "2035": {
-    "format": "i",
     "size": 8,
-    "name": "ForceShadowOff"
+    "format": "i"
   },
   "2036": {
     "format": "3i",
@@ -913,466 +859,398 @@
     "size": 16
   },
   "2037": {
-    "format": "i",
     "size": 8,
-    "name": "SetActionMark"
+    "format": "i"
   },
   "2038": {
-    "format": "i",
     "size": 8,
-    "name": "AddActionMark"
+    "format": "i"
   },
   "2039": {
-    "format": "i",
     "size": 8,
-    "name": "PerActionMark"
+    "format": "i"
   },
   "2040": {
-    "format": "i",
     "size": 8,
-    "name": "FlagAddActionMark"
+    "format": "i"
   },
   "2041": {
-    "format": "i",
     "size": 8,
-    "name": "FlagDelActionMark"
+    "format": "i"
   },
   "2042": {
-    "format": "i",
-    "name": "SetCommonActionMark"
+    "format": "i"
   },
   "2043": {
-    "format": "i",
     "size": 8,
-    "name": "AddCommonActionMark"
+    "format": "i"
   },
   "2044": {
-    "format": "i",
     "size": 8,
-    "name": "PerCommonActionMark"
+    "format": "i"
   },
   "2045": {
-    "format": "i",
     "size": 8,
-    "name": "FlagAddCommonActionMark"
+    "format": "i"
   },
   "2046": {
-    "format": "i",
     "size": 8,
-    "name": "FlagDelCommonActionMark"
+    "format": "i"
   },
   "2047": {
-    "format": "i",
     "size": 8,
-    "name": "ForceFloorReflectOff"
+    "format": "i"
   },
   "2048": {
-    "format": "i",
     "size": 8,
-    "name": "SetFloorReflectColor"
+    "format": "i"
   },
   "2049": {
     "format": "i",
     "size": 8,
     "name": "CreateDecalOn"
   },
-  "2052": {
+  "2050": {
     "format": "i",
+    "size": 8
+  },
+  "2052": {
     "size": 8,
-    "name": "EnableOutsideForces"
+    "format": "i"
   },
   "2053": {
-    "format": "i",
     "size": 8,
-    "name": "WallCollisionDetection"
+    "format": "i"
   },
   "2054": {
-    "format": "i",
     "size": 8,
-    "name": "IgnoreScreenfreeze"
+    "format": "i"
   },
   "2055": {
-    "format": "i",
     "size": 8,
-    "name": "ContinueState"
+    "format": "i"
   },
   "2056": {
-    "format": "i",
     "size": 8,
-    "name": "SetAttackObjectMax"
+    "format": "i"
   },
   "2057": {
-    "format": "i",
     "size": 8,
-    "name": "AirDashMomentum"
+    "format": "i"
   },
   "2058": {
-    "format": "i",
-    "name": "HeatChange",
-    "size": 8
+    "name": "ConsumeSuperMeter",
+    "size": 8,
+    "format": "i"
   },
   "2059": {
-    "format": "i",
     "size": 8,
-    "name": "DefenseChange"
+    "format": "i"
   },
   "2060": {
-    "format": "",
-    "name": "Recovery"
+    "name": "Recovery",
+    "format": ""
   },
   "2061": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "2062": {
-    "format": "",
-    "name": "DepleteOD"
+    "format": ""
   },
   "2063": {
     "format": ""
   },
   "2064": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "2065": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "2066": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "2067": {
-    "format": "ii",
     "size": 12,
-    "name": "BarrierGaugeOnCall"
+    "format": "ii"
+  },
+  "2068": {
+    "size": 8,
+    "format": "i"
   },
   "2070": {
-    "size": 20,
-    "format": "4i"
+    "size": 20
   },
   "2071": {
-    "format": "5i",
-    "size": 24,
-    "name": "PrivateFunction3"
+    "size": 24
   },
   "2072": {
-    "format": "5i",
-    "size": 24,
-    "name": "ObjectUpon26"
+    "size": 24
+  },
+  "2073": {
+    "size": 8,
+    "format": "i"
+  },
+  "2074": {
+    "size": 8,
+    "format": "i"
+  },
+  "2075": {
+    "size": 8,
+    "format": "i"
   },
   "3000": {
-    "format": "i",
     "size": 8,
-    "name": "PaletteID"
+    "format": "i"
   },
   "3001": {
-    "format": "i",
     "size": 8,
-    "name": "AlphaValue"
+    "format": "i"
   },
   "3002": {
-    "format": "i",
     "size": 8,
-    "name": "AddAlpha"
+    "format": "i"
   },
   "3003": {
-    "format": "i",
     "size": 8,
-    "name": "AlphaMultiplier"
+    "format": "i"
   },
   "3004": {
-    "format": "i",
     "size": 8,
-    "name": "ConstantAlphaModifier"
+    "format": "i"
   },
   "3005": {
-    "format": "i",
     "size": 8,
-    "name": "AddToAlphaModifier"
+    "format": "i"
   },
   "3006": {
-    "format": "i",
     "size": 8,
-    "name": "MultiplyAlphaModifier"
+    "format": "i"
   },
   "3007": {
-    "format": "i",
     "size": 8,
-    "name": "RedColorValue"
+    "format": "i"
   },
   "3008": {
-    "format": "i",
     "size": 8,
-    "name": "AddRedColorValue"
+    "format": "i"
   },
   "3009": {
-    "format": "i",
     "size": 8,
-    "name": "PerRedColorValue"
+    "format": "i"
   },
   "3010": {
-    "format": "i",
     "size": 8,
-    "name": "ConstantRedModifier"
+    "format": "i"
   },
   "3011": {
-    "format": "i",
     "size": 8,
-    "name": "AddConstantRedModifier"
+    "format": "i"
   },
   "3012": {
-    "format": "i",
     "size": 8,
-    "name": "PerConstantRedModifier"
+    "format": "i"
   },
   "3013": {
-    "format": "i",
     "size": 8,
-    "name": "GreenColorValue"
+    "format": "i"
   },
   "3014": {
-    "format": "i",
     "size": 8,
-    "name": "AddGreenColorValue"
+    "format": "i"
   },
   "3015": {
-    "format": "i",
     "size": 8,
-    "name": "PerGreenColorValue"
+    "format": "i"
   },
   "3016": {
-    "format": "i",
     "size": 8,
-    "name": "ConstantGreenModifier"
+    "format": "i"
   },
   "3017": {
-    "format": "i",
     "size": 8,
-    "name": "AddConstantGreenModifier"
+    "format": "i"
   },
   "3018": {
-    "format": "i",
     "size": 8,
-    "name": "PerConstantGreenModifier"
+    "format": "i"
   },
   "3019": {
-    "format": "i",
     "size": 8,
-    "name": "BlueColorValue"
+    "format": "i"
   },
   "3020": {
-    "format": "i",
     "size": 8,
-    "name": "AddBlueColorValue"
+    "format": "i"
   },
   "3021": {
-    "format": "i",
     "size": 8,
-    "name": "PerBlueColorValue"
+    "format": "i"
   },
   "3022": {
-    "format": "i",
     "size": 8,
-    "name": "ConstantBlueModifier"
+    "format": "i"
   },
   "3023": {
-    "format": "i",
     "size": 8,
-    "name": "AddConstantBlueModifier"
+    "format": "i"
   },
   "3024": {
-    "format": "i",
     "size": 8,
-    "name": "PerConstantBlueModifier"
+    "format": "i"
   },
   "3025": {
-    "format": "II",
     "size": 12,
-    "name": "ColorTransition"
+    "format": "ii"
   },
   "3026": {
-    "format": "I",
     "size": 8,
-    "name": "ColorForTransition"
+    "format": "i"
   },
   "3027": {
-    "format": "i",
     "size": 8,
-    "name": "SetAfterimageColor"
+    "format": "i"
   },
   "3028": {
-    "format": "ii",
-    "name": "ScreenShake"
+    "name": "ScreenShake",
+    "format": "ii"
   },
   "3029": {
-    "format": "i",
-    "name": "EnableAfterimage",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "3030": {
-    "format": "i",
     "size": 8,
-    "name": "AfterimageType"
+    "format": "i"
   },
   "3031": {
-    "format": "",
-    "name": "BlendMode_Off"
+    "format": ""
   },
   "3032": {
-    "format": "",
-    "name": "BlendMode_Normal"
+    "format": ""
   },
   "3033": {
-    "format": "",
-    "name": "BlendMode_Add"
+    "format": ""
   },
   "3034": {
-    "format": "",
-    "name": "BlendMode_HalfAdd"
+    "format": ""
   },
   "3035": {
-    "format": "",
-    "name": "BlendMode_Sub"
+    "format": ""
   },
   "3038": {
-    "format": "i",
     "size": 8,
-    "name": "Visibility"
+    "format": "i"
   },
   "3040": {
-    "format": "i",
     "size": 8,
-    "name": "PaletteEffType"
+    "format": "i"
   },
   "3041": {
-    "format": "i",
     "size": 8,
-    "name": "PaletteColor1"
+    "format": "i"
   },
   "3042": {
-    "format": "i",
     "size": 8,
-    "name": "PaletteColor2"
+    "format": "i"
   },
   "3043": {
-    "format": "i",
     "size": 8,
-    "name": "PaletteColor3"
+    "format": "i"
   },
   "3044": {
-    "format": "I",
     "size": 8,
-    "name": "PaletteColor4"
+    "format": "i"
   },
   "3045": {
-    "format": "i",
     "size": 8,
-    "name": "CustomPalette"
+    "format": "i"
   },
   "3046": {
-    "format": "i",
     "size": 8,
-    "name": "SetCustomPaletteAlpha"
+    "format": "i"
   },
   "3047": {
-    "format": "i",
     "size": 8,
-    "name": "SetBasePaletteAlpha"
+    "format": "i"
   },
   "3048": {
-    "format": "i",
     "size": 8,
-    "name": "SetBasePaletteColor"
+    "format": "i"
   },
   "3053": {
-    "format": "i",
     "size": 8,
-    "name": "TurnParticleColorable1"
+    "format": "i"
   },
   "3054": {
-    "format": "ii",
-    "size": 12
+    "size": 12,
+    "format": "ii"
   },
   "3055": {
-    "format": "ii",
     "size": 12,
-    "name": "AlphaIsColorOnPalette"
+    "format": "ii"
   },
   "3056": {
-    "format": "ii",
     "size": 12,
-    "name": "ChangeColorOnPalette"
+    "format": "ii"
   },
   "3057": {
-    "format": "i",
     "size": 8,
-    "name": "ParticleTransparency"
+    "format": "i"
   },
   "3058": {
-    "format": "i",
     "size": 8,
-    "name": "PlayerTransparency"
+    "format": "i"
   },
   "3059": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "3060": {
     "format": "i32s",
-    "size": 40,
-    "name": "SetCompositeImage"
+    "size": 40
   },
   "3061": {
-    "format": "ii",
     "size": 12,
-    "name": "SetCompositeBlendMode"
+    "format": "ii"
   },
   "3062": {
-    "format": "ii",
     "size": 12,
-    "name": "SetCompositePosX"
+    "format": "ii"
   },
   "3063": {
-    "format": "ii",
     "size": 12,
-    "name": "SetCompositePosY"
+    "format": "ii"
   },
   "3064": {
-    "format": "ii",
     "size": 12,
-    "name": "SetCompositeSpeedX"
+    "format": "ii"
   },
   "3065": {
-    "format": "ii",
     "size": 12,
-    "name": "SetCompositeSpeedY"
+    "format": "ii"
   },
   "3066": {
-    "format": "ii",
     "size": 12,
-    "name": "SetCompositeScaleX"
+    "format": "ii"
   },
   "3067": {
-    "format": "ii",
     "size": 12,
-    "name": "SetCompositeScaleY"
+    "format": "ii"
   },
   "3068": {
-    "format": "5i",
-    "size": 24,
-    "name": "SetCompositeColor"
+    "size": 24
   },
   "3069": {
-    "format": "i",
-    "name": "AfterimageBlendMode",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "3070": {
-    "format": "i",
     "size": 8,
-    "name": "AfterimageInterval"
+    "format": "i"
   },
   "3071": {
     "format": "i",
@@ -1419,168 +1297,143 @@
     "size": 8
   },
   "4000": {
-    "format": "32si",
-    "name": "CreateObject"
+    "name": "GFX_0",
+    "format": "32si"
   },
   "4001": {
-    "format": "32si",
-    "name": "CreateParticle"
+    "name": "GFX_1",
+    "format": "32si"
   },
   "4002": {
-    "format": "32s",
-    "name": "LinkParticle",
-    "size": 36
+    "size": 36,
+    "name": "GFX_2",
+    "format": "32s"
   },
   "4003": {
     "format": "32s32s",
-    "size": 68,
-    "name": "Eff3DEffect"
+    "size": 68
   },
   "4004": {
     "format": "32si",
-    "size": 40,
-    "name": "E0EAEffect"
+    "name": "SystemGFX",
+    "size": 40
   },
   "4006": {
-    "format": "i",
     "size": 8,
-    "name": "E0EAEffectRotation"
+    "format": "i"
   },
   "4007": {
-    "format": "i",
     "size": 8,
-    "name": "E0EAEffectPosition"
+    "format": "i"
   },
   "4008": {
-    "format": "i",
     "size": 8,
-    "name": "E0EAEffectDirection"
+    "format": "i"
   },
   "4009": {
-    "format": "i",
     "size": 8,
-    "name": "IgnorePauses"
+    "format": "i"
   },
   "4010": {
-    "format": "i",
     "size": 8,
-    "name": "RemoveOnCallStateEnd"
+    "format": "i"
   },
   "4011": {
-    "format": "i",
     "size": 8,
-    "name": "CancelIfPlayerHit"
+    "format": "i"
   },
   "4012": {
-    "format": "i",
     "size": 8,
-    "name": "E0EAEffectPositionCenter"
+    "format": "i"
   },
   "4013": {
-    "format": "i",
     "size": 8,
-    "name": "E0EAEffectScale"
+    "format": "i"
   },
   "4014": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "FloorSprite"
+    "format": "32s"
   },
   "4015": {
-    "format": "",
-    "name": "FaceSpawnLocation"
+    "format": ""
   },
   "4016": {
-    "size": 40,
-    "format": "32si",
-    "name": "CommonPolyline"
+    "size": 40
   },
   "4017": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddSpeedSphere"
+    "format": "ii"
   },
   "4018": {
-    "format": "i32s3i",
-    "size": 52,
-    "name": "CreateDecal"
+    "size": 52
   },
   "4019": {
-    "format": "i",
     "size": 8,
-    "name": "E0EAEffectObjectZ"
+    "format": "i"
   },
   "4020": {
-    "format": "i",
     "size": 8,
-    "name": "ObjectHitbox"
+    "format": "i"
   },
   "4021": {
-    "format": "32si",
-    "size": 40,
-    "name": "E0EAEffectPolyline"
+    "size": 40
   },
   "4022": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "4023": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "4024": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "4025": {
-    "format": "i",
     "size": 8,
-    "name": "RemoveOnContact"
+    "format": "i"
+  },
+  "4026": {
+    "size": 8,
+    "format": "i"
   },
   "4045": {
     "auto": "autostr",
     "format": "32si",
-    "size": 40,
-    "name": "CallCustomizableParticle"
+    "size": 40
   },
   "4046": {
-    "format": "3I",
     "size": 16,
-    "name": "ParticleColor"
+    "format": "iii"
   },
   "4047": {
-    "format": "3i",
     "size": 16,
-    "name": "ParticleColorFromPalette"
+    "format": "iii"
   },
   "4048": {
-    "format": "i",
     "size": 8,
-    "name": "ParticleRotationAngle"
+    "format": "i"
   },
   "4049": {
-    "format": "i",
     "size": 8,
-    "name": "ParticleSize"
+    "format": "i"
   },
   "4050": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "4051": {
-    "format": "i",
     "size": 8,
-    "name": "ParticleFacing"
+    "format": "i"
   },
   "4052": {
-    "format": "",
-    "name": "ParticleRandomRotation"
+    "format": ""
   },
   "4053": {
-    "format": "ii",
     "size": 12,
-    "name": "ParticleDeviation"
+    "format": "ii"
   },
   "4054": {
     "format": "i",
@@ -1610,10 +1463,6 @@
     "format": "i",
     "size": 8,
     "name": "ThrowLock"
-  },
-  "5004": {
-    "format": "",
-    "name": "ClipThroughOpp"
   },
   "5005": {
     "format": "i",
@@ -1646,6 +1495,11 @@
     "format": "16s",
     "name": "SmartVoiceline"
   },
+  "7005": {
+    "size": 72,
+    "name": "TagVoiceline",
+    "format": "i16s16s16s16s"
+  },
   "7006": {
     "format": "16si16si16si16si",
     "size": 84,
@@ -1671,27 +1525,28 @@
     "name": "CommonVoicelines"
   },
   "7011": {
-    "format": "i",
     "size": 8,
-    "name": "SmartCommonVoicelines"
+    "format": "i"
   },
   "7012": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "7013": {
-    "format": "ii",
-    "size": 12
+    "size": 12,
+    "format": "ii"
   },
   "7014": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "SpecialSE"
+    "format": "32s"
   },
   "7015": {
-    "format": "",
-    "name": "EndSE"
+    "format": ""
+  },
+  "7500": {
+    "size": 8,
+    "format": "i"
   },
   "8000": {
     "format": "3i",
@@ -1699,116 +1554,90 @@
     "name": "LandingEffects"
   },
   "8001": {
-    "format": "ii",
     "size": 12,
-    "name": "JumpEffects"
+    "format": "ii"
   },
   "8002": {
-    "format": "",
-    "name": "JumpSoundEffects"
+    "format": ""
   },
   "8003": {
-    "format": "3i",
     "size": 16,
-    "name": "KnockdownEffects"
+    "format": "iii"
   },
   "8004": {
-    "format": "3i",
     "size": 16,
-    "name": "AltKnockdownEffects"
+    "format": "iii"
   },
   "8005": {
-    "format": "3i",
     "size": 16,
-    "name": "RecoveryEffects"
+    "format": "iii"
   },
   "8006": {
-    "format": "3i",
     "size": 16,
-    "name": "DashEffects"
+    "format": "iii"
   },
   "8007": {
-    "format": "3i",
     "size": 16,
-    "name": "PreDashEffects"
+    "format": "iii"
   },
   "8008": {
-    "format": "3i",
     "size": 16,
-    "name": "WallbounceEffects"
+    "format": "iii"
   },
   "8009": {
-    "format": "i",
     "size": 8,
-    "name": "AirDashEffects"
+    "format": "i"
   },
   "8010": {
-    "format": "3i",
     "size": 16,
-    "name": "SkidEffects"
+    "format": "iii"
   },
   "8011": {
-    "format": "3i",
-    "name": "SFX_FOOTSTEP_"
+    "name": "SFX_FOOTSTEP_",
+    "format": "iii"
   },
   "9000": {
-    "format": "",
-    "name": "DefaultAttack"
+    "format": ""
   },
   "9001": {
-    "format": "i",
     "size": 8,
-    "name": "AttackType"
+    "format": "i"
   },
   "9002": {
-    "format": "i",
-    "name": "AttackLevel_"
+    "name": "AttackLevel_",
+    "format": "i"
   },
   "9003": {
-    "format": "i",
-    "name": "Damage"
+    "name": "Damage",
+    "format": "i"
   },
   "9004": {
-    "format": "",
-    "name": "ResetDamage"
+    "format": ""
   },
   "9007": {
-    "format": "i16s",
-    "size": 24,
-    "name": "SubVoice"
+    "size": 24
   },
   "9008": {
-    "format": "i16s",
-    "size": 24,
-    "name": "SmartSubVoice"
+    "size": 24
   },
   "9009": {
-    "size": 88,
-    "name": "RandomSubVoice"
+    "size": 88
   },
   "9010": {
-    "format": "i16si16si16si16si",
-    "size": 88,
-    "name": "SmartRandomSubVoice"
+    "size": 88
   },
   "9011": {
-    "size": 44,
-    "name": "OrderedVoiceline"
+    "size": 44
   },
   "9012": {
-    "format": "ii16si",
-    "size": 32,
-    "name": "RegisterSubVoice"
+    "size": 32
   },
   "9013": {
-    "format": "i16s",
-    "size": 24,
-    "name": "ObjectUpon25"
+    "size": 24
   },
   "9015": {
-    "format": "i",
     "size": 8,
-    "name": "UsePunchHitspark"
+    "format": "i"
   },
   "9016": {
     "format": "i",
@@ -1816,350 +1645,297 @@
     "name": "UseSlashHitspark"
   },
   "9017": {
-    "format": "i",
     "size": 8,
-    "name": "UseFireHitspark"
+    "format": "i"
   },
   "9018": {
-    "format": "i",
     "size": 8,
-    "name": "UseElectricHitspark"
+    "format": "i"
   },
   "9019": {
-    "format": "i",
     "size": 8,
-    "name": "UseFreezeHitspark"
+    "format": "i"
   },
   "9020": {
-    "format": "i",
     "size": 8,
-    "name": "UseStrongHitspark"
+    "format": "i"
+  },
+  "9021": {
+    "format": "i",
+    "size": 8
   },
   "9070": {
-    "format": "i",
-    "name": "AirPushbackX"
+    "name": "AirPushbackX",
+    "format": "i"
   },
   "9071": {
-    "format": "",
-    "name": "ResetPushback"
+    "format": ""
   },
   "9072": {
-    "format": "i",
     "size": 8,
-    "name": "CHAirPushbackX"
+    "format": "i"
   },
   "9073": {
-    "format": "",
-    "name": "ResetCHPushback"
+    "format": ""
   },
   "9082": {
-    "format": "i",
-    "name": "AirPushbackY"
+    "name": "AirPushbackY",
+    "format": "i"
   },
   "9083": {
-    "format": "",
-    "name": "ResetVerticalDrag"
+    "format": ""
   },
   "9084": {
-    "format": "i",
-    "name": "CHAirPushbackY"
+    "name": "CounterHitAirPushbackY",
+    "format": "i"
   },
   "9085": {
-    "format": "",
-    "name": "ResetCHVerticalDrag"
+    "format": ""
   },
   "9094": {
-    "format": "i",
-    "name": "YImpulseBeforeWallbounce",
-    "size": 8
+    "size": 8,
+    "name": "YImpluseBeforeWallbounce",
+    "format": "i"
   },
   "9095": {
-    "format": "",
-    "name": "ResetGravity"
+    "format": ""
   },
   "9096": {
-    "format": "i",
     "size": 8,
-    "name": "CHGravity"
+    "format": "i"
   },
   "9097": {
-    "format": "",
-    "name": "ResetCHGravity"
+    "format": ""
   },
   "9106": {
-    "format": "i",
+    "size": 8,
     "name": "WallbounceReboundTime",
-    "size": 8
+    "format": "i"
   },
   "9107": {
-    "format": "",
-    "name": "WallbounceReboundTimeReset"
+    "format": ""
   },
   "9108": {
-    "format": "i",
     "size": 8,
-    "name": "CHWallbounceReboundTime"
+    "format": "i"
   },
   "9109": {
-    "format": "",
-    "ame": "CHWallbounceReboundTimeReset"
+    "format": ""
   },
   "9118": {
-    "format": "i",
     "size": 8,
-    "name": "BouncePercentage"
+    "format": "i"
   },
   "9119": {
-    "format": "",
-    "name": "BouncePercentageReset"
+    "format": ""
   },
   "9120": {
-    "format": "i",
     "size": 8,
-    "name": "CHBouncePercentage"
+    "format": "i"
   },
   "9121": {
-    "format": "",
-    "name": "CHBouncePercentageReset"
+    "format": ""
   },
   "9130": {
-    "format": "i",
     "size": 8,
-    "name": "Stagger"
+    "format": "i"
   },
   "9131": {
-    "format": "",
-    "name": "StaggerReset"
+    "format": ""
   },
   "9132": {
-    "format": "i",
     "size": 8,
-    "name": "CHStagger"
+    "format": "i"
   },
   "9133": {
-    "format": "",
-    "name": "CHStaggerReset"
+    "format": ""
   },
   "9142": {
-    "format": "i",
     "size": 8,
-    "name": "Crumple"
+    "format": "i"
   },
   "9143": {
-    "format": "",
-    "name": "CrumpleReset"
+    "format": ""
   },
   "9144": {
-    "format": "i",
     "size": 8,
-    "name": "CHCrumple"
+    "format": "i"
   },
   "9145": {
-    "format": "",
-    "name": "CHCrumpleReset"
+    "format": ""
   },
   "9154": {
-    "format": "i",
+    "name": "hitstun",
     "size": 8,
-    "name": "Hitstun"
+    "format": "i"
   },
   "9155": {
-    "format": "",
-    "name": "HitstunReset"
+    "format": ""
   },
   "9156": {
-    "format": "i",
     "size": 8,
-    "name": "CHHitstun"
+    "format": "i"
   },
   "9157": {
-    "format": "",
-    "name": "CHHitstunReset"
+    "format": ""
   },
   "9166": {
-    "format": "i",
-    "name": "AirUntechableTime"
+    "name": "AirUntechableTime",
+    "format": "i"
   },
   "9167": {
-    "format": "",
-    "name": "AirUntechableTimeReset"
+    "format": ""
   },
   "9168": {
-    "format": "i",
     "size": 8,
-    "name": "CHAirUntechableTime"
+    "format": "i"
   },
   "9169": {
-    "format": "",
-    "name": "CHAirUntechableTimeReset"
+    "format": ""
   },
-  "9178": {
-    "format": "i",
-    "size": 8,
-    "name": "Wallbounce"
-  },
-  "9179": {
-    "format": "",
-    "name": "ResetWallbounce"
-  },
-  "9180": {
-    "format": "i",
-    "size": 8,
-    "name": "CHWallbounce"
-  },
-  "9181": {
-    "format": "",
-    "name": "CHResetWallbounce"
-  },
-  "9190": {
-    "format": "i",
-    "size": 8,
-    "name": "GroundBounce"
-  },
-  "9191": {
-    "format": "",
-    "name": "GroundBounceReset"
-  },
-  "9192": {
-    "format": "i",
-    "size": 8,
-    "name": "CHGroundBounce"
-  },
-  "9193": {
-    "format": "",
-    "name": "CHGroundBounceReset"
-  },
-  "9202": {
-    "format": "i",
-    "size": 8,
-    "name": "Floorslide"
-  },
-  "9203": {
-    "format": "",
-    "name": "FloorslideReset"
-  },
-  "9204": {
-    "format": "i",
-    "size": 8,
-    "name": "CHFloorslide"
-  },
-  "9205": {
-    "format": "",
-    "name": "CHFloorslideReset"
-  },
-  "9214": {
-    "format": "i",
-    "name": "PushbackX"
-  },
-  "9215": {
-    "format": "",
-    "name": "ResetPushbackX"
-  },
-  "9216": {
-    "format": "i",
-    "size": 8,
-    "name": "CHPushbackX"
-  },
-  "9217": {
-    "format": "",
-    "name": "CHResetPushbackX"
-  },
-  "9218": {
-    "format": "i",
-    "size": 8,
-    "name": "BounceOffWall"
-  },
-  "9219": {
+  "9170": {
     "format": "i",
     "size": 8
   },
-  "9238": {
-    "format": "i",
+  "9178": {
     "size": 8,
-    "name": "ComboCorrectionPoint"
+    "format": "i"
+  },
+  "9179": {
+    "format": ""
+  },
+  "9180": {
+    "size": 8,
+    "format": "i"
+  },
+  "9181": {
+    "format": ""
+  },
+  "9190": {
+    "size": 8,
+    "format": "i"
+  },
+  "9191": {
+    "format": ""
+  },
+  "9192": {
+    "size": 8,
+    "format": "i"
+  },
+  "9193": {
+    "format": ""
+  },
+  "9202": {
+    "size": 8,
+    "format": "i"
+  },
+  "9203": {
+    "format": ""
+  },
+  "9204": {
+    "size": 8,
+    "format": "i"
+  },
+  "9205": {
+    "format": ""
+  },
+  "9214": {
+    "name": "PushbackX",
+    "format": "i"
+  },
+  "9215": {
+    "format": ""
+  },
+  "9216": {
+    "size": 8,
+    "format": "i"
+  },
+  "9217": {
+    "format": ""
+  },
+  "9218": {
+    "size": 8,
+    "format": "i"
+  },
+  "9219": {
+    "size": 8,
+    "format": "i"
+  },
+  "9238": {
+    "size": 8,
+    "format": "i"
   },
   "9239": {
-    "format": "",
-    "name": "ComboCorrectionPointReset"
+    "format": ""
   },
   "9240": {
-    "format": "i",
     "size": 8,
-    "name": "CHComboCorrectionPoint"
+    "format": "i"
   },
   "9241": {
-    "format": "",
-    "name": "CHComboCorrectionPointReset"
+    "format": ""
   },
   "9250": {
-    "format": "i",
+    "name": "FreezeCount",
     "size": 8,
-    "name": "FreezeCount"
+    "format": "i"
   },
   "9251": {
-    "format": "",
-    "name": "FreezeCountReset"
+    "format": ""
   },
   "9252": {
-    "format": "i",
     "size": 8,
-    "name": "CHFreezeCount"
+    "format": "i"
   },
   "9253": {
-    "format": "",
-    "name": "CHFreezeCountReset"
+    "format": ""
   },
   "9262": {
-    "format": "i",
+    "name": "FreezeDuration",
     "size": 8,
-    "name": "FreezeTime"
+    "format": "i"
   },
   "9263": {
-    "format": "",
-    "name": "FreezeTimeReset"
+    "format": ""
   },
   "9264": {
-    "format": "i",
     "size": 8,
-    "name": "CHFreezeTime"
+    "format": "i"
   },
   "9265": {
-    "format": "",
-    "name": "CHFreezeTimeReset"
+    "format": ""
+  },
+  "9266": {
+    "format": "i",
+    "size": 8
   },
   "9274": {
-    "format": "i",
-    "name": "AttackP1"
+    "name": "AttackP1",
+    "format": "i"
   },
   "9275": {
-    "format": "",
-    "name": "ResetAttackP1"
+    "format": ""
   },
   "9276": {
-    "format": "i",
     "size": 8,
-    "name": "CHAttackP1"
+    "format": "i"
   },
   "9277": {
-    "format": "",
-    "name": "CHResetAttackP1"
+    "format": ""
   },
   "9286": {
-    "format": "i",
-    "name": "AttackP2"
+    "name": "AttackP2",
+    "format": "i"
   },
   "9287": {
-    "format": "",
-    "name": "ResetAttackP2"
+    "format": ""
   },
   "9288": {
-    "format": "i",
     "size": 8,
-    "name": "CHAttackP2"
+    "format": "i"
   },
   "9289": {
-    "format": "",
-    "name": "CHResetAttackP2"
+    "format": ""
   },
   "9310": {
     "format": "i",
@@ -2353,12 +2129,12 @@
     "name": "HitLow"
   },
   "11036": {
-    "format": "i",
-    "name": "HitOverhead"
+    "name": "HitOverhead",
+    "format": "i"
   },
   "11037": {
-    "format": "i",
-    "name": "HitAirUnblockable"
+    "name": "HitAirUnblockable",
+    "format": "i"
   },
   "11038": {
     "format": "i",
@@ -2407,111 +2183,88 @@
     "name": "GotoStateIfThrow"
   },
   "11048": {
-    "format": "i",
     "size": 8,
-    "name": "LifestealOld"
+    "format": "i"
   },
   "11049": {
-    "format": "i",
     "size": 8,
-    "name": "ChipLifestealOld"
+    "format": "i"
   },
   "11050": {
-    "auto": "autostr",
     "format": "i32s",
-    "size": 40,
-    "name": "DamageEffect"
+    "size": 40
   },
   "11051": {
-    "auto": "autostr",
-    "format": "i32s",
-    "size": 40,
-    "name": "GuardEffect"
+    "size": 40
   },
   "11052": {
-    "format": "i",
     "size": 8,
-    "name": "BarrierDepleteOnHit"
+    "format": "i"
   },
   "11053": {
-    "format": "i",
     "size": 8,
-    "name": "AddMagnetism"
+    "format": "i"
   },
   "11054": {
-    "format": "i",
     "size": 8,
-    "name": "RangeCheck"
+    "format": "i"
   },
   "11055": {
-    "format": "i",
     "size": 8,
-    "name": "ReduceHitEffects"
+    "format": "i"
   },
   "11056": {
-    "format": "i",
     "size": 8,
-    "name": "AttackDirection"
+    "format": "i"
   },
   "11057": {
-    "format": "i",
     "size": 8,
-    "name": "HitsparkSize"
+    "format": "i"
   },
   "11058": {
     "format": "5i",
-    "size": 24,
-    "name": "MoveAttributes"
+    "name": "AttackAttributes",
+    "size": 24
   },
   "11059": {
-    "format": "i",
     "size": 8,
-    "name": "MoveAttributeLevel"
+    "format": "i"
   },
   "11060": {
-    "format": "i",
     "size": 8,
-    "name": "GuardCrushOld"
+    "format": "i"
   },
   "11061": {
-    "format": "i",
     "size": 8,
-    "name": "CrouchWhiff"
+    "format": "i"
   },
   "11062": {
-    "format": "i",
     "size": 8,
-    "name": "OppMovementUnlock"
+    "format": "i"
   },
   "11063": {
-    "format": "i",
     "size": 8,
-    "name": "PreventBlocking"
+    "format": "i"
   },
   "11064": {
-    "format": "i",
     "size": 8,
-    "name": "DefeatOpponentBehavior"
+    "format": "i"
   },
   "11065": {
-    "format": "i",
     "size": 8,
-    "name": "EnableEmergencyTechAirHit"
+    "format": "i"
   },
   "11066": {
-    "format": "i",
     "size": 8,
-    "name": "OnlyHitPlayer"
+    "format": "i"
   },
   "11067": {
-    "format": "i",
     "size": 8,
-    "name": "DisableOppPushCollision"
+    "format": "i"
   },
   "11068": {
-    "format": "i",
     "size": 8,
-    "name": "IgnoreComboTime"
+    "format": "i"
   },
   "11069": {
     "auto": "autostr",
@@ -2520,112 +2273,94 @@
     "name": "DamageFromStateOnly"
   },
   "11070": {
-    "format": "i",
     "size": 8,
-    "name": "DisableNonLethalCombo"
+    "format": "i"
   },
   "11071": {
-    "format": "i",
     "size": 8,
-    "name": "FinishBG"
+    "format": "i"
   },
   "11072": {
-    "format": "3i",
     "size": 16,
-    "name": "OppPositionOnHit"
+    "format": "iii"
   },
   "11073": {
-    "format": "i",
     "size": 8,
-    "name": "KeepBounceGravity"
+    "format": "i"
   },
   "11074": {
-    "size": 32,
-    "name": "ExtraHitParameters"
+    "size": 32
   },
   "11075": {
-    "format": "ii",
     "size": 12,
-    "name": "Poison"
+    "format": "ii"
   },
   "11076": {
-    "format": "i",
     "size": 8,
-    "name": "ThrowRejectType"
+    "format": "i"
   },
   "11077": {
-    "format": "i",
     "size": 8,
-    "name": "IgnoreComboCorrection"
+    "format": "i"
   },
   "11078": {
-    "format": "i",
     "size": 8,
-    "name": "SingleComboCorrection"
+    "format": "i"
   },
   "11079": {
-    "format": "i",
     "size": 8,
-    "name": "IgnoreExternalForce"
+    "format": "i"
   },
   "11080": {
-    "format": "i",
     "size": 8,
-    "name": "ShutUp"
+    "format": "i"
   },
   "11081": {
-    "format": "i",
     "size": 8,
-    "name": "DollAttackAttributes"
+    "format": "i"
   },
   "11082": {
-    "format": "i",
     "size": 8,
-    "name": "LockOpponentState"
+    "format": "i"
   },
   "11083": {
-    "format": "i",
     "size": 8,
-    "name": "NoAttackOffset"
+    "format": "i"
   },
   "11084": {
-    "format": "i",
     "size": 8,
-    "name": "PassByArmor"
+    "format": "i"
   },
   "11085": {
-    "format": "i",
     "size": 8,
-    "name": "NextHitAstralOnly"
+    "format": "i"
   },
   "11086": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "11087": {
-    "format": "ii",
     "size": 12,
-    "name": "GuardCrush"
+    "format": "ii"
   },
   "11088": {
-    "format": "i",
+    "size": 8,
     "name": "FatalCounter",
-    "size": 8
+    "format": "i"
   },
   "11089": {
-    "format": "i",
     "size": 8,
-    "name": "SameMoveProration"
+    "format": "i"
   },
   "11090": {
-    "format": "i",
+    "name": "BonusProration",
     "size": 8,
-    "name": "BonusProration"
+    "format": "i"
   },
   "11091": {
-    "format": "i",
+    "name": "MinimumDamage",
     "size": 8,
-    "name": "MinimumDamage"
+    "format": "i"
   },
   "11092": {
     "format": "i",
@@ -2633,161 +2368,148 @@
     "name": "SingleProration"
   },
   "11093": {
-    "format": "i",
     "size": 8,
-    "name": "StickToWall"
+    "format": "i"
   },
   "11094": {
-    "format": "i",
     "size": 8,
-    "name": "Restand"
+    "format": "i"
   },
   "11095": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "11096": {
-    "format": "ii",
     "size": 12,
-    "name": "Curse"
+    "format": "ii"
   },
   "11097": {
-    "format": "ii",
     "size": 12,
-    "name": "Lifesteal"
+    "format": "ii"
   },
   "11098": {
-    "format": "ii",
-    "size": 12
+    "size": 12,
+    "format": "ii"
   },
   "11099": {
-    "format": "i",
     "size": 8,
-    "name": "FlipOnHit"
+    "format": "i"
   },
   "11100": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "11101": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "11102": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "11103": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "OppState"
+    "format": "32s"
   },
   "11104": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "11105": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "11106": {
-    "format": "i",
     "size": 8,
-    "name": "OppHeatGainMultiplier"
+    "format": "i"
   },
   "11107": {
-    "format": "i",
     "size": 8,
-    "name": "OnlyHitIfHitstun"
+    "format": "i"
   },
   "11108": {
     "format": "i",
-    "size": 8,
-    "name": "CHStateIfCHStart"
+    "size": 8
   },
   "11109": {
-    "format": "i",
     "size": 8
+  },
+  "11110": {
+    "size": 8,
+    "format": "i"
   },
   "12000": {
-    "format": "i",
-    "name": "WalkFSpeed"
+    "name": "WalkFSpeed",
+    "format": "i"
   },
   "12001": {
-    "format": "i",
-    "name": "WalkBSpeed"
+    "name": "WalkBSpeed",
+    "format": "i"
   },
   "12002": {
-    "format": "i",
-    "name": "DashFInitialVelocity"
+    "name": "DashFInitialVelocity",
+    "format": "i"
   },
   "12003": {
-    "format": "i",
-    "name": "DashFAccel"
+    "name": "DashFAccel",
+    "format": "i"
   },
   "12004": {
-    "format": "i",
-    "name": "DashFMaxVelocity"
+    "name": "DashFMaxVelocity",
+    "format": "i"
   },
   "12005": {
-    "format": "i",
-    "name": "JumpYVelocity"
+    "name": "JumpYVelocity",
+    "format": "i"
   },
   "12006": {
-    "format": "i",
-    "name": "SuperJumpYVelocity"
+    "name": "SuperJumpYVelocity",
+    "format": "i"
   },
   "12007": {
-    "format": "i",
     "size": 8,
-    "name": "ForwardJumpVelocity"
+    "format": "i"
   },
   "12008": {
-    "format": "i",
     "size": 8,
-    "name": "ForwardSuperJumpVelocity"
+    "format": "i"
   },
   "12009": {
-    "format": "i",
     "size": 8,
-    "name": "BackwardJumpVelocity"
+    "format": "i"
   },
   "12010": {
-    "format": "i",
     "size": 8,
-    "name": "BackwardSuperJumpVelocity"
+    "format": "i"
   },
   "12011": {
-    "format": "i",
-    "name": "Gravity",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "12012": {
-    "format": "i",
-    "name": "DoubleJumpCount"
+    "name": "DoubleJumpCount",
+    "format": "i"
   },
   "12013": {
-    "format": "i",
-    "name": "AirDashCount"
+    "name": "AirDashCount",
+    "format": "i"
   },
   "12014": {
-    "format": "i",
     "size": 8,
-    "name": "GroundDashCount"
+    "format": "i"
   },
   "12015": {
-    "format": "i",
-    "name": "Health"
+    "name": "Health",
+    "format": "i"
   },
   "12016": {
-    "format": "ii",
     "size": 12,
-    "name": "Guts"
+    "format": "ii"
   },
   "12017": {
-    "format": "i",
-    "name": "ComboRate"
+    "name": "ComboRate",
+    "format": "i"
   },
   "12018": {
     "format": "i32s",
@@ -2795,27 +2517,22 @@
   },
   "12019": {
     "format": "16s",
-    "size": 20,
-    "name": "CharacterID"
+    "size": 20
   },
   "12020": {
-    "format": "",
-    "name": "SyncEntry"
+    "format": ""
   },
   "12021": {
-    "format": "i",
     "size": 8,
-    "name": "PushWidth"
+    "format": "i"
   },
   "12022": {
-    "format": "i",
     "size": 8,
-    "name": "PushHeight"
+    "format": "i"
   },
   "12023": {
-    "format": "i",
     "size": 8,
-    "name": "CharacterDamageMultiplier"
+    "format": "i"
   },
   "12024": {
     "format": "i",
@@ -2823,55 +2540,45 @@
     "name": "FootstepType"
   },
   "12025": {
-    "format": "i",
     "size": 8,
-    "name": "DashBVelocity"
+    "format": "i"
   },
   "12026": {
-    "format": "i",
     "size": 8,
-    "name": "DashBHeight"
+    "format": "i"
   },
   "12027": {
-    "format": "i",
     "size": 8,
-    "name": "DashBGravity"
+    "format": "i"
   },
   "12028": {
-    "format": "i",
     "size": 8,
-    "name": "JumpStartup"
+    "format": "i"
   },
   "12029": {
-    "format": "i",
     "size": 8,
-    "name": "DefaultZLine"
+    "format": "i"
   },
   "12030": {
-    "format": "i",
-    "name": "HeatGainFactor"
+    "format": "i"
   },
   "12031": {
-    "format": "i",
-    "name": "NegativePenaltyResistance"
+    "name": "JumpStartup",
+    "format": "i"
   },
   "12032": {
-    "format": "6i",
-    "size": 28,
-    "name": "OldGuardCrushLevelTable"
+    "size": 28
   },
   "12033": {
-    "format": "i",
     "size": 8,
-    "name": "GuardCrushLibraRate"
+    "format": "i"
   },
   "12034": {
-    "format": "i",
-    "name": "AirFDashDuration"
+    "format": "i"
   },
   "12035": {
-    "format": "i",
-    "name": "AirBDashDuration"
+    "name": "AirBDashDuration",
+    "format": "i"
   },
   "12036": {
     "format": "i",
@@ -2888,82 +2595,87 @@
     "name": "AirDashFSpeed"
   },
   "12039": {
-    "format": "i",
-    "name": "AirDashBSpeed"
+    "name": "AirDashBSpeed",
+    "format": "i"
   },
   "12040": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "12041": {
-    "format": "6i",
-    "size": 28,
-    "name": "DefaultAttackP2Table"
+    "size": 28
   },
   "12042": {
-    "format": "i",
     "size": 8,
-    "name": "LandPreJumpActionNormalAttackAvailable"
+    "format": "i"
   },
   "12043": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "12044": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "12045": {
-    "format": "16i",
     "size": 68,
-    "name": "SoulEaterMultiplier"
+    "format": "16i"
   },
   "12046": {
-    "format": "i",
     "size": 8,
-    "name": "ExtendCollisionX"
+    "format": "i"
   },
   "12047": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "12048": {
     "format": "i",
     "size": 8,
     "name": "EnableFallingAnimation"
   },
-  "12049": {
-    "format": "i",
-    "size": 8
-  },
   "12050": {
-    "format": "i",
     "size": 8,
-    "name": "EnableDashBuffer"
+    "format": "i"
   },
   "12051": {
-    "format": "i",
+    "name": "StarterRating",
     "size": 8,
-    "name": "StarterRating"
+    "format": "i"
   },
   "12052": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "12053": {
-    "format": "10i",
-    "name": "OverdriveDuration"
+    "name": "OverdriveDuration",
+    "format": "10i"
   },
   "12054": {
     "format": "ii"
   },
   "12055": {
+    "size": 8,
+    "format": "i"
+  },
+  "12056": {
+    "format": ""
+  },
+  "12057": {
     "format": "i",
     "size": 8
   },
-  "12056": {
-    "format": "",
-    "name": "TakemikazuchiIntroFlag"
+  "12058": {
+    "format": "i",
+    "size": 8
+  },
+  "12059": {
+    "format": "i32s",
+    "size": 40
+  },
+  "12060": {
+    "size": 8,
+    "format": "i"
   },
   "13000": {
     "format": "i",
@@ -3081,69 +2793,56 @@
     "name": "EnableRapidCancel"
   },
   "13026": {
-    "format": "i",
     "size": 8,
-    "name": "WhiffBarrierCancel2"
+    "format": "i"
   },
   "13027": {
-    "format": "i",
     "size": 8,
-    "name": "AutomaticThrowReject"
+    "format": "i"
   },
   "13028": {
-    "format": "i",
     "size": 8,
-    "name": "EnableDemo"
+    "format": "i"
   },
   "13029": {
-    "format": "i",
     "size": 8,
-    "name": "EnablePreGuard"
+    "format": "i"
   },
   "13030": {
-    "format": "i",
     "size": 8,
-    "name": "EnableAutoBlock"
+    "format": "i"
   },
   "13031": {
-    "format": "i",
     "size": 8,
-    "name": "WhiffOverdriveCancel"
+    "format": "i"
   },
   "13032": {
-    "format": "i",
     "size": 8,
-    "name": "Enable2GetUp"
+    "format": "i"
   },
   "13033": {
-    "format": "i",
     "size": 8,
-    "name": "Enable2UkemiLand"
+    "format": "i"
   },
   "13034": {
-    "format": "i",
     "size": 8,
-    "name": "Enable2UkemiAir"
+    "format": "i"
   },
   "13035": {
-    "format": "i",
     "size": 8,
-    "name": "Enable2UkemiStagger"
+    "format": "i"
   },
   "13036": {
-    "format": "i",
     "size": 8,
-    "name": "Enable2UkemiLeap"
+    "format": "i"
   },
   "13037": {
-    "format": "i",
     "size": 8,
-    "name": "Enable2UkemiLeapEx"
+    "format": "i"
   },
   "13038": {
-    "format": "i",
     "size": 8,
-    "name": "EnableAll"
+    "format": "i"
   },
   "13039": {
     "format": "i",
@@ -3151,56 +2850,51 @@
     "name": "FootstepSE"
   },
   "13040": {
-    "format": "32s8I",
-    "size": 68,
-    "name": "ArakuneSpriteOverlay"
+    "size": 68
   },
   "13041": {
-    "format": "ii",
     "size": 12,
-    "name": "ArakuneInvisibilityEffect"
+    "format": "ii"
   },
   "13042": {
-    "format": "",
-    "name": "EndArakuneInvisibilityEffect"
+    "format": ""
   },
   "13043": {
-    "format": "i",
     "size": 8,
-    "name": "ShadowOffsetY"
+    "format": "i"
   },
   "13044": {
-    "format": "i",
     "size": 8,
-    "name": "ForceBloomMaskOn"
+    "format": "i"
+  },
+  "13045": {
+    "format": "i",
+    "size": 8
   },
   "13054": {
-    "format": "i",
     "size": 8,
-    "name": "BeginCancelLevel"
+    "format": "i"
   },
   "14000": {
-    "format": "",
-    "name": "SkillInit"
+    "format": ""
   },
   "14001": {
-    "format": "32si",
     "hex": true,
-    "name": "Move_Register"
+    "name": "Move_Register",
+    "format": "32si"
   },
   "14002": {
-    "format": "",
-    "name": "Move_EndRegister"
+    "name": "Move_EndRegister",
+    "format": ""
   },
   "14003": {
-    "format": "i",
     "hex": true,
-    "name": "Move_Condition"
+    "name": "Move_AirGround_",
+    "format": "i"
   },
   "14004": {
-    "format": "i",
     "size": 8,
-    "name": "NeutralOnly"
+    "format": "i"
   },
   "14005": {
     "format": "i",
@@ -3208,38 +2902,33 @@
     "name": "FollowupOnly"
   },
   "14006": {
-    "format": "i",
     "size": 8,
-    "name": "GuardCancelOnly"
+    "format": "i"
   },
   "14007": {
-    "format": "i",
     "size": 8,
-    "name": "FromBeginCancelLevel"
+    "format": "i"
   },
   "14008": {
-    "format": "i",
     "size": 8,
-    "name": "RemoveHitstop"
+    "format": "i"
   },
   "14009": {
-    "format": "i",
     "size": 8,
-    "name": "SkillType"
+    "format": "i"
   },
   "14010": {
-    "format": "i",
     "size": 8,
-    "name": "SkillCommonInitialize"
+    "format": "i"
   },
   "14011": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "14012": {
-    "format": "i",
     "hex": true,
-    "name": "Move_Input_"
+    "name": "Move_Input_",
+    "format": "i"
   },
   "14013": {
     "auto": "autostr",
@@ -3248,84 +2937,72 @@
     "name": "StateCall"
   },
   "14014": {
-    "format": "i",
     "size": 8,
-    "name": "StateCallFlag"
+    "format": "i"
   },
   "14015": {
     "format": "6i",
     "name": "SkillEstimateRange"
   },
   "14017": {
-    "size": 20,
-    "name": "SkillEstimateDistanceRate"
+    "size": 20
   },
   "14018": {
-    "format": "3i",
     "size": 16,
-    "name": "IndependentInput"
+    "format": "iii"
   },
   "14019": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "CallFunction"
+    "format": "32s"
   },
   "14020": {
-    "format": "i",
     "size": 8,
-    "name": "DisallowSameSkill"
+    "format": "i"
   },
   "14021": {
-    "format": "i",
     "size": 8,
-    "name": "ForceSkillDirection"
+    "format": "i"
   },
   "14022": {
-    "format": "i",
-    "name": "MoveMaxChainRepeat"
+    "name": "MoveMaxChainRepeat",
+    "format": "i"
   },
   "14023": {
-    "format": "i",
     "size": 8,
-    "name": "Move_HPThreshold"
+    "format": "i"
   },
   "14024": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "CallSkillConditions"
+    "format": "32s"
   },
   "14025": {
-    "format": "i",
     "size": 8,
-    "name": "InputDirectionBaseObject"
+    "format": "i"
   },
   "14026": {
-    "format": "i",
     "size": 8,
-    "name": "OldSpecialInput"
+    "format": "i"
   },
   "14027": {
     "format": "32s",
     "name": "SharedGatling"
   },
   "14029": {
-    "format": "i",
     "size": 8,
-    "name": "AddChain"
+    "format": "i"
   },
   "14030": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "14033": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "14035": {
-    "size": 40,
-    "name": "CSStylishRouting"
+    "size": 40
   },
   "14043": {
     "format": ""
@@ -3334,189 +3011,166 @@
     "size": 44
   },
   "14045": {
-    "format": "ii",
-    "size": 12
+    "size": 12,
+    "format": "ii"
   },
   "14046": {
-    "format": "i",
     "size": 8,
-    "name": "CSStylishSomething"
+    "format": "i"
   },
   "14047": {
     "format": ""
   },
   "14048": {
-    "format": "32sii",
     "hex": true,
-    "name": "StylishModeSpecialButton"
+    "format": "32sii"
   },
   "14049": {
-    "format": "32s32sii",
-    "name": "StylishModeCancels"
+    "format": "32s32sii"
   },
   "14067": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "14068": {
-    "format": "32s",
-    "name": "WhiffCancel"
+    "name": "WhiffCancel",
+    "format": "32s"
   },
   "14069": {
-    "format": "32s",
-    "name": "HitOrBlockCancel"
+    "name": "HitOrBlockCancel",
+    "format": "32s"
   },
   "14070": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "BeginBuffer"
+    "format": "32s"
   },
   "14071": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "DisallowGoto3"
+    "format": "32s"
   },
   "14072": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "BufferedOrPressedGoto"
+    "format": "32s"
   },
   "14073": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "DisallowGoto2"
+    "format": "32s"
   },
   "14074": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "DisallowGoto"
+    "format": "32s"
   },
   "14075": {
-    "format": "i",
     "size": 8,
-    "name": "RapidCancelTime"
+    "format": "i"
   },
   "14076": {
-    "format": "i",
+    "size": 8,
     "name": "WhiffCancelEnable",
-    "size": 8
+    "format": "i"
   },
   "14077": {
-    "format": "i",
     "size": 8,
-    "name": "ChainCancel"
+    "format": "i"
   },
   "14078": {
-    "format": "i",
+    "size": 8,
     "name": "HitOrBlockJumpCancel",
-    "size": 8
+    "format": "i"
   },
   "14079": {
-    "format": "i",
-    "name": "SpecialCancel",
-    "size": 8
+    "size": 8,
+    "name": "JumpCancel_",
+    "format": "i"
   },
   "14080": {
     "auto": "autostr",
-    "format": "32s",
+    "size": 36,
     "name": "HitCancel",
-    "size": 36
+    "format": "32s"
   },
   "14081": {
-    "format": "i",
+    "size": 8,
     "name": "HitJumpCancel",
-    "size": 8
+    "format": "i"
   },
   "14082": {
-    "format": "i",
     "size": 8,
-    "name": "SpecialCancelOnHit"
+    "format": "i"
   },
   "14083": {
-    "auto": "autostr",
-    "format": "32s",
-    "size": 36,
-    "name": "PreventWhiffCancel"
+    "format": "i",
+    "size": 8
   },
   "14084": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "AttackOffOrBlockCancel"
+    "format": "32s"
   },
   "14085": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "AttackOffCancel"
+    "format": "32s"
   },
   "14086": {
-    "format": "i",
-    "size": 8
+    "format": "32s",
+    "size": 36
   },
   "14087": {
+    "size": 8,
+    "format": "i"
+  },
+  "14088": {
     "format": "i",
     "size": 8
   },
-  "14089": {
-    "format": "",
-    "name": "ResetEasyInputA"
-  },
   "14090": {
-    "format": "",
-    "name": "ResetEasyInputB"
+    "format": ""
   },
   "14091": {
-    "format": "",
-    "name": "ResetEasyInputC"
+    "format": ""
   },
   "14092": {
-    "format": "",
-    "name": "ResetEasyInputD"
+    "format": ""
   },
   "14093": {
-    "format": "",
-    "name": "ResetEasyInputE"
+    "format": ""
+  },
+  "14094": {
+    "size": 4
   },
   "15000": {
-    "format": "i",
     "size": 8,
-    "name": "CPUUsable"
+    "format": "i"
   },
   "15001": {
-    "format": "3i",
     "size": 16,
-    "name": "CPUInput"
+    "format": "iii"
   },
   "15003": {
-    "format": "i",
     "size": 8,
-    "name": "PlayerUsable"
+    "format": "i"
   },
   "15004": {
-    "format": "i",
     "size": 8,
-    "name": "SkillRecipe"
+    "format": "i"
   },
   "15005": {
-    "format": "i",
     "size": 8,
-    "name": "MovePriority"
+    "format": "i"
   },
   "15006": {
-    "format": "i",
     "size": 8,
-    "name": "MoveComboPriority"
+    "format": "i"
   },
   "15007": {
-    "format": "i",
     "size": 8,
-    "name": "MoveAttackFrame"
+    "format": "i"
   },
   "15008": {
     "format": "",
@@ -3531,9 +3185,8 @@
     "name": "MoveThrow"
   },
   "15011": {
-    "format": "i",
     "size": 8,
-    "name": "JumpAvoidPriority"
+    "format": "i"
   },
   "15012": {
     "format": "i",
@@ -3546,77 +3199,63 @@
     "name": "DamageStunPriority"
   },
   "15014": {
-    "format": "i",
     "size": 8,
-    "name": "OpponentAttackPriority"
+    "format": "i"
   },
   "15015": {
-    "format": "ii",
     "size": 12,
-    "name": "MoveCancellableFrames"
+    "format": "ii"
   },
   "15016": {
-    "format": "3i",
     "size": 16,
-    "name": "MoveButtonHoldTime"
+    "format": "iii"
   },
   "15017": {
-    "format": "ii",
     "size": 12,
-    "name": "MoveEstimatedInterval"
+    "format": "ii"
   },
   "15018": {
-    "format": "i",
     "size": 8,
-    "name": "CPUJumpPriority"
+    "format": "i"
   },
   "15019": {
-    "format": "i",
     "size": 8,
-    "name": "CPURetreatPriority"
+    "format": "i"
   },
   "15020": {
-    "format": "4i",
     "size": 20,
-    "name": "MoveCPULevel"
+    "format": "4i"
   },
   "15021": {
     "format": "i",
     "name": "AirborneOpponentPriority"
   },
   "15022": {
-    "format": "4i",
-    "size": 20,
-    "name": "MoveHeatValuePriority"
+    "size": 20
   },
   "15023": {
-    "format": "i",
     "size": 8,
-    "name": "MoveTarget"
+    "format": "i"
   },
   "15024": {
     "format": "32s32si",
     "name": "TempPriorityMultiplier"
   },
   "15025": {
-    "format": "5i",
-    "size": 24,
-    "name": "TempPriorityMultiplierInterval"
+    "size": 24
   },
   "15026": {
-    "format": "3i",
-    "size": 16
+    "size": 16,
+    "format": "iii"
   },
   "15027": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "16000": {
-    "format": "32sii",
     "size": 44
   },
   "16001": {
-    "format": "32sii",
     "size": 44
   },
   "17000": {
@@ -3698,53 +3337,54 @@
     "name": "AttackDefaults_AirAstral"
   },
   "17019": {
-    "format": "",
-    "name": "ScriptEndGroundBounce_"
+    "name": "ScriptEndGroundBOunce_",
+    "format": ""
   },
   "17020": {
-    "format": "",
-    "name": "ScriptSameAttackComboNoSpecialCancel"
+    "name": "ScriptSameAttackComboNoSpecialCancel",
+    "format": ""
   },
   "17021": {
-    "format": "",
-    "name": "AttackDefaults_Stage1ExceedAccel"
+    "size": 4
   },
   "17022": {
+    "size": 4
+  },
+  "17023": {
+    "size": 4
+  },
+  "17024": {
     "format": "",
-    "name": "AttackDefaults_Stage2ExceedAccel"
+    "size": 4
+  },
+  "17025": {
+    "format": "",
+    "size": 4
   },
   "18001": {
-    "format": "",
-    "name": "ClearCommonActionControl"
+    "format": ""
   },
   "18003": {
-    "format": "64h",
-    "size": 132,
-    "name": "Mouth"
+    "size": 132
   },
   "18004": {
-    "format": "ii",
     "size": 12,
-    "name": "SetPrivateValue"
+    "format": "ii"
   },
   "18005": {
-    "format": "ii",
     "size": 12,
-    "name": "AddPrivateValue"
+    "format": "ii"
   },
   "18006": {
-    "format": "ii",
     "size": 12,
-    "name": "PerPrivateValue"
+    "format": "ii"
   },
   "18007": {
-    "format": "3i",
     "size": 16,
-    "name": "RandAddPrivateValue"
+    "format": "iii"
   },
   "18008": {
-    "format": "",
-    "name": "EndDemo"
+    "format": ""
   },
   "18009": {
     "format": "i",
@@ -3752,209 +3392,167 @@
     "name": "CrouchState"
   },
   "18010": {
-    "format": "",
-    "name": "WinAction"
+    "format": ""
   },
   "18011": {
-    "format": "16s64h",
-    "size": 148
+    "size": 148,
+    "format": "16s64h"
   },
   "19000": {
-    "format": "i",
     "size": 8,
-    "name": "SetPositionZ"
+    "format": "i"
   },
   "19001": {
-    "format": "i",
     "size": 8,
-    "name": "AddPositionZ"
+    "format": "i"
   },
   "19002": {
-    "format": "",
-    "name": "PushPositionZ"
+    "format": ""
   },
   "19003": {
-    "format": "",
-    "name": "PopPositionZ"
+    "format": ""
   },
   "19004": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddPositionZ"
+    "format": "ii"
   },
   "19005": {
-    "format": "i",
     "size": 8,
-    "name": "SetSpeedZ"
+    "format": "i"
   },
   "19006": {
-    "format": "i",
     "size": 8,
-    "name": "AddSpeedZ"
+    "format": "i"
   },
   "19007": {
-    "format": "",
-    "name": "PushSpeedZ"
+    "format": ""
   },
   "19008": {
-    "format": "",
-    "name": "PopSpeedZ"
+    "format": ""
   },
   "19009": {
-    "format": "i",
     "size": 8,
-    "name": "PerSpeedZ"
+    "format": "i"
   },
   "19010": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddSpeedZ"
+    "format": "ii"
   },
   "19011": {
-    "format": "i",
     "size": 8,
-    "name": "SetAccelerationZ"
+    "format": "i"
   },
   "19012": {
-    "format": "i",
     "size": 8,
-    "name": "AddAccelerationZ"
+    "format": "i"
   },
   "19013": {
-    "format": "",
-    "name": "PushAccelerationZ"
+    "format": ""
   },
   "19014": {
-    "format": "",
-    "name": "PopAccelerationZ"
+    "format": ""
   },
   "19015": {
-    "format": "i",
     "size": 8,
-    "name": "PerAccelerationZ"
+    "format": "i"
   },
   "19016": {
-    "format": "ii",
     "size": 12,
-    "name": "RandAddAccelerationZ"
+    "format": "ii"
   },
   "20000": {
-    "format": "i",
-    "name": "CameraControlEnable",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "20001": {
-    "format": "i",
     "size": 8,
-    "name": "CameraFast"
+    "format": "i"
   },
   "20002": {
-    "format": "i",
     "size": 8,
-    "name": "CameraNoCeiling"
+    "format": "i"
   },
   "20003": {
-    "format": "i",
     "size": 8,
-    "name": "CameraNoScreenCollision"
+    "format": "i"
   },
   "20004": {
-    "format": "i",
     "size": 8,
-    "name": "CameraControlInfinity"
+    "format": "i"
   },
   "20005": {
-    "format": "ii",
     "size": 12,
-    "name": "CameraForAstralHeat"
+    "format": "ii"
   },
   "20006": {
-    "format": "i",
     "size": 8,
-    "name": "CameraWinnerControlStop"
+    "format": "i"
   },
   "20007": {
-    "format": "i",
     "size": 8,
-    "name": "CameraLookAtEnemy"
+    "format": "i"
   },
   "20008": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "20009": {
-    "format": "i",
     "size": 8,
-    "name": "CameraPosition"
+    "format": "i"
   },
   "20010": {
-    "format": "3i",
-    "size": 16
+    "size": 16,
+    "format": "iii"
   },
   "20011": {
-    "format": "ii",
-    "size": 12,
-    "name": "CameraFollowTarget"
+    "size": 12
   },
   "21000": {
-    "format": "i",
     "size": 8,
-    "name": "AddToCurrentHP"
+    "format": "i"
   },
   "21001": {
-    "format": "i",
     "size": 8,
-    "name": "HPManipulationNoKill"
+    "format": "i"
   },
   "21002": {
-    "format": "i",
     "size": 8,
-    "name": "Eff3DEffectResetTime"
+    "format": "i"
   },
   "21003": {
-    "format": "ii",
     "size": 12,
-    "name": "MagnetismLevel"
+    "format": "ii"
   },
   "21004": {
-    "format": "i",
     "size": 8,
-    "name": "ColorFromPaletteIndex"
+    "format": "i"
   },
   "21005": {
-    "format": "i",
     "size": 8,
-    "name": "IgnoreTurn"
+    "format": "i"
   },
   "21006": {
-    "format": "ii",
     "size": 12,
-    "name": "Move2CenterOffset"
+    "format": "ii"
   },
   "21007": {
-    "format": "ii",
     "size": 12,
-    "name": "ObjectUpon"
+    "format": "ii"
   },
   "21008": {
-    "format": "i",
     "size": 8,
-    "name": "ColorParent"
+    "format": "i"
   },
   "21009": {
-    "size": 28,
-    "format": "6i",
-    "name": "PaletteMapping"
+    "size": 28
   },
   "21010": {
-    "format": "i",
     "size": 8,
-    "name": "IgnoreFinishStop"
+    "format": "i"
   },
   "21011": {
-    "format": "i",
     "size": 8,
-    "name": "DemoTimer"
+    "format": "i"
   },
   "21012": {
     "auto": "autostr",
@@ -3968,26 +3566,26 @@
     "name": "DisableEffect"
   },
   "21014": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
+  },
+  "21015": {
+    "format": "32sii",
+    "size": 44
   },
   "22000": {
-    "format": "",
-    "name": "ResetAirJumpCount"
+    "format": ""
   },
   "22001": {
-    "format": "i",
     "size": 8,
-    "name": "AddAirJumpCount"
+    "format": "i"
   },
   "22002": {
-    "format": "",
-    "name": "ResetAirDashCount"
+    "format": ""
   },
   "22003": {
-    "format": "i",
     "size": 8,
-    "name": "AddAirDashCount"
+    "format": "i"
   },
   "22004": {
     "format": "ii",
@@ -3996,29 +3594,26 @@
   },
   "22005": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "DebugPrint"
+    "format": "32s"
   },
   "22006": {
-    "format": "i",
     "size": 8,
-    "name": "CollidableInvincibility"
+    "format": "i"
   },
   "22007": {
-    "format": "i",
+    "size": 8,
     "name": "setInvincible",
-    "size": 8
+    "format": "i"
   },
   "22008": {
-    "format": "i",
+    "name": "setInvincibleFor",
     "size": 8,
-    "name": "InvincibilityDuration"
+    "format": "i"
   },
   "22009": {
-    "format": "i",
     "size": 8,
-    "name": "InvincibleState"
+    "format": "i"
   },
   "22019": {
     "format": "5i",
@@ -4026,233 +3621,201 @@
     "name": "SpecificInvincibility"
   },
   "22020": {
-    "format": "i",
+    "size": 8,
     "name": "GuardPoint_",
-    "size": 8
+    "format": "i"
   },
   "22021": {
-    "format": "i",
     "size": 8,
-    "name": "InvincibilityLevel"
+    "format": "i"
   },
   "22022": {
-    "format": "i",
     "size": 8,
-    "name": "StrikeProjectilesBypass"
+    "format": "i"
   },
   "22023": {
-    "format": "i",
     "size": 8,
-    "name": "ProjectileInvincibility"
+    "format": "i"
   },
   "22024": {
-    "format": "i",
     "size": 8,
-    "name": "ArmorHealth"
+    "format": "i"
   },
   "22025": {
-    "format": "3i",
     "size": 16,
-    "name": "SpecificGuardPoint"
+    "format": "iii"
   },
   "22026": {
-    "format": "i",
     "size": 8,
-    "name": "BurstInvincibility"
+    "format": "i"
   },
   "22027": {
-    "format": "i",
     "size": 8,
-    "name": "BlockMid"
+    "format": "i"
   },
   "22028": {
-    "format": "i",
-    "name": "BlockOverhead",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "22029": {
-    "format": "i",
-    "name": "BlockLow",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "22030": {
-    "format": "i",
     "size": 8,
-    "name": "GuardpointBlockUnblockable"
+    "format": "i"
   },
   "22031": {
-    "format": "ii",
     "size": 12,
-    "name": "GuardpointHitstop"
+    "format": "ii"
   },
   "22032": {
-    "format": "i",
     "size": 8,
-    "name": "PretendNoGuardPointIfFail"
+    "format": "i"
   },
   "22033": {
-    "format": "i",
     "size": 8,
-    "name": "ThrowInvincible"
+    "format": "i"
   },
   "22034": {
-    "format": "i",
     "size": 8,
-    "name": "AirAttackInvincibility"
+    "format": "i"
   },
   "22035": {
-    "format": "i",
     "size": 8,
-    "name": "ArmorChipDamage"
+    "format": "i"
   },
   "22036": {
-    "format": "i",
     "size": 8,
-    "name": "DollInvincibility"
+    "format": "i"
   },
   "22037": {
-    "format": "i",
     "size": 8,
-    "name": "PreventProjectile"
+    "format": "i"
+  },
+  "22038": {
+    "format": "i",
+    "size": 8
+  },
+  "22039": {
+    "size": 8,
+    "format": "i"
+  },
+  "22500": {
+    "size": 8,
+    "format": "i"
   },
   "23000": {
-    "format": "3i",
     "size": 16,
-    "name": "Wind"
+    "format": "iii"
   },
   "23001": {
     "format": "ii",
     "name": "ExternalForcesRate"
   },
   "23002": {
-    "format": "",
-    "name": "JumpInputLimit"
+    "format": ""
   },
   "23003": {
-    "format": "8i",
     "size": 36,
-    "name": "ResourceGauge"
+    "format": "8i"
   },
   "23004": {
-    "format": "ii",
     "size": 12,
-    "name": "HideResourceGauge"
+    "format": "ii"
   },
   "23005": {
-    "format": "ii",
     "size": 12,
-    "name": "NumberGauge"
+    "format": "ii"
   },
   "23006": {
-    "format": "ii",
     "size": 12,
-    "name": "ResourceBarIcon"
+    "format": "ii"
   },
   "23007": {
-    "format": "iI",
     "size": 12,
-    "name": "ResourceBarColor"
+    "format": "ii"
   },
   "23008": {
-    "format": "ii",
     "size": 12,
-    "name": "ResourceBarVisibility2"
+    "format": "ii"
   },
   "23009": {
-    "format": "ii",
     "size": 12,
-    "name": "ResourceBarVisibility"
+    "format": "ii"
   },
   "23010": {
-    "format": "ii",
     "size": 12,
-    "name": "ResourceBarFlashIfFull"
+    "format": "ii"
   },
   "23011": {
-    "format": "i",
     "size": 8,
-    "name": "AddCombo"
+    "format": "i"
   },
   "23012": {
-    "format": "3i",
     "size": 16,
-    "name": "SelfWind"
+    "format": "iii"
   },
   "23013": {
-    "format": "i",
     "size": 8,
-    "name": "FloorCollision"
+    "format": "i"
   },
   "23014": {
-    "format": "",
-    "name": "ResetExternalForces"
+    "format": ""
   },
   "23015": {
-    "format": "i",
     "size": 8,
-    "name": "RenderLayer"
+    "format": "i"
   },
   "23016": {
-    "format": "",
-    "name": "SkeletonPaletteEffectOnNoStopIdling"
+    "format": ""
   },
   "23017": {
-    "format": "i",
     "size": 8,
-    "name": "GuardCancel"
+    "format": "i"
   },
   "23018": {
-    "format": "i",
     "size": 8,
-    "name": "DemoEndOnVoiceEnd"
+    "format": "i"
   },
   "23019": {
-    "format": "i",
     "size": 8,
-    "name": "PerExternalForces"
+    "format": "i"
   },
   "23020": {
-    "format": "i",
     "size": 8,
-    "name": "MaxHP"
+    "format": "i"
   },
   "23021": {
-    "format": "i",
     "size": 8,
-    "name": "CurrentHP"
+    "format": "i"
   },
   "23022": {
-    "format": "i",
     "size": 8,
-    "name": "NoDamageAction"
+    "format": "i"
   },
   "23023": {
-    "format": "",
-    "name": "TurnAround"
+    "format": ""
   },
   "23024": {
-    "format": "i",
     "size": 8,
-    "name": "SetBackground"
+    "format": "i"
   },
   "23025": {
-    "format": "i",
     "size": 8,
-    "name": "KeepBackground"
+    "format": "i"
   },
   "23026": {
-    "format": "i",
     "size": 8,
-    "name": "LandingHeight"
+    "format": "i"
   },
   "23027": {
-    "format": "",
-    "name": "AttackOff"
+    "name": "DisableAttackRestOfMove",
+    "format": ""
   },
   "23028": {
-    "format": "ii",
     "size": 12,
-    "name": "InstantProjectileInit"
+    "format": "ii"
   },
   "23029": {
     "format": "3i",
@@ -4280,566 +3843,531 @@
     "name": "SetPosYByScreenPer"
   },
   "23034": {
-    "format": "i",
     "size": 8,
-    "name": "MugenTime"
+    "format": "i"
   },
   "23035": {
-    "format": "i",
     "size": 8,
-    "name": "DoNotResetRotation"
+    "format": "i"
   },
   "23036": {
-    "format": "",
-    "name": "GuardpointNonProjectileCheck"
+    "format": ""
   },
   "23037": {
-    "format": "",
-    "name": "GuardpointProjectileCheck"
+    "format": ""
   },
   "23038": {
-    "format": "iI",
     "size": 12,
-    "name": "ResourceBarFullColor"
+    "format": "ii"
   },
   "23039": {
-    "format": "ii",
     "size": 12,
-    "name": "ResourceItemAmount"
+    "format": "ii"
   },
   "23040": {
-    "format": "ii",
     "size": 12,
-    "name": "BackupGaugeText"
+    "format": "ii"
   },
   "23041": {
-    "format": "ii",
     "size": 12,
-    "name": "ResourceGaugeFlash"
+    "format": "ii"
   },
   "23042": {
     "format": ""
   },
   "23043": {
-    "format": "3i",
+    "size": 16,
     "name": "PhysicsPull",
-    "size": 16
+    "format": "iii"
   },
   "23044": {
-    "format": "ii",
     "size": 12,
-    "name": "DisableResourceGaugeBar"
+    "format": "ii"
   },
   "23045": {
     "format": "i",
-    "size": 8,
-    "name": "PrivateFunction5"
+    "size": 8
   },
   "23046": {
-    "format": "i",
-    "size": 8,
-    "name": "PrivateFunction4"
+    "size": 8
   },
   "23047": {
-    "format": "ii",
-    "size": 12,
-    "name": "ResourceGaugeX"
+    "size": 12
   },
   "23048": {
-    "format": "i",
     "size": 8
   },
   "23049": {
-    "format": "ii",
     "size": 12
   },
   "23050": {
-    "format": "ii",
     "size": 12
   },
   "23051": {
-    "format": "32s32s",
     "size": 68
   },
   "23052": {
+    "size": 8
+  },
+  "23053": {
+    "size": 12
+  },
+  "23054": {
+    "format": "32si",
+    "size": 40
+  },
+  "23055": {
+    "size": 4
+  },
+  "23056": {
+    "format": "",
+    "size": 4
+  },
+  "23057": {
     "format": "i",
     "size": 8
   },
-  "23066": {
+  "23058": {
     "format": "i",
+    "size": 8
+  },
+  "23059": {
     "size": 8,
-    "name": "AutoHitSignalSending"
+    "format": "i"
+  },
+  "23060": {
+    "size": 8,
+    "format": "i"
+  },
+  "23066": {
+    "size": 8,
+    "format": "i"
   },
   "23067": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "CallPrivateEffect"
+    "format": "32s"
   },
   "23068": {
-    "format": "i",
     "size": 8,
-    "name": "SetAngleByDirSign"
+    "format": "i"
   },
   "23069": {
-    "format": "i",
     "size": 8,
-    "name": "ForceShadowOn"
+    "format": "i"
   },
   "23070": {
-    "format": "i",
     "size": 8,
-    "name": "MovementSeal"
+    "format": "i"
   },
   "23071": {
-    "format": "i",
     "size": 8,
-    "name": "GuardSeal"
+    "format": "i"
   },
   "23072": {
-    "format": "",
-    "name": "CtrlDirectionReverse"
+    "format": ""
   },
   "23073": {
-    "format": "",
-    "name": "CtrlDirectionVsTarget"
+    "format": ""
   },
   "23074": {
-    "format": "",
-    "name": "CtrlDirectionLeft"
+    "format": ""
   },
   "23075": {
-    "format": "",
-    "name": "CtrlDirectionRight"
+    "format": ""
   },
   "23076": {
     "format": "",
     "name": "NegativeForBackDash"
   },
   "23077": {
-    "format": "i",
     "size": 8,
-    "name": "SlowField"
+    "format": "i"
   },
   "23078": {
-    "format": "i",
     "size": 8,
-    "name": "AutoHitStopSending"
+    "format": "i"
   },
   "23079": {
-    "format": "i",
     "size": 8,
-    "name": "HitBackReturnObject"
+    "format": "i"
   },
   "23080": {
-    "format": "3i",
     "size": 16,
-    "name": "ObjectMoveCheck"
+    "format": "iii"
   },
   "23081": {
-    "format": "i",
     "size": 8,
-    "name": "ColorIsAdditive"
+    "format": "i"
   },
   "23082": {
-    "size": 20,
-    "name": "CheckStageName"
+    "size": 20
   },
   "23083": {
-    "format": "i",
     "size": 8,
-    "name": "StopClock"
+    "format": "i"
   },
   "23084": {
-    "format": "i",
     "size": 8,
-    "name": "HUDVisibillity"
+    "format": "i"
   },
   "23085": {
-    "format": "i",
     "size": 8,
-    "name": "TurnLimitByInitialize"
+    "format": "i"
   },
   "23086": {
-    "format": "i",
     "size": 8,
-    "name": "HitBackReturnIgnore"
+    "format": "i"
   },
   "23087": {
-    "format": "i",
     "size": 8,
-    "name": "PushCollisionHeightLow"
+    "format": "i"
   },
   "23088": {
-    "format": "ii",
     "size": 12,
-    "name": "AstralHeatCleanup"
+    "format": "ii"
   },
   "23089": {
     "format": "8i",
-    "size": 36,
-    "name": "HitsPerCall"
+    "size": 36
   },
   "23090": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23091": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23093": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23094": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23095": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23096": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23097": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23098": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23099": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23100": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23101": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23102": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23103": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23104": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23105": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23106": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23107": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23108": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23109": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23110": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23111": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23112": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23113": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23114": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23115": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23116": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23117": {
-    "format": "ii",
     "size": 12,
-    "name": "CharacterFlash2"
+    "format": "ii"
   },
   "23118": {
-    "format": "i",
     "size": 8,
-    "name": "StopCharacterFlash1"
+    "format": "i"
   },
   "23119": {
-    "format": "3i",
     "size": 16,
-    "name": "CharacterFlash"
+    "format": "iii"
   },
   "23120": {
-    "format": "",
-    "name": "StopCharacterFlash2"
+    "format": ""
   },
   "23121": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23122": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23123": {
-    "format": "ii",
-    "size": 12
+    "size": 12,
+    "format": "ii"
   },
   "23124": {
     "format": "i",
+    "size": 8
+  },
+  "23125": {
+    "size": 4
+  },
+  "23126": {
     "size": 8,
-    "name": "PreventOppJump"
+    "format": "i"
   },
   "23130": {
-    "format": "3i",
-    "size": 16
+    "size": 16,
+    "format": "iii"
   },
   "23131": {
     "format": ""
   },
   "23132": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23141": {
-    "format": "i",
     "size": 8,
-    "name": "ExtendNonCornerWallbounce"
+    "format": "i"
   },
   "23142": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23143": {
-    "format": "3i",
-    "size": 16
+    "size": 16,
+    "format": "iii"
   },
   "23144": {
-    "format": "11i",
     "size": 48
   },
   "23145": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "PreviousStateCheck"
+    "format": "32s"
   },
   "23146": {
-    "format": "i32s",
     "size": 40
   },
   "23147": {
-    "format": "",
-    "name": "EmptyHeat"
+    "format": ""
   },
   "23148": {
     "format": "32s",
     "name": "CurrentStateCheck"
   },
   "23149": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23150": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23151": {
-    "format": "ii",
     "size": 12,
-    "name": "EffectPosition"
+    "format": "ii"
   },
   "23152": {
-    "format": "i",
     "size": 8,
-    "name": "MagatanaGainMultiplier"
+    "format": "i"
   },
   "23153": {
-    "format": "i",
     "size": 8,
-    "name": "InitialPush"
+    "format": "i"
   },
   "23154": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23155": {
-    "auto": "autostr",
-    "format": "i32si",
-    "size": 44,
-    "name": "ObjectGotoState"
+    "size": 44
   },
   "23156": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "EnteredState"
+    "format": "32s"
   },
   "23157": {
-    "format": "i",
     "size": 8,
-    "name": "PlayPlayAstralBGM"
+    "format": "i"
   },
   "23158": {
-    "format": "3i",
-    "size": 16
+    "size": 12
   },
   "23159": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "GotoState"
+    "format": "32s"
   },
   "23160": {
-    "format": "i",
     "size": 8,
-    "name": "DisableBarrier"
+    "format": "i"
   },
   "23161": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23162": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23163": {
-    "format": "i",
     "size": 8,
-    "name": "DisableOverdrive1"
+    "format": "i"
   },
   "23164": {
-    "format": "i",
     "size": 8,
-    "name": "DisableCrouch"
+    "format": "i"
   },
   "23165": {
-    "format": "",
-    "name": "DisableOverdrive2"
+    "format": ""
   },
   "23166": {
     "auto": "autostr",
-    "format": "32s",
     "size": 36,
-    "name": "OppStateCheck"
+    "format": "32s"
   },
   "23167": {
     "format": ""
   },
   "23168": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23169": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23170": {
-    "format": "32s",
-    "size": 36
+    "size": 36,
+    "format": "32s"
   },
   "23177": {
-    "format": "",
-    "name": "TimerDepleted"
+    "format": ""
   },
   "23178": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23179": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23180": {
-    "format": "i",
-    "size": 8
+    "size": 8,
+    "format": "i"
   },
   "23181": {
-    "format": "i",
     "size": 8,
-    "name": "HeatCooldown"
+    "format": "i"
   },
   "23182": {
-    "format": "i",
     "size": 8,
-    "name": "VoodooDamageMultiplier"
+    "format": "i"
   },
   "23183": {
     "format": "32s3i",
-    "size": 48,
-    "name": "SpriteCall"
+    "size": 48
+  },
+  "23184": {
+    "format": "8i",
+    "size": 36
+  },
+  "23185": {
+    "format": "32si",
+    "size": 40
   },
   "30000": {
-    "format": "",
-    "name": "Create3DObject"
+    "format": ""
   },
   "30001": {
-    "format": "32si",
-    "size": 40,
-    "name": "Char3DAnim"
+    "size": 40
   },
   "30002": {
-    "format": "3i",
-    "size": 16
+    "size": 16,
+    "format": "iii"
   },
   "30003": {
-    "format": "i",
     "size": 8,
-    "name": "Char3DScale"
+    "format": "i"
   },
   "30004": {
-    "format": "i",
-    "size": 8,
-    "name": "Char3DRotation"
-  },
-  "30005": {
-    "format": "i",
-    "size": 8,
-    "name": "Char3DVisibility"
-  },
-  "30006": {
-    "format": "3i",
     "size": 16
   },
+  "30005": {
+    "size": 8,
+    "format": "i"
+  },
+  "30006": {
+    "size": 16,
+    "format": "iii"
+  },
   "30007": {
-    "format": "i",
     "size": 8
   },
   "30008": {
     "size": 12
   },
   "30009": {
-    "format": "i",
     "size": 8
   },
   "30010": {
@@ -4850,29 +4378,285 @@
   },
   "30012": {
     "format": "i",
-    "size": 8,
-    "name": "LoadSpritePalette"
+    "size": 8
   },
   "30013": {
-    "size": 4,
-    "name": "TimestopEffect"
+    "size": 4
   },
   "30014": {
     "size": 4
   },
   "30015": {
-    "size": 4,
-    "name": "StopTimestopEffect"
+    "size": 4
   },
   "30016": {
-    "format": "i",
     "size": 8
   },
   "30017": {
-    "format": "i",
     "size": 8
   },
   "30018": {
     "size": 4
+  },
+  "30019": {
+    "format": "ii",
+    "size": 12
+  },
+  "30020": {
+    "size": 4
+  },
+  "30021": {
+    "size": 4
+  },
+  "30026": {
+    "size": 4
+  },
+  "30027": {
+    "size": 4
+  },
+  "30028": {
+    "format": "i",
+    "name": "selfDamage",
+    "size": 8
+  },
+  "30029": {
+    "format": "i",
+    "size": 8
+  },
+  "30030": {
+    "format": "i",
+    "size": 8
+  },
+  "30031": {
+    "format": "i",
+    "size": 8
+  },
+  "30032": {
+    "format": "i",
+    "size": 8
+  },
+  "30033": {
+    "format": "i",
+    "size": 8
+  },
+  "30034": {
+    "size": 4
+  },
+  "30035": {
+    "format": "i",
+    "size": 8
+  },
+  "30036": {
+    "format": "32sii",
+    "size": 40
+  },
+  "30037": {
+    "size": 4
+  },
+  "30038": {
+    "format": "i",
+    "size": 8
+  },
+  "30039": {
+    "format": "i",
+    "size": 8
+  },
+  "30040": {
+    "format": "i",
+    "size": 8
+  },
+  "30041": {
+    "size": 4
+  },
+  "30042": {
+    "format": "i",
+    "size": 8
+  },
+  "30043": {
+    "format": "i",
+    "size": 8
+  },
+  "30044": {
+    "size": 4
+  },
+  "30045": {
+    "format": "i",
+    "size": 8
+  },
+  "30046": {
+    "format": "i",
+    "size": 8
+  },
+  "30047": {
+    "format": "i",
+    "size": 8
+  },
+  "30048": {
+    "format": "i",
+    "size": 8
+  },
+  "30049": {
+    "size": 28
+  },
+  "30050": {
+    "size": 28
+  },
+  "30051": {
+    "format": "i",
+    "size": 8
+  },
+  "30052": {
+    "format": "i",
+    "size": 8
+  },
+  "30053": {
+    "format": "i",
+    "size": 8
+  },
+  "30054": {
+    "format": "i",
+    "size": 8
+  },
+  "30055": {
+    "format": "3i",
+    "size": 16
+  },
+  "30056": {
+    "format": "3i",
+    "size": 16
+  },
+  "30057": {
+    "size": 4
+  },
+  "30058": {
+    "size": 4
+  },
+  "30059": {
+    "size": 4
+  },
+  "30060": {
+    "size": 12
+  },
+  "30061": {
+    "format": "i",
+    "size": 8
+  },
+  "30062": {
+    "format": "i",
+    "size": 8
+  },
+  "30063": {
+    "format": "i",
+    "size": 8
+  },
+  "30064": {
+    "format": "i",
+    "size": 8
+  },
+  "30065": {
+    "format": "i",
+    "size": 8
+  },
+  "30066": {
+    "format": "i",
+    "size": 8
+  },
+  "30067": {
+    "format": "i",
+    "size": 8
+  },
+  "30068": {
+    "format": "i",
+    "size": 8
+  },
+  "30069": {
+    "format": "i",
+    "size": 8
+  },
+  "30070": {
+    "format": "32s",
+    "size": 36
+  },
+  "30071": {
+    "size": 4
+  },
+  "30072": {
+    "size": 4
+  },
+  "30073": {
+    "format": "i",
+    "size": 8
+  },
+  "30074": {
+    "format": "i",
+    "size": 8
+  },
+  "30075": {
+    "format": "i",
+    "size": 8
+  },
+  "30076": {
+    "format": "i",
+    "size": 8
+  },
+  "30077": {
+    "size": 12
+  },
+  "30078": {
+    "format": "i",
+    "size": 8
+  },
+  "30079": {
+    "format": "i",
+    "size": 8
+  },
+  "30080": {
+    "size": 4
+  },
+  "30081": {
+    "size": 4
+  },
+  "30082": {
+    "format": "i",
+    "size": 8
+  },
+  "30083": {
+    "size": 20
+  },
+  "30084": {
+    "format": "i",
+    "size": 8
+  },
+  "30085": {
+    "format": "i",
+    "size": 8
+  },
+  "30086": {
+    "format": "i",
+    "size": 8
+  },
+  "30087": {
+    "size": 8,
+    "format": "i"
+  },
+  "30088": {
+    "size": 8,
+    "format": "i"
+  },
+  "30089": {
+    "size": 8,
+    "format": "i"
+  },
+  "30090": {
+    "size": 120,
+    "format": "16s16si16si16si16si16si"
+  },
+  "30092": {
+    "size": 36,
+    "format": "16s16s"
+  },
+  "30093": {
+    "size": 24,
+    "format": "iiiii"
   }
 }
