@@ -1,7 +1,7 @@
 import os, struct, json, sys, astor
 from ast import *
 
-GAME = "BBCF"
+GAME = "BBTAG"
 
 pypath = os.path.dirname(sys.argv[0])
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
@@ -242,7 +242,6 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         elif isinstance(node.test, Name):
             # This is if(SLOT) we need to find out slot index and write it as param of if
             write_command_by_name("if", decode_var(node.test))
-            self.visit_body(node.body)
             write_command_by_name("endIf", [])
             if len(node.orelse) > 0:
                 write_command_by_name("else", [])
@@ -264,7 +263,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare)) and find2:
             self.visit(node.test.operand)
             write_command_by_id("19", [node.body[0].value.args[0], 2, 0])
-        elif isinstance(node.test, Call) or isinstance(node.test, Compare):
+        elif isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp):
             self.visit(node.test)
             write_command_by_name("if", [2, 0])
             self.visit_body(node.body)
@@ -274,7 +273,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 self.visit_body(node.orelse)
                 write_command_by_name("endElse", [])
         elif isinstance(node.test, UnaryOp) and (
-                isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare)):
+                isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)):
             self.visit(node.test.operand)
             write_command_by_name("ifNot", [2, 0])
             self.visit_body(node.body)
@@ -283,6 +282,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_name("else", [])
                 self.visit_body(node.orelse)
                 write_command_by_name("endElse", [])
+        # This thing breaks too many things when rebuilding
                 '''
         elif isinstance(node.test, BoolOp):
             self.visit_If(If(node.test.values[0].values[0], [node.test.values[0].values[1]], [If(node.test.values[1].values[0], [node.test.values[1].values[1]])]))
@@ -297,6 +297,34 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             '''
         else:
             raise Exception("UNHANDLED IF")
+        
+    def visit_BoolOp(self, node):
+        params = []
+        if len(node.values) > 2:
+            raise Exception("THERE CAN ONLY BE 2 AND/OR")
+        if type(node.values[0]) != type(node.values[1]):
+            raise Exception("BOTH VALUES NEED TO USE THE SAME OPERATOR")
+        if isinstance(node.values[0], UnaryOp):
+            if isinstance(node.op, And):
+                params.append(5)
+            elif isinstance(node.op, Or):
+                params.append(6)
+            write_command_by_name("op", params + decode_var(node.values[0].operand) + decode_var(node.values[1].operand))
+        else:
+            if isinstance(node.op, And):
+                params.append(7)
+            elif isinstance(node.op, Or):
+                params.append(8)
+            write_command_by_name("op", params + decode_var(node.values[0]) + decode_var(node.values[1]))
+
+    def visit_UnaryOp(self, node):
+        pass
+    
+    def visit_BinOp(self, node):
+        params = []
+        if isinstance(node.op, Mod):
+            params.append(4)
+        write_command_by_name("op", params + decode_var(node.left) + decode_var(node.right))
 
     def visit_Assign(self, node):
         if isinstance(node.value, BinOp):

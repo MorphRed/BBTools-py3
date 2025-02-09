@@ -1,7 +1,7 @@
 import os, struct, json, sys, astor
 from ast import *
 
-GAME = "BBTAG"
+GAME = "BBCF"
 
 pypath = os.path.dirname(sys.argv[0])
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
@@ -14,6 +14,8 @@ json_data = open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/global.jso
 upon_db = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.json")).read()
 slot_db = json.loads(json_data)
+json_data = open(os.path.join(pypath, "static_db/" + GAME + "/object_db/global.json")).read()
+object_db = json.loads(json_data)
 #Checking for a custom slot/upon db
 character_name = sys.argv[1].replace("scr_", "").split(".")[0]
 if character_name[:-2] == "ea" and len(character_name) > 2:
@@ -58,6 +60,11 @@ def get_slot_name(cmd_data):
         str_cmd_data = slot_db[str_cmd_data]
     return Name(id="SLOT_" + str_cmd_data)
 
+def get_object_name(cmd_data):
+    str_cmd_data = str(cmd_data)
+    if str_cmd_data in object_db:
+        str_cmd_data = object_db[str_cmd_data]
+    return str_cmd_data
 
 # Changes numbers to their db value
 def sanitizer(command):
@@ -122,7 +129,7 @@ def parse_bbscript_routine(file):
                     for j in v:
                         debug += chr(j)
                     cmd_data[i] = debug
-            
+
         # AST STUFF
         # 0 is startState
         if current_cmd == 0:
@@ -144,8 +151,16 @@ def parse_bbscript_routine(file):
         # 4 is if
         elif current_cmd == 4:
             if cmd_data[1] == 0:
-                if isinstance(ast_stack[-1][-1], Expr):
-                    tmp = lastExpr.value
+                try:
+                    if ast_stack[-1][-1]:
+                        arcsysdoubleifspaghetti = ast_stack[-1][-1]
+                except IndexError:
+                    arcsysdoubleifspaghetti = True
+                if isinstance(arcsysdoubleifspaghetti, Expr):
+                    try:
+                        tmp = lastExpr.value
+                    except Exception:
+                        print('test')
                     ast_stack[-1].append(If(tmp, [], []))
                     ast_stack.append(ast_stack[-1][-1].body)
                     ast_stack[-2].pop(-2)
@@ -166,6 +181,10 @@ def parse_bbscript_routine(file):
         elif current_cmd == 54:
             if cmd_data[1] == 0:
                 if isinstance(ast_stack[-1][-1], Expr):
+                    try:
+                        tmp = lastExpr.value
+                    except Exception:
+                        print('test')
                     tmp = lastExpr.value
                     ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
                     ast_stack.append(ast_stack[-1][-1].body)
@@ -208,13 +227,13 @@ def parse_bbscript_routine(file):
                 tmp = get_slot_name(cmd_data[2])
                 ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
             ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [Constant(cmd_data[0])], [])))
-        # 35 is RunOnObject
+        # 35 is apply function to Object
         elif current_cmd == 36:
             ast_stack[-1].append(
                 FunctionDef(db_data["name"] + "_" + str(cmd_data[0]), empty_args, [], []))
             ast_stack.append(ast_stack[-1][-1].body)
         # 40 is operation type aka comparison
-        elif current_cmd == 40 and cmd_data[0] in [9, 10, 11, 12, 13]:
+        elif current_cmd == 40 and cmd_data[0] in [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]:
             if cmd_data[1] == 2:
                 lval = get_slot_name(cmd_data[2])
             else:
@@ -223,17 +242,34 @@ def parse_bbscript_routine(file):
                 rval = get_slot_name(cmd_data[4])
             else:
                 rval = Constant(cmd_data[4])
-            if cmd_data[0] == 9:
-                op = Eq()
-            if cmd_data[0] == 10:
-                op = Gt()
-            if cmd_data[0] == 11:
-                op = Lt()
-            if cmd_data[0] == 12:
-                op = GtE()
-            if cmd_data[0] == 13:
-                op = LtE()
-            lastExpr = Expr(Compare(lval, [op], [rval]))
+            if cmd_data[0] in [4]:
+                if cmd_data[0] == 4:
+                    op = Mod()
+                lastExpr = Expr(BinOp(lval, op, rval))
+            elif cmd_data[0] in [5, 6]:
+                if cmd_data[0] == 5:
+                    op = And()
+                if cmd_data[0] == 6:
+                    op = Or()
+                lastExpr = Expr(BoolOp(op, [UnaryOp(Not(), lval), UnaryOp(Not(),rval)]))
+            elif cmd_data[0] in [7, 8]:
+                if cmd_data[0] == 7:
+                    op = And()
+                if cmd_data[0] == 8:
+                    op = Or()
+                lastExpr = Expr(BoolOp(op, [lval, rval]))
+            elif cmd_data[0] in [9, 10, 11, 12, 13]:
+                if cmd_data[0] == 9:
+                    op = Eq()
+                if cmd_data[0] == 10:
+                    op = Gt()
+                if cmd_data[0] == 11:
+                    op = Lt()
+                if cmd_data[0] == 12:
+                    op = GtE()
+                if cmd_data[0] == 13:
+                    op = LtE()
+                lastExpr = Expr(Compare(lval, [op], [rval]))
             ast_stack[-1].append(lastExpr)
         # 41 is StoreValue aka SLOT assignment
         elif current_cmd == 41:
@@ -277,8 +313,10 @@ def parse_bbscript_routine(file):
                 ast_stack[-1][-1].body.append(
                     Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[])))
         else:
-            if current_cmd in [39, 42, 43, 44, 45, 46, 23036, 23037, 23145, 23148]:
+            # Things that affect slot_0
+            if current_cmd in [39, 40, 42, 43, 44, 45, 46, 23036, 23037, 23145, 23148]:
                 lastExpr = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+
             if len(ast_stack) == 1:
                 ast_stack.append(astor_handler)
             ast_stack[-1].append(
