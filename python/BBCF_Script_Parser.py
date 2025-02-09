@@ -14,6 +14,8 @@ json_data = open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/global.jso
 upon_db = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.json")).read()
 slot_db = json.loads(json_data)
+json_data = open(os.path.join(pypath, "static_db/" + GAME + "/object_db/global.json")).read()
+object_db = json.loads(json_data)
 #Checking for a custom slot/upon db
 character_name = sys.argv[1].replace("scr_", "").split(".")[0]
 if character_name[:-2] == "ea" and len(character_name) > 2:
@@ -58,6 +60,11 @@ def get_slot_name(cmd_data):
         str_cmd_data = slot_db[str_cmd_data]
     return Name(id="SLOT_" + str_cmd_data)
 
+def get_object_name(cmd_data):
+    str_cmd_data = str(cmd_data)
+    if str_cmd_data in object_db:
+        str_cmd_data = object_db[str_cmd_data]
+    return str_cmd_data
 
 # Changes numbers to their db value
 def sanitizer(command):

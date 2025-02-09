@@ -1,0 +1,11 @@
+{
+  "0": "DEREGISTER",
+  "1": "LAST",
+  "2": "PARENT",
+  "3": "MAIN",
+  "22": "OPPONENT",
+  "23": "OPPONENT_PARTNER",
+  "24": "PARTNER",
+  "25": "CURRENT",
+  "27": "HIT"
+}
