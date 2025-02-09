@@ -240,6 +240,10 @@ def parse_bbscript_routine(file):
             ast_stack[-1].append(
                 FunctionDef(db_data["name"] + "_" + str(cmd_data[0]), empty_args, [], []))
             ast_stack.append(ast_stack[-1][-1].body)
+        # 39 is random
+            '''
+        elif current_cmd == 39: 
+        '''
         # 40 is operation type aka comparison
         elif current_cmd == 40 and cmd_data[0] in [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]:
             if cmd_data[1] == 2:

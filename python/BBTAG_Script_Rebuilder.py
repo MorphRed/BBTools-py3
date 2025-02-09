@@ -242,6 +242,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         elif isinstance(node.test, Name):
             # This is if(SLOT) we need to find out slot index and write it as param of if
             write_command_by_name("if", decode_var(node.test))
+            self.visit_body(node.body)
             write_command_by_name("endIf", [])
             if len(node.orelse) > 0:
                 write_command_by_name("else", [])
