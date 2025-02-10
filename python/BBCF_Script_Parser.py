@@ -10,6 +10,8 @@ json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/move_
 move_inputs = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/normal_inputs.json")).read()
 normal_inputs = json.loads(json_data)
+json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/hit_animation.json")).read()
+animation_db = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/global.json")).read()
 upon_db = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.json")).read()
@@ -36,7 +38,6 @@ def find_named_value(command, value):
     if command in [43, 14012]:
         if str_value in move_inputs:
             return move_inputs[str_value]
-
     elif command == 14001:
         if str_value in normal_inputs['grouped_values']:
             return normal_inputs['grouped_values'][str_value]
@@ -46,6 +47,11 @@ def find_named_value(command, value):
             return normal_inputs['direction_byte'][str(dir_byte)] + normal_inputs['button_byte'][str(button_byte)]
     return hex(value)
 
+def get_animation_name(cmd_data):
+    str_value = str(cmd_data)
+    if str_value in animation_db:
+        return animation_db[str_value]
+    return cmd_data
 
 def get_upon_name(cmd_data):
     str_cmd_data = str(cmd_data)
@@ -76,6 +82,8 @@ def sanitizer(command):
             return Name(find_named_value(command, value))
         elif command in [17, 29, 30, 21007] and i == 0:
             return Name(get_upon_name(value).replace("upon_", ""))
+        elif command in [9322, 9324, 9334, 9336]:
+            return Name(get_animation_name(value))
         elif command and not isinstance(value, str) and "hex" in command_db[str(command)]:
             return Name(hex(value))
         return Constant(value)
@@ -316,6 +324,20 @@ def parse_bbscript_routine(file):
                 op = Div()
             tmp = Assign([lval], BinOp(lval, op, rval))
             ast_stack[-1].append(tmp)
+        elif current_cmd in [11058, 22019]:
+            attributes = ""
+            if cmd_data[0] == 1:
+                attributes += "H"
+            if cmd_data[1] == 1:
+                attributes += "B"
+            if cmd_data[2] == 1:
+                attributes += "F"
+            if cmd_data[3] == 1:
+                attributes += "P"
+            if cmd_data[4] == 1:
+                attributes += "T"
+            ast_stack[-1].append(
+                Expr(Call(Name(id=db_data["name"]), args=[Constant(attributes)], keywords=[])))
         # Indentation end
         elif current_cmd in [1, 5, 9, 16, 35, 55, 57]:
             if len(ast_stack[-1]) == 0:

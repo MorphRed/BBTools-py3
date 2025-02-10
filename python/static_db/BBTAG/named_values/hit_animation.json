@@ -1,0 +1,21 @@
+{
+  "0": "DEFAULT",
+  "1": "AIR_FACE_UP",
+  "2": "STAGGER",
+  "3": "CROUCHING",
+  "4": "STANDING",
+  "5": "STANDING_LOW",
+  "6": "PIROUETTE",
+  "7": "GUARD_CRUSH",
+  "9": "AIR_FACE_UP_SKIP",
+  "10": "AIR_VERTICAL",
+  "11": "AIR_FACE_DOWN",
+  "12": "AIR_BLOWBACK",
+  "13": "AIR_TAILSPIN",
+  "14": "ELECTROCUTION_AIR",
+  "16": "AIR_GUARD_CRUSH",
+  "17": "AIR_TUMBLE",
+  "18": "AIR_SPIN",
+  "19": "AIR_BLOWBACK_SKIP",
+  "20": "ASTRAL_SPECIAL"
+}

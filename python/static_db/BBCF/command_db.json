@@ -3718,7 +3718,7 @@
     "name": "ClearCommonActionControl"
   },
   "18003": {
-    "format": "64h",
+    "format": "64s64",
     "size": 132,
     "name": "Mouth"
   },
@@ -3756,7 +3756,7 @@
     "name": "WinAction"
   },
   "18011": {
-    "format": "16s64h",
+    "format": "16s128s",
     "size": 148
   },
   "19000": {

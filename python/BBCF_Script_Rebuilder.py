@@ -10,6 +10,8 @@ json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/move_
 move_inputs = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/normal_inputs.json")).read()
 normal_inputs = json.loads(json_data)
+json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/hit_animation.json")).read()
+animation_db = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/global.json")).read()
 upon_db = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.json")).read()
@@ -33,6 +35,7 @@ named_value_lookup = {}
 named_button_lookup = {}
 named_direction_lookup = {}
 upon_db_lookup = {}
+animation_db_lookup = {}
 
 for k, v in command_db.items():
     v["id"] = k
@@ -51,6 +54,7 @@ for k, v in normal_inputs['button_byte'].items():
 for k, v in normal_inputs['direction_byte'].items():
     named_direction_lookup[v.lower()] = k
 upon_db_lookup = {v.lower(): k for k, v in upon_db.items()}
+animation_db_lookup = {v.lower(): k for k, v in animation_db.items()}
 
 MODE = "<"
 error = False
@@ -103,7 +107,13 @@ def write_command_by_id(id, params):
                 if int(id) in [17, 29, 30, 21007]:
                     upon = decode_upon(oValue.id)
                     my_params[index] = upon
-                if int(id) in [43, 14001, 14012]:
+                elif int(id) in [9322, 9324, 9334, 9336]:
+                    s = oValue.id.lower()
+                    if s in animation_db_lookup:
+                        my_params[index] = int(animation_db_lookup[s])
+                    else:
+                        my_params[index] = int(s)
+                elif int(id) in [43, 14001, 14012]:
                     buttonstr = oValue.id[-1].lower()
                     directionstr = oValue.id[:-1].lower()
                     my_params[index] = (int(named_button_lookup[buttonstr]) << 8) + int(
@@ -112,6 +122,14 @@ def write_command_by_id(id, params):
             my_params[index] = -oValue.operand.value
         else:
             raise Exception("unknown type " + str(type(oValue)))
+    if int(id) in [11058, 22019] and len(my_params) == 1:
+        new_params = []
+        for attribute in "HBFPT":
+            if attribute in my_params[0]:
+                new_params.append(1)
+            else:
+                new_params.append(0)
+        my_params = new_params
     output_buffer.write(struct.pack(MODE + "I", int(id)))
     if "format" in cmd_data:
         for i, v1 in enumerate(my_params):
