@@ -3718,7 +3718,7 @@
     "name": "ClearCommonActionControl"
   },
   "18003": {
-    "format": "64s64",
+    "format": "64s32h",
     "size": 132,
     "name": "Mouth"
   },

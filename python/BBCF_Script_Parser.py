@@ -125,7 +125,10 @@ def parse_bbscript_routine(file):
         if "format" not in command_db[str(current_cmd)]:
             cmd_data = [file.read(command_db[str(current_cmd)]["size"] - 4)]
         else:
-            cmd_data = list(struct.unpack(MODE + db_data["format"], file.read(struct.calcsize(db_data["format"]))))
+            try:
+                cmd_data = list(struct.unpack(MODE + db_data["format"], file.read(struct.calcsize(db_data["format"]))))
+            except struct.error:
+                print('test')
         # Cleaning up the binary string
         for i, v in enumerate(cmd_data):
             if isinstance(v, bytes):
@@ -252,7 +255,7 @@ def parse_bbscript_routine(file):
             '''
         elif current_cmd == 39: 
         '''
-        # 40 is operation type aka comparison
+        # 40 is operation stored in SLOT_0
         elif current_cmd == 40 and cmd_data[0] in [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]:
             if cmd_data[1] == 2:
                 lval = get_slot_name(cmd_data[2])
@@ -292,7 +295,7 @@ def parse_bbscript_routine(file):
                     op = LtE()
                 lastExpr = Expr(Compare(lval, [op], [rval]))
             ast_stack[-1].append(lastExpr)
-        # 41 is StoreValue aka SLOT assignment
+        # 41 is StoreValue, assigning SLOT 
         elif current_cmd == 41:
             if cmd_data[0] == 2:
                 lval = get_slot_name(cmd_data[1])
@@ -349,7 +352,7 @@ def parse_bbscript_routine(file):
                     Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[])))
         else:
             # Things that affect slot_0
-            if current_cmd in [39, 40, 42, 43, 44, 45, 46, 23036, 23037, 23145, 23148, 23156]:
+            if current_cmd in [39, 40, 42, 43, 44, 45, 46, 61, 23036, 23037, 23145, 23146, 23148, 23156, 23166]:
                 lastExpr = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
                 
             if len(ast_stack) == 1:
