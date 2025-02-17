@@ -4718,7 +4718,7 @@
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "GotoState"
+    "name": "Comment"
   },
   "23160": {
     "format": "i",
