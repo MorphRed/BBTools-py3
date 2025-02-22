@@ -85,9 +85,10 @@
     "name": "ConditionalSendToLabel"
   },
   "20": {
+    "type": [1],
     "format": "3i",
     "size": 16,
-    "name": "SpriteIfNot0"
+    "name": "SpriteDurationIfNot"
   },
   "21": {
     "format": "32s",

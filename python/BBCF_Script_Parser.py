@@ -33,6 +33,40 @@ except IOError:
 
 MODE = "<"
 
+def get_operation(operation_id):
+    if operation_id == 0:
+        op = Add()
+    elif operation_id == 1:
+        op = Sub()
+    elif operation_id == 2:
+        op = Mult()
+    elif operation_id == 3:
+        op = Div()
+    elif operation_id == 4:
+        op = Mod()
+    elif operation_id == 5:
+        op = And()
+    elif operation_id == 6:
+        op = Or()
+    elif operation_id == 7:
+        op = And()
+    elif operation_id == 8:
+        op = Or()
+    elif operation_id == 9:
+        op = Eq()
+    elif operation_id == 10:
+        op = Gt()
+    elif operation_id == 11:
+        op = Lt()
+    elif operation_id == 12:
+        op = GtE()
+    elif operation_id == 13:
+        op = LtE()
+    else:
+        raise Exception("Unvalid operation_id" + str(operation_id))
+    
+    return op
+
 def slot_handler(command, cmd_data):
     command = str(command)
     tmp = []
@@ -247,61 +281,62 @@ def parse_bbscript_routine(file):
                 FunctionDef(db_data["name"] + "_" + str(cmd_data[0]), empty_args, [], []))
             ast_stack.append(ast_stack[-1][-1].body)
         # 40 is operation stored in SLOT_0
-        elif current_cmd == 40 and cmd_data[0] in [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]:
+        elif current_cmd == 40:
             cmd_data = slot_handler(current_cmd, cmd_data)
             cmd_data[0] = cmd_data[0].value
             lval = cmd_data[1]
             rval = cmd_data[2]
-            if cmd_data[0] in [4]:
-                if cmd_data[0] == 4:
-                    op = Mod()
+            op = get_operation(cmd_data[0])
+            if cmd_data[0] in [0, 1, 2, 3]:
+                lastExpr = BinOp(lval, op, rval)
+            elif cmd_data[0] in [4]:
                 lastExpr = Expr(BinOp(lval, op, rval))
             elif cmd_data[0] in [5, 6]:
-                if cmd_data[0] == 5:
-                    op = And()
-                if cmd_data[0] == 6:
-                    op = Or()
                 lastExpr = Expr(BoolOp(op, [UnaryOp(Not(), lval), UnaryOp(Not(),rval)]))
             elif cmd_data[0] in [7, 8]:
-                if cmd_data[0] == 7:
-                    op = And()
-                if cmd_data[0] == 8:
-                    op = Or()
                 lastExpr = Expr(BoolOp(op, [lval, rval]))
             elif cmd_data[0] in [9, 10, 11, 12, 13]:
-                if cmd_data[0] == 9:
-                    op = Eq()
-                if cmd_data[0] == 10:
-                    op = Gt()
-                if cmd_data[0] == 11:
-                    op = Lt()
-                if cmd_data[0] == 12:
-                    op = GtE()
-                if cmd_data[0] == 13:
-                    op = LtE()
                 lastExpr = Expr(Compare(lval, [op], [rval]))
+            else:
+                raise Exception("Unhandled operation")
             ast_stack[-1].append(lastExpr)
-        # 41 is StoreValue, assigning SLOT 
+        # 41 is StoreValue, assigning to SLOT
         elif current_cmd == 41:
             cmd_data = slot_handler(current_cmd, cmd_data)
             lval = cmd_data[0]
             rval = cmd_data[1]
             tmp = Assign([lval], rval)
             ast_stack[-1].append(tmp)
+        # 47 slot operation saved to slot diff from SLOT_0
+        elif current_cmd == 47:
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            cmd_data[0] = cmd_data[0].value
+            aval = cmd_data[1]
+            lval = cmd_data[2]
+            rval = cmd_data[3]
+            op = get_operation(cmd_data[0])
+            if cmd_data[0] in [0, 1, 2, 3]:
+                tmp = BinOp(lval, op, rval)
+            elif cmd_data[0] in [4]:
+                tmp = Expr(BinOp(lval, op, rval))
+            elif cmd_data[0] in [5, 6]:
+                tmp = Expr(BoolOp(op, [UnaryOp(Not(), lval), UnaryOp(Not(),rval)]))
+            elif cmd_data[0] in [7, 8]:
+                tmp = Expr(BoolOp(op, [lval, rval]))
+            elif cmd_data[0] in [9, 10, 11, 12, 13]:
+                tmp = Expr(Compare(lval, [op], [rval]))
+            else:
+                raise Exception("Unhandled operation")
+            tmp = Assign([aval], tmp)
+            ast_stack[-1].append(tmp)
+            
         # 49 is ModifyVar_
-        elif current_cmd == 49 and cmd_data[0] in [0, 1, 2, 3]:
+        elif current_cmd == 49:
             cmd_data = slot_handler(current_cmd, cmd_data)
             cmd_data[0] = cmd_data[0].value
             lval = cmd_data[1]
             rval = cmd_data[2]
-            if cmd_data[0] == 0:
-                op = Add()
-            if cmd_data[0] == 1:
-                op = Sub()
-            if cmd_data[0] == 2:
-                op = Mult()
-            if cmd_data[0] == 3:
-                op = Div()
+            op = get_operation(cmd_data[0])
             tmp = Assign([lval], BinOp(lval, op, rval))
             ast_stack[-1].append(tmp)
         elif current_cmd in [11058, 22019]:
