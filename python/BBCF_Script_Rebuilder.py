@@ -250,6 +250,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         try:
             node.body[0].value.func.id = node.body[0].value.func.id.lower()
             find1 = node.body[0].value.func.id == "conditionalsendtolabel"
+            #TODO make sure to add the differentiation between the 2 types now that it's using the same name
             find2 = node.body[0].value.func.id == "notconditionalsendtolabel"
         except Exception:
             pass
