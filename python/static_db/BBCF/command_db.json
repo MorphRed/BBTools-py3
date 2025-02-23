@@ -152,6 +152,7 @@
     "name": "RegisterObject"
   },
   "39": {
+    "type": [1],
     "format": "3i",
     "name": "random_"
   },

@@ -63,17 +63,17 @@ def get_operation(operation_id):
     elif operation_id == 13:
         op = LtE()
     else:
-        raise Exception("Unvalid operation_id" + str(operation_id))
+        raise Exception("Unvalid operation_id " + str(operation_id))
     
     return op
 
 def slot_handler(command, cmd_data):
-    command = str(command)
+    str_command = str(command)
     tmp = []
     for i, v in enumerate(cmd_data):
-        if i in command_db[command]['type']:
+        if i in command_db[str_command]['type']:
             continue
-        elif i-1 in command_db[command]['type']:
+        elif i-1 in command_db[str_command]['type']:
             if cmd_data[i-1] == 0:
                 tmp.append(Constant(v))
             else:
@@ -83,24 +83,24 @@ def slot_handler(command, cmd_data):
             
     return tmp
 
-def find_named_value(command, value):
-    str_value = str(value)
+def get_move_name(command, cmd_data):
+    str_cmd_data = str(cmd_data)
     if command in [43, 14012]:
-        if str_value in move_inputs:
-            return move_inputs[str_value]
+        if str_cmd_data in move_inputs:
+            return move_inputs[str_cmd_data]
     elif command == 14001:
-        if str_value in normal_inputs['grouped_values']:
-            return normal_inputs['grouped_values'][str_value]
-        s = struct.pack('>H', value)
+        if str_cmd_data in normal_inputs['grouped_values']:
+            return normal_inputs['grouped_values'][str_cmd_data]
+        s = struct.pack('>H', cmd_data)
         button_byte, dir_byte = struct.unpack('>BB', s)
         if str(button_byte) in normal_inputs['button_byte'] and str(dir_byte) in normal_inputs['direction_byte']:
             return normal_inputs['direction_byte'][str(dir_byte)] + normal_inputs['button_byte'][str(button_byte)]
-    return hex(value)
+    return hex(cmd_data)
 
 def get_animation_name(cmd_data):
-    str_value = str(cmd_data)
-    if str_value in animation_db:
-        return animation_db[str_value]
+    str_cmd_data = str(cmd_data)
+    if str_cmd_data in animation_db:
+        return animation_db[str_cmd_data]
     return cmd_data
 
 def get_upon_name(cmd_data):
@@ -129,7 +129,7 @@ def sanitizer(command):
         i = values[0]
         value = values[1]
         if command in [43, 14001, 14012] and isinstance(value, int):
-            return Name(find_named_value(command, value))
+            return Name(get_move_name(command, value))
         elif command in [17, 29, 30] and i == 0:
             return Name(get_upon_name(value))
         elif command in [21007] and i == 1:
@@ -138,6 +138,8 @@ def sanitizer(command):
             return Name(get_animation_name(value))
         elif command and not isinstance(value, str) and "hex" in command_db[str(command)]:
             return Name(hex(value))
+        elif isinstance(values[1], str) and "SLOT_" in values[1]:
+            return Name(values[1])
         return Constant(value)
 
     return sanitize
@@ -363,18 +365,21 @@ def parse_bbscript_routine(file):
                 ast_stack[-1][-1].body.append(
                     Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[])))
         else:
+            if 'type' in command_db[str(current_cmd)]:
+                cmd_data = slot_handler(current_cmd, cmd_data)
+                for i, v in enumerate(cmd_data):
+                    try: 
+                        cmd_data[i] = v.id
+                    except AttributeError as _:
+                        cmd_data[i] = v.value
             # Things that affect slot_0
+            tmp = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
             if current_cmd in [39, 40, 42, 43, 44, 45, 46, 61, 23036, 23037, 23145, 23146, 23148, 23156, 23166]:
-                lastExpr = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+                lastExpr = tmp
                 
             if len(ast_stack) == 1:
                 ast_stack.append(astor_handler)
-            if 'type' not in command_db[str(current_cmd)]:
-                ast_stack[-1].append(
-                    Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[])))
-            else:
-                ast_stack[-1].append(
-                    Expr(Call(Name(id=db_data["name"]), args=slot_handler(current_cmd, cmd_data), keywords=[])))
+            ast_stack[-1].append(tmp)
                 
     return ast_root
 
