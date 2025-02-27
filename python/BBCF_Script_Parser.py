@@ -151,7 +151,6 @@ def function_clean(command):
         command = "__" + command
     return command
 
-
 def parse_bbscript_routine(file):
     ast_root = Module([], [])
     ast_stack = [ast_root.body]
@@ -205,77 +204,27 @@ def parse_bbscript_routine(file):
                 FunctionDef(get_upon_name(cmd_data[0]), empty_args, [], []))
             ast_stack.append(ast_stack[-1][-1].body)
         # 4 is if
-        elif current_cmd == 4:
-            if cmd_data[1] == 0:
-                try: 
-                    if ast_stack[-1][-1]:
-                        arcsysdoubleifspaghetti = ast_stack[-1][-1]
-                except IndexError:
-                    arcsysdoubleifspaghetti = True
-                if isinstance(arcsysdoubleifspaghetti, Expr):
-                    try: 
-                        tmp = lastExpr.value
-                        ast_stack[-1].append(If(tmp, [], []))
-                        ast_stack.append(ast_stack[-1][-1].body)
-                        ast_stack[-2].pop(-2)
-                    except Exception:
-                        print("Tell Morph to fix his script")
-                        tmp = Name(get_slot_name(0))
-                        ast_stack[-1].append(If(tmp, [], []))
-                        ast_stack.append(ast_stack[-1][-1].body)
-                else:
-                    ast_stack[-1].append(If(Name(get_slot_name(cmd_data[1]))))
-                    ast_stack.append(ast_stack[-1][-1].body)
-            else:
-                tmp = Name(get_slot_name(cmd_data[1]))
-                ast_stack[-1].append(If(tmp, [], []))
-                ast_stack.append(ast_stack[-1][-1].body)
         # 54 is ifNot
-        elif current_cmd == 54:
-            if cmd_data[1] == 0:
-                try:
-                    if ast_stack[-1][-1]:
-                        arcsysdoubleifspaghetti = ast_stack[-1][-1]
-                except IndexError:
-                    arcsysdoubleifspaghetti = True
-                if isinstance(arcsysdoubleifspaghetti, Expr):
-                    try:
-                        tmp = lastExpr.value
-                        ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                        ast_stack.append(ast_stack[-1][-1].body)
-                        ast_stack[-2].pop(-2)
-                    except Exception:
-                        print("Tell Morph to fix his script")
-                        tmp = Name(get_slot_name(0))
-                        ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                        ast_stack.append(ast_stack[-1][-1].body)
-            else:
-                tmp = Name(get_slot_name(cmd_data[1]))
+        elif current_cmd in [4, 54]:
+            tmp = Name(get_slot_name(cmd_data[1]))
+            if current_cmd == 4:
+                ast_stack[-1].append(If(tmp, [], []))
+            elif current_cmd == 54:
                 ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                ast_stack.append(ast_stack[-1][-1].body)
+            ast_stack.append(ast_stack[-1][-1].body)
         # 56 is else
         elif current_cmd == 56:
             ifnode = ast_stack[-1][-1]
             ast_stack.append(ifnode.orelse)
         # 18 is ifSlotSendTolabel
         elif current_cmd == 18:
-            if cmd_data[2] == 0:
-                tmp = lastExpr.value
-                ast_stack[-1].append(If(tmp, [], []))
-                ast_stack[-1].pop(-2)
-            else:
-                tmp = Name(get_slot_name(cmd_data[2]))
-                ast_stack[-1].append(If(tmp, [], []))
+            tmp = Name(get_slot_name(cmd_data[2]))
+            ast_stack[-1].append(If(tmp, [], []))
             ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [Constant(cmd_data[0])], [])))
         # 19 is ifNotSlotSendTolabel
         elif current_cmd == 19:
-            if cmd_data[2] == 0:
-                tmp = lastExpr.value
-                ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                ast_stack[-1].pop(-2)
-            else:
-                tmp = Name(get_slot_name(cmd_data[2]))
-                ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
+            tmp = Name(get_slot_name(cmd_data[2]))
+            ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
             ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [Constant(cmd_data[0])], [])))
         # 35 is apply function to Object
         elif current_cmd == 36:
@@ -290,18 +239,19 @@ def parse_bbscript_routine(file):
             rval = cmd_data[2]
             op = get_operation(cmd_data[0])
             if cmd_data[0] in [0, 1, 2, 3]:
-                lastExpr = BinOp(lval, op, rval)
+                tmp = BinOp(lval, op, rval)
             elif cmd_data[0] in [4]:
-                lastExpr = Expr(BinOp(lval, op, rval))
+                tmp = Expr(BinOp(lval, op, rval))
             elif cmd_data[0] in [5, 6]:
-                lastExpr = Expr(BoolOp(op, [UnaryOp(Not(), lval), UnaryOp(Not(),rval)]))
+                tmp = Expr(BoolOp(op, [UnaryOp(Not(), lval), UnaryOp(Not(),rval)]))
             elif cmd_data[0] in [7, 8]:
-                lastExpr = Expr(BoolOp(op, [lval, rval]))
+                tmp = Expr(BoolOp(op, [lval, rval]))
             elif cmd_data[0] in [9, 10, 11, 12, 13]:
-                lastExpr = Expr(Compare(lval, [op], [rval]))
+                tmp = Expr(Compare(lval, [op], [rval]))
             else:
                 raise Exception("Unhandled operation")
-            ast_stack[-1].append(lastExpr)
+            tmp = Assign([Name(get_slot_name(0))], tmp.value)
+            ast_stack[-1].append(tmp)
         # 41 is StoreValue, assigning to SLOT
         elif current_cmd == 41:
             cmd_data = slot_handler(current_cmd, cmd_data)
@@ -375,7 +325,7 @@ def parse_bbscript_routine(file):
             # Things that affect slot_0
             tmp = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
             if current_cmd in [39, 40, 42, 43, 44, 45, 46, 61, 23036, 23037, 23145, 23146, 23148, 23156, 23166]:
-                lastExpr = tmp
+                tmp = Assign([Name(get_slot_name(0))], tmp.value)
                 
             if len(ast_stack) == 1:
                 ast_stack.append(astor_handler)
