@@ -86,7 +86,6 @@
   "20": {
     "type_check": [1],
     "format": "3i",
-    "size": 16,
     "name": "SpriteDurationIfNot"
   },
   "21": {
@@ -191,8 +190,8 @@
     "name": "CheckObjectPresence"
   },
   "47": {
-    "format": "7i",
     "type_check": [1, 3, 5],
+    "format": "7i",
     "size": 32,
     "name": "PrivateFunction"
   },
@@ -245,8 +244,8 @@
     "name": "endElse"
   },
   "58": {
+    "type_check": [1],
     "format": "32sii",
-    "size": 44,
     "name": "TrainingModeSLOT"
   },
   "59": {
@@ -2072,7 +2071,6 @@
   },
   "9218": {
     "format": "i",
-    "size": 8,
     "name": "BounceOffWall"
   },
   "9219": {
@@ -2081,7 +2079,6 @@
   },
   "9238": {
     "format": "i",
-    "size": 8,
     "name": "ComboCorrectionPoint"
   },
   "9239": {
@@ -2090,7 +2087,6 @@
   },
   "9240": {
     "format": "i",
-    "size": 8,
     "name": "CHComboCorrectionPoint"
   },
   "9241": {
@@ -2099,7 +2095,6 @@
   },
   "9250": {
     "format": "i",
-    "size": 8,
     "name": "FreezeCount"
   },
   "9251": {
@@ -2108,7 +2103,6 @@
   },
   "9252": {
     "format": "i",
-    "size": 8,
     "name": "CHFreezeCount"
   },
   "9253": {
@@ -2117,7 +2111,6 @@
   },
   "9262": {
     "format": "i",
-    "size": 8,
     "name": "FreezeTime"
   },
   "9263": {
@@ -2126,7 +2119,6 @@
   },
   "9264": {
     "format": "i",
-    "size": 8,
     "name": "CHFreezeTime"
   },
   "9265": {
@@ -2143,7 +2135,6 @@
   },
   "9276": {
     "format": "i",
-    "size": 8,
     "name": "CHAttackP1"
   },
   "9277": {
@@ -2160,7 +2151,6 @@
   },
   "9288": {
     "format": "i",
-    "size": 8,
     "name": "CHAttackP2"
   },
   "9289": {
@@ -2169,7 +2159,6 @@
   },
   "9310": {
     "format": "i",
-    "size": 8,
     "name": "HardKnockdown"
   },
   "9311": {
@@ -2178,7 +2167,6 @@
   },
   "9312": {
     "format": "i",
-    "size": 8,
     "name": "CHHardKnockdown"
   },
   "9313": {
@@ -2195,7 +2183,6 @@
   },
   "9324": {
     "format": "i",
-    "size": 8,
     "name": "CHGroundedHitstunAnimation"
   },
   "9325": {
@@ -2212,7 +2199,6 @@
   },
   "9336": {
     "format": "i",
-    "size": 8,
     "name": "CHAirHitstunAnimation"
   },
   "9337": {
@@ -2221,7 +2207,6 @@
   },
   "9346": {
     "format": "i",
-    "size": 8,
     "name": "NonCornerWallbounce"
   },
   "9347": {
@@ -2230,7 +2215,6 @@
   },
   "9348": {
     "format": "i",
-    "size": 8,
     "name": "NonCornerCHWallbounce"
   },
   "9349": {
@@ -2240,7 +2224,6 @@
   "9358": {
     "format": "i",
     "name": "AirHitstunAfterWallbounce",
-    "size": 8
   },
   "9359": {
     "format": "",
@@ -2248,7 +2231,6 @@
   },
   "9360": {
     "format": "i",
-    "size": 8,
     "name": "CHAirHitstunAfterWallbounce"
   },
   "9361": {
@@ -2257,12 +2239,10 @@
   },
   "9362": {
     "format": "i",
-    "size": 8,
     "name": "Wallstick"
   },
   "9363": {
     "format": "i",
-    "size": 8,
     "name": "CHWallstick"
   },
   "9364": {
@@ -2272,17 +2252,14 @@
   },
   "9365": {
     "format": "i",
-    "size": 8,
     "name": "CHWallstickDuration"
   },
   "10000": {
     "format": "i",
-    "size": 8,
     "name": "DamageMultiplier"
   },
   "10001": {
     "format": "i",
-    "size": 8,
     "name": "CopyAttackValues"
   },
   "11000": {
@@ -2291,62 +2268,50 @@
   },
   "11001": {
     "format": "3i",
-    "size": 16,
     "name": "EnemyHitstopAddition"
   },
   "11002": {
     "format": "i",
-    "size": 8,
     "name": "ThrowTechWindow"
   },
   "11023": {
     "format": "i",
-    "size": 8,
     "name": "HitAnywhere"
   },
   "11024": {
     "format": "i",
-    "size": 8,
     "name": "ThrowAttack"
   },
   "11025": {
     "format": "i",
-    "size": 8,
     "name": "DoNotHitKnockedDownOpp"
   },
   "11026": {
     "format": "i",
-    "size": 8,
     "name": "BurstAttribute"
   },
   "11028": {
     "format": "i",
-    "size": 8,
     "name": "Blockstun"
   },
   "11029": {
     "format": "i",
-    "size": 8,
     "name": "AirBlockstun"
   },
   "11030": {
     "format": "i",
-    "size": 8,
     "name": "GuardCrushHitstun"
   },
   "11031": {
     "format": "i",
-    "size": 8,
     "name": "ChipPercentage"
   },
   "11032": {
     "format": "4i",
-    "size": 20,
     "name": "DistanceCheck"
   },
   "11033": {
     "format": "i",
-    "size": 8,
     "name": "ProjectileLevel"
   },
   "11034": {
@@ -4262,8 +4227,8 @@
     "name": "ObjectUpon2"
   },
   "23030": {
+    "type_check": [1, 3, 5, 7],
     "format": "32s8i",
-    "size": 68,
     "name": "CallPrivateFunction"
   },
   "23031": {
@@ -4752,7 +4717,6 @@
   "23166": {
     "auto": "autostr",
     "format": "32s",
-    "size": 36,
     "name": "OppStateCheck"
   },
   "23167": {

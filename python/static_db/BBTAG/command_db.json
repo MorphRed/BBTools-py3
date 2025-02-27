@@ -16,6 +16,7 @@
     "format": ""
   },
   "4": {
+    "type_check": [0],
     "startBlock": true,
     "name": "if",
     "format": "ii"
@@ -76,17 +77,19 @@
     "format": "i"
   },
   "18": {
+    "type_check": [1],
     "format": "3i",
     "name": "conditionalSendToLabel"
   },
   "19": {
-    "size": 16,
+    "type_check": [1],
     "format": "3i",
-    "name": "notConditionalSendToLabel"
+    "name": "conditionalSendToLabel"
   },
   "20": {
-    "size": 16,
-    "format": "iii"
+    "type_check": [1],
+    "format": "3i",
+    "name": "SpriteDurationIfNot"
   },
   "21": {
     "name": "enterState",
@@ -146,15 +149,18 @@
     "name": "RegisterObject"
   },
   "39": {
+    "type_check": [1],
     "name": "random_",
     "format": "iii"
   },
   "40": {
+    "type_check": [1, 3],
     "size": 24,
     "name": "op",
     "format": "iiiii"
   },
   "41": {
+    "type_check": [0, 2],
     "name": "StoreValue",
     "format": "iiii"
   },
@@ -182,19 +188,22 @@
     "name": "CheckObjectPresence"
   },
   "47": {
+    "type_check": [1, 3, 5],
     "format": "7i",
     "size": 32,
     "name": "PrivateFunction"
   },
   "48": {
+    "type_check": [1, 4],
     "format": "6i",
     "size": 28,
     "name": "CopyFromRightToLeft"
   },
   "49": {
+    "type_check": [1, 3],
     "size": 24,
     "name": "ModifyVar_",
-    "format": "iiiii"
+    "format": "5i"
   },
   "50": {
     "size": 8,
@@ -213,7 +222,7 @@
     "format": "i"
   },
   "54": {
-    "size": 12,
+    "type_check": [0],
     "name": "ifNot",
     "format": "ii"
   },
@@ -230,8 +239,9 @@
     "format": ""
   },
   "58": {
-    "size": 44,
-    "format": "32sii"
+    "type_check": [1],
+    "format": "32sii",
+    "name": "TrainingModeSLOT"
   },
   "59": {
     "size": 20,
@@ -242,7 +252,7 @@
     "format": "16s"
   },
   "61": {
-    "size": 52,
+    "type_check": [0, 2],
     "format": "12i"
   },
   "62": {
@@ -764,94 +774,107 @@
     "size": 4
   },
   "2000": {
-    "name": "RefreshMultihit",
-    "format": ""
+    "format": "",
+    "name": "RefreshMultihit"
   },
   "2001": {
-    "format": ""
+    "format": "",
+    "name": "EndAttack"
   },
   "2002": {
-    "name": "StartMultihit",
-    "format": ""
+    "format": "",
+    "name": "StartMultihit"
   },
   "2003": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "NoAttackDuringAction"
   },
   "2004": {
+    "format": "ii",
     "size": 12,
-    "format": "ii"
+    "name": "StayAfterMovement"
   },
   "2005": {
-    "format": ""
+    "format": "",
+    "name": "Flip"
   },
   "2006": {
-    "format": ""
+    "format": "",
+    "name": "ForceFaceSprite"
   },
   "2007": {
-    "format": ""
+    "format": "",
+    "name": "FaceLeft"
   },
   "2008": {
-    "format": ""
+    "format": "",
+    "name": "FaceRight"
   },
   "2009": {
-    "format": ""
+    "format": "",
+    "name": "AttackDefaults_Projectile"
   },
   "2010": {
-    "format": ""
+    "format": "",
+    "name": "AttackDefaults_SpecialProjectile"
   },
   "2011": {
-    "format": ""
+    "format": "",
+    "name": "AttackDefaults_SuperProjectile"
   },
   "2012": {
-    "format": ""
-  },
-  "2013": {
-    "format": "i",
-    "size": 8
+    "format": "",
+    "name": "AttackDefaults_AstralHeatProjectile"
   },
   "2015": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "SetXCollisionFromOrigin"
   },
   "2016": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "SetYCollisionFromOrigin"
   },
   "2017": {
-    "name": "EnableCollision",
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "EnableCollision"
   },
   "2018": {
+    "format": "ii",
     "size": 12,
-    "format": "ii"
+    "name": "SetZLine"
   },
   "2019": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "SetZVal"
   },
   "2020": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "AddZVal"
   },
   "2021": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "PreventSelfPush"
   },
   "2022": {
-    "format": ""
-  },
-  "2023": {
-    "size": 12
+    "format": "",
+    "name": "InitializeForLockObject"
   },
   "2034": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "ScreenCollision"
   },
   "2035": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "ForceShadowOff"
   },
   "2036": {
     "format": "3i",
@@ -859,51 +882,63 @@
     "size": 16
   },
   "2037": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "SetActionMark"
   },
   "2038": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "AddActionMark"
   },
   "2039": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "PerActionMark"
   },
   "2040": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "FlagAddActionMark"
   },
   "2041": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "FlagDelActionMark"
   },
   "2042": {
-    "format": "i"
+    "format": "i",
+    "name": "SetCommonActionMark"
   },
   "2043": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "AddCommonActionMark"
   },
   "2044": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "PerCommonActionMark"
   },
   "2045": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "FlagAddCommonActionMark"
   },
   "2046": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "FlagDelCommonActionMark"
   },
   "2047": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "ForceFloorReflectOff"
   },
   "2048": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "SetFloorReflectColor"
   },
   "2049": {
     "format": "i",
@@ -1103,12 +1138,15 @@
     "format": "i"
   },
   "3025": {
+    "hex": [0],
     "size": 12,
-    "format": "ii"
+    "format": "II",
+    "name": "ColorTransition"
   },
   "3026": {
-    "size": 8,
-    "format": "i"
+    "format": "I",
+    "name": "ColorForTransition",
+    "hex": true
   },
   "3027": {
     "size": 8,
@@ -1119,67 +1157,84 @@
     "format": "ii"
   },
   "3029": {
-    "size": 8,
-    "format": "i"
+    "format": "i",
+    "name": "EnableAfterimage",
+    "size": 8
   },
   "3030": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "AfterimageType"
   },
   "3031": {
-    "format": ""
+    "format": "",
+    "name": "BlendMode_Off"
   },
   "3032": {
-    "format": ""
+    "format": "",
+    "name": "BlendMode_Normal"
   },
   "3033": {
-    "format": ""
+    "format": "",
+    "name": "BlendMode_Add"
   },
   "3034": {
-    "format": ""
+    "format": "",
+    "name": "BlendMode_HalfAdd"
   },
   "3035": {
-    "format": ""
+    "format": "",
+    "name": "BlendMode_Sub"
   },
   "3038": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "Visibility"
   },
   "3040": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "PaletteEffType"
   },
   "3041": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "PaletteColor1"
   },
   "3042": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "PaletteColor2"
   },
   "3043": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "PaletteColor3"
   },
   "3044": {
+    "format": "I",
     "size": 8,
-    "format": "i"
+    "name": "PaletteColor4"
   },
   "3045": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "CustomPalette"
   },
   "3046": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "SetCustomPaletteAlpha"
   },
   "3047": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "SetBasePaletteAlpha"
   },
   "3048": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "SetBasePaletteColor"
   },
   "3053": {
     "size": 8,
@@ -1854,8 +1909,8 @@
     "format": ""
   },
   "9218": {
-    "size": 8,
-    "format": "i"
+    "format": "i",
+    "name": "BounceOffWall"
   },
   "9219": {
     "size": 8,
@@ -2214,8 +2269,8 @@
     "format": "i"
   },
   "11056": {
-    "size": 8,
-    "format": "i"
+    "format": "i",
+    "name": "AttackDirection"
   },
   "11057": {
     "size": 8,
@@ -2517,7 +2572,8 @@
   },
   "12019": {
     "format": "16s",
-    "size": 20
+    "size": 20,
+    "name": "CharacterID"
   },
   "12020": {
     "format": ""
@@ -2793,56 +2849,69 @@
     "name": "EnableRapidCancel"
   },
   "13026": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "WhiffBarrierCancel2"
   },
   "13027": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "AutomaticThrowReject"
   },
   "13028": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "EnableDemo"
   },
   "13029": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "EnablePreGuard"
   },
   "13030": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "EnableAutoBlock"
   },
   "13031": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "WhiffOverdriveCancel"
   },
   "13032": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "Enable2GetUp"
   },
   "13033": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "Enable2UkemiLand"
   },
   "13034": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "Enable2UkemiAir"
   },
   "13035": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "Enable2UkemiStagger"
   },
   "13036": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "Enable2UkemiLeap"
   },
   "13037": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "Enable2UkemiLeapEx"
   },
   "13038": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "EnableAll"
   },
   "13039": {
     "format": "i",
@@ -2850,30 +2919,33 @@
     "name": "FootstepSE"
   },
   "13040": {
-    "size": 68
+    "format": "32s8I",
+    "size": 68,
+    "name": "ArakuneSpriteOverlay"
   },
   "13041": {
+    "format": "ii",
     "size": 12,
-    "format": "ii"
+    "name": "ArakuneInvisibilityEffect"
   },
   "13042": {
-    "format": ""
+    "format": "",
+    "name": "EndArakuneInvisibilityEffect"
   },
   "13043": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "ShadowOffsetY"
   },
   "13044": {
-    "size": 8,
-    "format": "i"
-  },
-  "13045": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "ForceBloomMaskOn"
   },
   "13054": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "BeginCancelLevel"
   },
   "14000": {
     "format": ""
@@ -3199,8 +3271,9 @@
     "name": "DamageStunPriority"
   },
   "15014": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "OpponentAttackPriority"
   },
   "15015": {
     "size": 12,
@@ -3823,8 +3896,8 @@
     "name": "ObjectUpon2"
   },
   "23030": {
+    "type_check": [1, 3, 5, 7],
     "format": "32s8i",
-    "size": 68,
     "name": "CallPrivateFunction"
   },
   "23031": {
@@ -4283,8 +4356,8 @@
   },
   "23166": {
     "auto": "autostr",
-    "size": 36,
-    "format": "32s"
+    "format": "32s",
+    "name": "OppStateCheck"
   },
   "23167": {
     "format": ""
@@ -4325,6 +4398,7 @@
     "format": "i"
   },
   "23183": {
+    "type_check": [2],
     "format": "32s3i",
     "size": 48
   },
