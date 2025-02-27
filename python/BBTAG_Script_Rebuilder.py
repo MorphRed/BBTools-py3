@@ -397,12 +397,21 @@ def rebuild_bbscript(filename, output_path):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) not in [2, 3] or sys.argv[1].split(".")[-1] != "py":
-        print("Usage:BBTAG_Script_Rebuilder.py scr_xx.bin outdir")
+    no_slot = False
+    input_file = None
+    output_path = None
+    for v in sys.argv[1:]:
+        if input_file is None:
+            input_file = v
+        elif output_path is None:
+            output_path = v
+
+    if input_file.split(".")[-1] != "py":
+        print("Usage:BBTAG_Script_Rebuilder.py scr_xx.py outdir")
         print("Default output directory if left blank is the input file's directory.")
         sys.exit(1)
-    if len(sys.argv) == 2:
-        rebuild_bbscript(sys.argv[1], os.path.split(sys.argv[1])[0])
+    if output_path is None:
+        rebuild_bbscript(input_file, os.path.split(input_file)[0])
     else:
-        rebuild_bbscript(sys.argv[1], sys.argv[2])
+        rebuild_bbscript(input_file, output_path)
     print("\033[96m" + "complete" + "\033[0m")

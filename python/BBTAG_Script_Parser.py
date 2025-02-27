@@ -352,12 +352,30 @@ def parse_bbscript(filename, output_path):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) not in [2, 3] or sys.argv[1].split(".")[-1] != "bin":
-        print("Usage:BBTAG_Script_Parser.py scr_xx.bin outdir")
+    no_slot = False
+    input_file = None
+    output_path = None
+    for v in sys.argv[1:]:
+        if "--" in v:
+            if "--no-slot" in v:
+                no_slot = True
+            else:
+                raise Exception("Flag doesn't exist")
+            continue
+        if input_file is None:
+            input_file = v
+        elif output_path is None:
+            output_path = v
+
+    if input_file.split(".")[-1] != "bin":
+        print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
         print("Default output directory if left blank is the input file's directory.")
+        print("Flag: --no-slot")
         sys.exit(1)
-    if len(sys.argv) == 2:
-        parse_bbscript(sys.argv[1], os.path.split(sys.argv[1])[0])
+    if no_slot:
+        slot_db = {}
+    if output_path is None:
+        parse_bbscript(input_file, os.path.split(input_file)[0])
     else:
-        parse_bbscript(sys.argv[1], sys.argv[2])
+        parse_bbscript(input_file, output_path)
     print("\033[96m" + "complete" + "\033[0m")
