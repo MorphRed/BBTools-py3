@@ -1054,8 +1054,9 @@
     "format": "i"
   },
   "3004": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "ConstantAlphaModifier"
   },
   "3005": {
     "size": 8,
@@ -1609,8 +1610,9 @@
     "name": "LandingEffects"
   },
   "8001": {
+    "format": "ii",
     "size": 12,
-    "format": "ii"
+    "name": "JumpEffects"
   },
   "8002": {
     "format": ""
@@ -1652,47 +1654,63 @@
     "format": "iii"
   },
   "9000": {
-    "format": ""
+    "format": "",
+    "name": "DefaultAttack"
   },
   "9001": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "AttackType"
   },
   "9002": {
-    "name": "AttackLevel_",
-    "format": "i"
+    "format": "i",
+    "name": "AttackLevel"
   },
   "9003": {
-    "name": "Damage",
-    "format": "i"
+    "format": "i",
+    "name": "Damage"
   },
   "9004": {
-    "format": ""
+    "format": "",
+    "name": "ResetDamage"
   },
   "9007": {
-    "size": 24
+    "format": "i16s",
+    "size": 24,
+    "name": "SubVoice"
   },
   "9008": {
-    "size": 24
+    "format": "i16s",
+    "size": 24,
+    "name": "SmartSubVoice"
   },
   "9009": {
-    "size": 88
+    "size": 88,
+    "name": "RandomSubVoice"
   },
   "9010": {
-    "size": 88
+    "format": "i16si16si16si16si",
+    "size": 88,
+    "name": "SmartRandomSubVoice"
   },
   "9011": {
-    "size": 44
+    "size": 44,
+    "name": "OrderedVoiceline"
   },
   "9012": {
-    "size": 32
+    "format": "ii16si",
+    "size": 32,
+    "name": "RegisterSubVoice"
   },
   "9013": {
-    "size": 24
+    "format": "i16s",
+    "size": 24,
+    "name": "ObjectUpon25"
   },
   "9015": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "UsePunchHitspark"
   },
   "9016": {
     "format": "i",
@@ -1700,301 +1718,344 @@
     "name": "UseSlashHitspark"
   },
   "9017": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "UseFireHitspark"
   },
   "9018": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "UseElectricHitspark"
   },
   "9019": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "UseFreezeHitspark"
   },
   "9020": {
-    "size": 8,
-    "format": "i"
-  },
-  "9021": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "UseStrongHitspark"
   },
   "9070": {
-    "name": "AirPushbackX",
-    "format": "i"
+    "format": "i",
+    "name": "AirPushbackX"
   },
   "9071": {
-    "format": ""
+    "format": "",
+    "name": "ResetPushback"
   },
   "9072": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "CHAirPushbackX"
   },
   "9073": {
-    "format": ""
+    "format": "",
+    "name": "ResetCHPushback"
   },
   "9082": {
-    "name": "AirPushbackY",
-    "format": "i"
+    "format": "i",
+    "name": "AirPushbackY"
   },
   "9083": {
-    "format": ""
+    "format": "",
+    "name": "ResetVerticalDrag"
   },
   "9084": {
-    "name": "CounterHitAirPushbackY",
-    "format": "i"
+    "format": "i",
+    "name": "CHAirPushbackY"
   },
   "9085": {
-    "format": ""
+    "format": "",
+    "name": "ResetCHVerticalDrag"
   },
   "9094": {
-    "size": 8,
-    "name": "YImpluseBeforeWallbounce",
-    "format": "i"
-  },
-  "9095": {
-    "format": ""
-  },
-  "9096": {
-    "size": 8,
-    "format": "i"
-  },
-  "9097": {
-    "format": ""
-  },
-  "9106": {
-    "size": 8,
-    "name": "WallbounceReboundTime",
-    "format": "i"
-  },
-  "9107": {
-    "format": ""
-  },
-  "9108": {
-    "size": 8,
-    "format": "i"
-  },
-  "9109": {
-    "format": ""
-  },
-  "9118": {
-    "size": 8,
-    "format": "i"
-  },
-  "9119": {
-    "format": ""
-  },
-  "9120": {
-    "size": 8,
-    "format": "i"
-  },
-  "9121": {
-    "format": ""
-  },
-  "9130": {
-    "size": 8,
-    "format": "i"
-  },
-  "9131": {
-    "format": ""
-  },
-  "9132": {
-    "size": 8,
-    "format": "i"
-  },
-  "9133": {
-    "format": ""
-  },
-  "9142": {
-    "size": 8,
-    "format": "i"
-  },
-  "9143": {
-    "format": ""
-  },
-  "9144": {
-    "size": 8,
-    "format": "i"
-  },
-  "9145": {
-    "format": ""
-  },
-  "9154": {
-    "name": "hitstun",
-    "size": 8,
-    "format": "i"
-  },
-  "9155": {
-    "format": ""
-  },
-  "9156": {
-    "size": 8,
-    "format": "i"
-  },
-  "9157": {
-    "format": ""
-  },
-  "9166": {
-    "name": "AirUntechableTime",
-    "format": "i"
-  },
-  "9167": {
-    "format": ""
-  },
-  "9168": {
-    "size": 8,
-    "format": "i"
-  },
-  "9169": {
-    "format": ""
-  },
-  "9170": {
     "format": "i",
+    "name": "YImpulseBeforeWallbounce",
     "size": 8
   },
-  "9178": {
+  "9095": {
+    "format": "",
+    "name": "ResetGravity"
+  },
+  "9096": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "CHGravity"
+  },
+  "9097": {
+    "format": "",
+    "name": "ResetCHGravity"
+  },
+  "9106": {
+    "format": "i",
+    "name": "WallbounceReboundTime",
+    "size": 8
+  },
+  "9107": {
+    "format": "",
+    "name": "WallbounceReboundTimeReset"
+  },
+  "9108": {
+    "format": "i",
+    "size": 8,
+    "name": "CHWallbounceReboundTime"
+  },
+  "9109": {
+    "format": "",
+    "ame": "CHWallbounceReboundTimeReset"
+  },
+  "9118": {
+    "format": "i",
+    "size": 8,
+    "name": "BouncePercentage"
+  },
+  "9119": {
+    "format": "",
+    "name": "BouncePercentageReset"
+  },
+  "9120": {
+    "format": "i",
+    "size": 8,
+    "name": "CHBouncePercentage"
+  },
+  "9121": {
+    "format": "",
+    "name": "CHBouncePercentageReset"
+  },
+  "9130": {
+    "format": "i",
+    "size": 8,
+    "name": "Stagger"
+  },
+  "9131": {
+    "format": "",
+    "name": "StaggerReset"
+  },
+  "9132": {
+    "format": "i",
+    "size": 8,
+    "name": "CHStagger"
+  },
+  "9133": {
+    "format": "",
+    "name": "CHStaggerReset"
+  },
+  "9142": {
+    "format": "i",
+    "size": 8,
+    "name": "Crumple"
+  },
+  "9143": {
+    "format": "",
+    "name": "CrumpleReset"
+  },
+  "9144": {
+    "format": "i",
+    "size": 8,
+    "name": "CHCrumple"
+  },
+  "9145": {
+    "format": "",
+    "name": "CHCrumpleReset"
+  },
+  "9154": {
+    "format": "i",
+    "size": 8,
+    "name": "Hitstun"
+  },
+  "9155": {
+    "format": "",
+    "name": "HitstunReset"
+  },
+  "9156": {
+    "format": "i",
+    "size": 8,
+    "name": "CHHitstun"
+  },
+  "9157": {
+    "format": "",
+    "name": "CHHitstunReset"
+  },
+  "9166": {
+    "format": "i",
+    "name": "AirUntechableTime"
+  },
+  "9167": {
+    "format": "",
+    "name": "AirUntechableTimeReset"
+  },
+  "9168": {
+    "format": "i",
+    "size": 8,
+    "name": "CHAirUntechableTime"
+  },
+  "9169": {
+    "format": "",
+    "name": "CHAirUntechableTimeReset"
+  },
+  "9178": {
+    "format": "i",
+    "size": 8,
+    "name": "Wallbounce"
   },
   "9179": {
-    "format": ""
+    "format": "",
+    "name": "ResetWallbounce"
   },
   "9180": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "CHWallbounce"
   },
   "9181": {
-    "format": ""
+    "format": "",
+    "name": "CHResetWallbounce"
   },
   "9190": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "GroundBounce"
   },
   "9191": {
-    "format": ""
+    "format": "",
+    "name": "GroundBounceReset"
   },
   "9192": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "CHGroundBounce"
   },
   "9193": {
-    "format": ""
+    "format": "",
+    "name": "CHGroundBounceReset"
   },
   "9202": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "Floorslide"
   },
   "9203": {
-    "format": ""
+    "format": "",
+    "name": "FloorslideReset"
   },
   "9204": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "CHFloorslide"
   },
   "9205": {
-    "format": ""
+    "format": "",
+    "name": "CHFloorslideReset"
   },
   "9214": {
-    "name": "PushbackX",
-    "format": "i"
+    "format": "i",
+    "name": "PushbackX"
   },
   "9215": {
-    "format": ""
+    "format": "",
+    "name": "ResetPushbackX"
   },
   "9216": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "CHPushbackX"
   },
   "9217": {
-    "format": ""
+    "format": "",
+    "name": "CHResetPushbackX"
   },
   "9218": {
     "format": "i",
     "name": "BounceOffWall"
   },
   "9219": {
-    "size": 8,
-    "format": "i"
-  },
-  "9238": {
-    "size": 8,
-    "format": "i"
-  },
-  "9239": {
-    "format": ""
-  },
-  "9240": {
-    "size": 8,
-    "format": "i"
-  },
-  "9241": {
-    "format": ""
-  },
-  "9250": {
-    "name": "FreezeCount",
-    "size": 8,
-    "format": "i"
-  },
-  "9251": {
-    "format": ""
-  },
-  "9252": {
-    "size": 8,
-    "format": "i"
-  },
-  "9253": {
-    "format": ""
-  },
-  "9262": {
-    "name": "FreezeDuration",
-    "size": 8,
-    "format": "i"
-  },
-  "9263": {
-    "format": ""
-  },
-  "9264": {
-    "size": 8,
-    "format": "i"
-  },
-  "9265": {
-    "format": ""
-  },
-  "9266": {
     "format": "i",
     "size": 8
   },
+  "9238": {
+    "format": "i",
+    "name": "ComboCorrectionPoint"
+  },
+  "9239": {
+    "format": "",
+    "name": "ComboCorrectionPointReset"
+  },
+  "9240": {
+    "format": "i",
+    "name": "CHComboCorrectionPoint"
+  },
+  "9241": {
+    "format": "",
+    "name": "CHComboCorrectionPointReset"
+  },
+  "9250": {
+    "format": "i",
+    "name": "FreezeCount"
+  },
+  "9251": {
+    "format": "",
+    "name": "FreezeCountReset"
+  },
+  "9252": {
+    "format": "i",
+    "name": "CHFreezeCount"
+  },
+  "9253": {
+    "format": "",
+    "name": "CHFreezeCountReset"
+  },
+  "9262": {
+    "format": "i",
+    "name": "FreezeTime"
+  },
+  "9263": {
+    "format": "",
+    "name": "FreezeTimeReset"
+  },
+  "9264": {
+    "format": "i",
+    "name": "CHFreezeTime"
+  },
+  "9265": {
+    "format": "",
+    "name": "CHFreezeTimeReset"
+  },
   "9274": {
-    "name": "AttackP1",
-    "format": "i"
+    "format": "i",
+    "name": "AttackP1"
   },
   "9275": {
-    "format": ""
+    "format": "",
+    "name": "ResetAttackP1"
   },
   "9276": {
-    "size": 8,
-    "format": "i"
+    "format": "i",
+    "name": "CHAttackP1"
   },
   "9277": {
-    "format": ""
+    "format": "",
+    "name": "CHResetAttackP1"
   },
   "9286": {
-    "name": "AttackP2",
-    "format": "i"
+    "format": "i",
+    "name": "AttackP2"
   },
   "9287": {
-    "format": ""
+    "format": "",
+    "name": "ResetAttackP2"
   },
   "9288": {
-    "size": 8,
-    "format": "i"
+    "format": "i",
+    "name": "CHAttackP2"
   },
   "9289": {
-    "format": ""
+    "format": "",
+    "name": "CHResetAttackP2"
   },
   "9310": {
     "format": "i",
-    "size": 8,
     "name": "HardKnockdown"
   },
   "9311": {
@@ -2003,7 +2064,6 @@
   },
   "9312": {
     "format": "i",
-    "size": 8,
     "name": "CHHardKnockdown"
   },
   "9313": {
@@ -2020,7 +2080,6 @@
   },
   "9324": {
     "format": "i",
-    "size": 8,
     "name": "CHGroundedHitstunAnimation"
   },
   "9325": {
@@ -2037,7 +2096,6 @@
   },
   "9336": {
     "format": "i",
-    "size": 8,
     "name": "CHAirHitstunAnimation"
   },
   "9337": {
@@ -2046,7 +2104,6 @@
   },
   "9346": {
     "format": "i",
-    "size": 8,
     "name": "NonCornerWallbounce"
   },
   "9347": {
@@ -2055,7 +2112,6 @@
   },
   "9348": {
     "format": "i",
-    "size": 8,
     "name": "NonCornerCHWallbounce"
   },
   "9349": {
@@ -2064,8 +2120,7 @@
   },
   "9358": {
     "format": "i",
-    "name": "AirHitstunAfterWallbounce",
-    "size": 8
+    "name": "AirHitstunAfterWallbounce"
   },
   "9359": {
     "format": "",
@@ -2073,7 +2128,6 @@
   },
   "9360": {
     "format": "i",
-    "size": 8,
     "name": "CHAirHitstunAfterWallbounce"
   },
   "9361": {
@@ -2082,12 +2136,10 @@
   },
   "9362": {
     "format": "i",
-    "size": 8,
     "name": "Wallstick"
   },
   "9363": {
     "format": "i",
-    "size": 8,
     "name": "CHWallstick"
   },
   "9364": {
@@ -2097,7 +2149,6 @@
   },
   "9365": {
     "format": "i",
-    "size": 8,
     "name": "CHWallstickDuration"
   },
   "10000": {
@@ -3094,11 +3145,13 @@
     "format": ""
   },
   "14048": {
+    "format": "32sii",
     "hex": true,
-    "format": "32sii"
+    "name": "StylishModeSpecialButton"
   },
   "14049": {
-    "format": "32s32sii"
+    "format": "32s32sii",
+    "name": "StylishModeCancels"
   },
   "14067": {
     "size": 8,
@@ -3114,8 +3167,9 @@
   },
   "14070": {
     "auto": "autostr",
+    "format": "32s",
     "size": 36,
-    "format": "32s"
+    "name": "BeginBuffer"
   },
   "14071": {
     "auto": "autostr",
@@ -3124,8 +3178,9 @@
   },
   "14072": {
     "auto": "autostr",
+    "format": "32s",
     "size": 36,
-    "format": "32s"
+    "name": "BufferedOrPressedGoto"
   },
   "14073": {
     "auto": "autostr",
@@ -3134,8 +3189,9 @@
   },
   "14074": {
     "auto": "autostr",
+    "format": "32s",
     "size": 36,
-    "format": "32s"
+    "name": "DisallowGoto"
   },
   "14075": {
     "size": 8,
@@ -3438,7 +3494,8 @@
     "format": ""
   },
   "18003": {
-    "size": 132
+    "format": "128s",
+    "name": "Mouth"
   },
   "18004": {
     "size": 12,
@@ -3468,8 +3525,8 @@
     "format": ""
   },
   "18011": {
-    "size": 148,
-    "format": "16s64h"
+    "format": "16s128s",
+    "name": "MouthToVoice"
   },
   "19000": {
     "size": 8,
@@ -3609,8 +3666,9 @@
     "format": "ii"
   },
   "21007": {
+    "format": "ii",
     "size": 12,
-    "format": "ii"
+    "name": "ObjectUpon"
   },
   "21008": {
     "size": 8,
@@ -3624,8 +3682,9 @@
     "format": "i"
   },
   "21011": {
+    "format": "i",
     "size": 8,
-    "format": "i"
+    "name": "DemoTimer"
   },
   "21012": {
     "auto": "autostr",
