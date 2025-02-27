@@ -46,13 +46,13 @@ def get_operation(operation_id):
     elif operation_id == 4:
         op = Mod()
     elif operation_id == 5:
-        op = BitAnd() # It's actually conditional And
+        op = And()
     elif operation_id == 6:
-        op = BitOr() # It's actually conditional Or
+        op = Or()
     elif operation_id == 7:
-        op = And() # It's actually BitAnd
+        op = BitAnd()
     elif operation_id == 8:
-        op = Or() # It's actually BitOr
+        op = BitOr()
     elif operation_id == 9:
         op = Eq()
     elif operation_id == 10:

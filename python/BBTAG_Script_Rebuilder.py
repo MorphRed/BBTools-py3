@@ -71,13 +71,13 @@ def decode_op(node):
             return 3
         elif isinstance(node.op, Mod):
             return 4
-        elif isinstance(node.op, BitAnd): #It's actually conditional And but it's used less often
+        elif isinstance(node.op, And):
             return 5
-        elif isinstance(node.op, BitOr): #It's actually conditional Or but it's used less often
+        elif isinstance(node.op, Or):
             return 6
-        elif isinstance(node.op, And): #It's actually BitAnd but it's used more often
+        elif isinstance(node.op, BitAnd):
             return 7
-        elif isinstance(node.op, Or): #It's actually BitOr but it's used more often
+        elif isinstance(node.op, BitOr):
             return 8
     elif isinstance(node, Compare):
         if isinstance(node.ops[0], Eq):
