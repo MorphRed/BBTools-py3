@@ -59,12 +59,55 @@ animation_db_lookup = {v.lower(): k for k, v in animation_db.items()}
 MODE = "<"
 error = False
 
-def decode_upon(s):
-    s = s.lower()
-    if s.replace("upon_", "") in upon_db_lookup:
-        return int(upon_db_lookup[s.replace("upon_", "")])
+def decode_op(node):
+    if isinstance(node, BinOp) or isinstance(node, BoolOp):
+        if isinstance(node.op, Add):
+            return 0
+        elif isinstance(node.op, Sub):
+            return 1
+        elif isinstance(node.op, Mult):
+            return 2
+        elif isinstance(node.op, Div):
+            return 3
+        elif isinstance(node.op, Mod):
+            return 4
+        elif isinstance(node.op, BitAnd): #It's actually conditional And but it's used less often
+            return 5
+        elif isinstance(node.op, BitOr): #It's actually conditional Or but it's used less often
+            return 6
+        elif isinstance(node.op, And): #It's actually BitAnd but it's used more often
+            return 7
+        elif isinstance(node.op, Or): #It's actually BitOr but it's used more often
+            return 8
+    elif isinstance(node, Compare):
+        if isinstance(node.ops[0], Eq):
+            return 9
+        elif isinstance(node.ops[0], Gt):
+            return 10
+        elif isinstance(node.ops[0], Lt):
+            return 11
+        elif isinstance(node.ops[0], GtE):
+            return 12
+        elif isinstance(node.ops[0], LtE):
+            return 13
+    raise Exception("UNKNOWN OP")
+
+def decode_move(value):
+    tmp = named_value_lookup.get(value.id.lower())
+    if tmp is not None:
+        return int(tmp)
     else:
-        return int(s.replace("upon_", ""))
+        buttonstr = value.id[-1].lower()
+        directionstr = value.id[:-1].lower()
+        return (int(named_button_lookup[buttonstr]) << 8) + int(
+            named_direction_lookup[directionstr])
+
+def decode_upon(s):
+    s = s.lower().replace("upon_", "")
+    if s in upon_db_lookup:
+        return int(upon_db_lookup[s])
+    else:
+        return int(s)
 
 
 def decode_var(node):
@@ -89,6 +132,16 @@ def write_command_by_name(name, params):
 def write_command_by_id(id, params):
     global output_buffer
     cmd_data = command_db[id]
+    id = int(id)
+    if "type_check" in cmd_data:
+        type_check = cmd_data["type_check"]
+        type_check.sort()
+        n = max(len(params) + len(type_check), type_check[-1] + 1)
+        for i in range(n):
+            if i in type_check:
+                var = decode_var(params[i])
+                params.insert(i, var[0])
+                params[i+1] = var[1]
     my_params = list(params)
     for index, oValue in enumerate(my_params):
         if isinstance(oValue, str):
@@ -100,29 +153,21 @@ def write_command_by_id(id, params):
         elif isinstance(oValue, Constant):
             my_params[index] = oValue.value
         elif isinstance(oValue, Name):
-            temp = named_value_lookup.get(oValue.id.lower())
-            if temp is not None:
-                my_params[index] = int(temp)
-            else:
-                if int(id) in [17, 29, 30, 21007]:
-                    upon = decode_upon(oValue.id)
-                    my_params[index] = upon
-                elif int(id) in [9322, 9324, 9334, 9336]:
-                    s = oValue.id.lower()
-                    if s in animation_db_lookup:
-                        my_params[index] = int(animation_db_lookup[s])
-                    else:
-                        my_params[index] = int(s)
-                elif int(id) in [43, 14001, 14012]:
-                    buttonstr = oValue.id[-1].lower()
-                    directionstr = oValue.id[:-1].lower()
-                    my_params[index] = (int(named_button_lookup[buttonstr]) << 8) + int(
-                        named_direction_lookup[directionstr])
+            if id in [43, 14001, 14012]:
+                my_params[index] = decode_move(oValue)
+            elif id in [17, 29, 30, 21007]:
+                my_params[index] = decode_upon(oValue.id)
+            elif id in [9322, 9324, 9334, 9336]:
+                s = oValue.id.lower()
+                if s in animation_db_lookup:
+                    my_params[index] = int(animation_db_lookup[s])
+                else:
+                    my_params[index] = int(s)
         elif isinstance(oValue, UnaryOp):
             my_params[index] = -oValue.operand.value
         else:
             raise Exception("unknown type " + str(type(oValue)))
-    if int(id) in [11058, 22019] and len(my_params) == 1:
+    if id in [11058, 22019] and len(my_params) == 1:
         new_params = []
         for attribute in "HBFPT":
             if attribute in my_params[0]:
@@ -156,14 +201,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             state_count += 1
             if function.name.startswith('__') and function.name[2].isdigit():
                 function.name = function.name[2:]
-            if '__sp__' in function.name:
-                function.name.replace('__sp__', ' ')
-            if '__qu__' in function.name:
-                function.name.replace('__qu__', '?')
-            if '__at__' in function.name:
-                function.name.replace('__at__', '@')
-            if "__ds__" in function.name:
-                function.name.replace('__ds__', '-' )
+            function.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
             bytelog = function.name.encode()
             output_buffer.write(struct.pack(MODE + "32sI", function.name.encode(), 0xFADEF00D))
         node._dataStart = output_buffer.tell()
@@ -187,28 +225,14 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 output_buffer.seek(0, 2)
                 if node.name.startswith('__') and node.name[2].isdigit():
                     node.name = node.name[2:]
-                if '__sp__' in node.name:
-                    node.name.replace('__sp__', ' ')
-                if '__qu__' in node.name:
-                    node.name.replace('__qu__', '?')
-                if '__at__' in node.name:
-                    node.name.replace('__at__', '@')
-                if "__ds__" in node.name:
-                    node.name.replace('__ds__', '-' )
+                node.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
                 write_command_by_name("startState", [node.name])
                 self.visit_body(node.body)
                 write_command_by_name("endState", [])
-            else:
+            elif node.decorator_list[0].id.lower() == "subroutine":
                 if node.name.startswith('__') and node.name[2].isdigit():
                     node.name = node.name[2:]
-                if '__sp__' in node.name:
-                    node.name.replace('__sp__', ' ')
-                if '__qu__' in node.name:
-                    node.name.replace('__qu__', '?')
-                if '__at__' in node.name:
-                    node.name.replace('__at__', '@')
-                if "__ds__" in node.name:
-                    node.name.replace('__ds__', '-' )
+                node.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
                 write_command_by_name("startSubroutine", [node.name])
                 self.visit_body(node.body)
                 write_command_by_name("endSubroutine", [])
@@ -231,9 +255,15 @@ class Rebuilder(astor.ExplicitNodeVisitor):
 
     # Concerns def upon_ and applyFunctionToObject
     def visit_FunctionDef(self, node):
+        if len(node.decorator_list) > 0 and "stateregister" in node.decorator_list[0].id.lower():
+            if node.name.startswith('__') and node.name[2].isdigit():
+                node.name = node.name[2:]
+            node.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
+            write_command_by_name("Move_Register", [node.name, node.args.defaults[0]])
+            self.visit_body(node.body)
+            write_command_by_name("Move_EndRegister", [])
+            return
         node.name = node.name.lower()
-        if "upon" not in node.name and "runonobject" not in node.name:
-            raise Exception("prohibited inner function")
         if "upon" in node.name:
             write_command_by_name("upon", [decode_upon(node.name)])
             self.visit_body(node.body)
@@ -242,24 +272,28 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             write_command_by_name("RunOnObject", [int(node.name.replace("runonobject_", ""))])
             self.visit_body(node.body)
             write_command_by_name("RunOnSelf", [])
+        else:
+            raise Exception("prohibited inner function")
 
 
     def visit_If(self, node):
         find1 = False
         find2 = False
         try:
-            node.body[0].value.func.id = node.body[0].value.func.id.lower()
-            find1 = node.body[0].value.func.id == "conditionalsendtolabel"
-            find2 = node.body[0].value.func.id == "notconditionalsendtolabel"
+            if node.body[0].value.func.id.lower() == "conditionalsendtolabel":
+                if isinstance(node.test, UnaryOp):
+                    find2 = True
+                else:
+                    find1 = True
         except Exception:
             pass
         if isinstance(node.test, Name) and find1:
-            write_command_by_id("18", [node.body[0].value.args[0]] + decode_var(node.test))
+            write_command_by_id("18", [node.body[0].value.args[0], node.test])
         elif isinstance(node.test, UnaryOp) and isinstance(node.test.operand, Name) and find2:
-            write_command_by_id("19", [node.body[0].value.args[0]] + decode_var(node.test.operand))
+            write_command_by_id("19", [node.body[0].value.args[0], node.test.operand])
         elif isinstance(node.test, Name):
             # This is if(SLOT) we need to find out slot index and write it as param of if
-            write_command_by_name("if", decode_var(node.test))
+            write_command_by_name("if", [node.test])
             self.visit_body(node.body)
             write_command_by_name("endIf", [])
             if len(node.orelse) > 0:
@@ -268,7 +302,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_name("endElse", [])
         elif isinstance(node.test, UnaryOp) and isinstance(node.test.operand, Name):
             # This is if(SLOT) we need to find out slot index and write it as param of if
-            write_command_by_name("ifNot", decode_var(node.test.operand))
+            write_command_by_name("ifNot", [node.test.operand])
             self.visit_body(node.body)
             write_command_by_name("endIfNot", [])
             if len(node.orelse) > 0:
@@ -301,82 +335,35 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_name("else", [])
                 self.visit_body(node.orelse)
                 write_command_by_name("endElse", [])
-                # This thing breaks too many things when rebuilding
-                '''
-        elif isinstance(node.test, BoolOp):
-            self.visit_If(If(node.test.values[0].values[0], [node.test.values[0].values[1]], [If(node.test.values[1].values[0], [node.test.values[1].values[1]])]))
-            write_command_by_name("if", [2, 0])
-            self.visit_body(node.body)
-            write_command_by_name("endIf", [])
-        elif isinstance(node.test, UnaryOp) and isinstance(node.test.operand, BoolOp):
-            self.visit_If(If(node.test.operand.values[0], [If(node.test.operand.values[1].values[0], [node.test.operand.values[1].values[1]])], []))
-            write_command_by_name("ifNot", [2, 0])
-            self.visit_body(node.body)
-            write_command_by_name("endIfNot", [])
-            '''
         else:
             raise Exception("UNHANDLED IF")
-
-    def visit_BoolOp(self, node):
-        params = []
-        if len(node.values) > 2:
-            raise Exception("THERE CAN ONLY BE 2 AND/OR")
-        if not (not isinstance(node.values[0], UnaryOp) and not isinstance(node.values[1], UnaryOp) or (isinstance(node.values[0], UnaryOp) and isinstance(node.values[1], UnaryOp))):
-            raise Exception("BOTH VALUES NEED TO USE THE SAME OPERATOR")
-        if isinstance(node.values[0], UnaryOp):
-            if isinstance(node.op, And):
-                params.append(5)
-            elif isinstance(node.op, Or):
-                params.append(6)
-            write_command_by_name("op", params + decode_var(node.values[0].operand) + decode_var(node.values[1].operand))
-        else:
-            if isinstance(node.op, And):
-                params.append(7)
-            elif isinstance(node.op, Or):
-                params.append(8)
-            write_command_by_name("op", params + decode_var(node.values[0]) + decode_var(node.values[1]))
 
     def visit_UnaryOp(self, node):
         return
 
-    def visit_BinOp(self, node):
-        params = []
-        if isinstance(node.op, Mod):
-            params.append(4)
-        write_command_by_name("op", params + decode_var(node.left) + decode_var(node.right))
-
     def visit_Assign(self, node):
-        if isinstance(node.value, BinOp):
-            params = []
-            if isinstance(node.value.op, Add):
-                params.append(0)
-            elif isinstance(node.value.op, Sub):
-                params.append(1)
-            elif isinstance(node.value.op, Mult):
-                params.append(2)
-            elif isinstance(node.value.op, Div):
-                params.append(3)
+        if isinstance(node.value, Call):
+            self.visit(node.value)
+        else:
+            if isinstance(node.value, BinOp) or isinstance(node.value, BoolOp) or isinstance(node.value, Compare):
+                params = [decode_op(node.value)]
+                if isinstance(node.targets[0], Name) and isinstance(node.value.left, Name) and node.targets[0].id.lower() == node.value.left.id.lower():
+                    if isinstance(node.value, Compare):
+                        write_command_by_name("ModifyVar_", params + [node.targets[0], node.value.comparators[0]])
+                    else:
+                        write_command_by_name("ModifyVar_", params + [node.targets[0], node.value.right])
+                elif node.targets[0].id.lower() == "slot_0":
+                    if isinstance(node.value, Compare):
+                        write_command_by_name("op", params + [node.value.left, node.value.comparators[0]])
+                    else:
+                        write_command_by_name("op", params + [node.value.left, node.value.right])
+                else:
+                    if isinstance(node.value, Compare):
+                        write_command_by_name("PrivateFunction", params + [node.targets[0], node.value.left, node.value.comparators[0]])
+                    else:
+                        write_command_by_name("PrivateFunction", params + [node.targets[0], node.value.left, node.value.right])
             else:
-                raise Exception("UNKNOWN OPERATION")
-            write_command_by_name("ModifyVar_", params + decode_var(node.targets[0]) + decode_var(node.value.right))
-        else:
-            write_command_by_name("StoreValue", decode_var(node.targets[0]) + decode_var(node.value))
-
-    def visit_Compare(self, node):
-        params = []
-        if isinstance(node.ops[0], Eq):
-            params.append(9)
-        elif isinstance(node.ops[0], Gt):
-            params.append(10)
-        elif isinstance(node.ops[0], Lt):
-            params.append(11)
-        elif isinstance(node.ops[0], GtE):
-            params.append(12)
-        elif isinstance(node.ops[0], LtE):
-            params.append(13)
-        else:
-            raise Exception("UNKNOWN COMPARE")
-        write_command_by_name("op", params + decode_var(node.left) + decode_var(node.comparators[0]))
+                write_command_by_name("StoreValue", [node.targets[0], node.value])
 
     def visit_body(self, nodebody):
         global output_buffer, error

@@ -16,6 +16,7 @@
     "name": "loopRest"
   },
   "4": {
+    "type_check": [0],
     "format": "ii",
     "name": "if"
   },
@@ -73,13 +74,14 @@
     "size": 8
   },
   "18": {
+    "type_check": [1],
     "format": "3i",
     "name": "conditionalSendToLabel"
   },
   "19": {
+    "type_check": [1],
     "format": "3i",
-    "size": 16,
-    "name": "ConditionalSendToLabel"
+    "name": "conditionalSendToLabel"
   },
   "20": {
     "type_check": [1],
@@ -226,9 +228,9 @@
     "name": "CollideWithWall"
   },
   "54": {
+    "type_check": [0],
     "format": "ii",
-    "name": "ifNot",
-    "size": 12
+    "name": "ifNot"
   },
   "55": {
     "format": "",

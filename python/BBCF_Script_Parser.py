@@ -46,13 +46,13 @@ def get_operation(operation_id):
     elif operation_id == 4:
         op = Mod()
     elif operation_id == 5:
-        op = And()
+        op = BitAnd() # It's actually conditional And
     elif operation_id == 6:
-        op = Or()
+        op = BitOr() # It's actually conditional Or
     elif operation_id == 7:
-        op = And()
+        op = And() # It's actually BitAnd
     elif operation_id == 8:
-        op = Or()
+        op = Or() # It's actually BitOr
     elif operation_id == 9:
         op = Eq()
     elif operation_id == 10:
@@ -195,22 +195,25 @@ def parse_bbscript_routine(file):
         if current_cmd == 0:
             if len(ast_stack) > 1:
                 ast_stack.pop()
-            ast_stack[-1].append(FunctionDef(function_clean(cmd_data[0]), empty_args, [], [Name(id="State")]))
+            command = FunctionDef(function_clean(cmd_data[0]), empty_args, [], [Name(id="State")])
+            ast_stack[-1].append(command)
             ast_stack.append(ast_stack[-1][-1].body)
         # 8 is startSubroutine
         elif current_cmd == 8:
             if len(ast_stack) > 1:
                 ast_stack.pop()
-            ast_stack[-1].append(FunctionDef(function_clean(cmd_data[0]), empty_args, [], [Name(id="Subroutine")]))
+            command = FunctionDef(function_clean(cmd_data[0]), empty_args, [], [Name(id="Subroutine")])
+            ast_stack[-1].append(command)
             ast_stack.append(ast_stack[-1][-1].body)
         # 15 is upon
         elif current_cmd == 15:
-            ast_stack[-1].append(
-                FunctionDef(get_upon_name(cmd_data[0]), empty_args, [], []))
+            command = FunctionDef(get_upon_name(cmd_data[0]), empty_args, [], [])
+            ast_stack[-1].append(command)
             ast_stack.append(ast_stack[-1][-1].body)
         # 14001 is Move_Register
         elif current_cmd == 14001:
-            ast_stack[-1].append(FunctionDef(function_clean(cmd_data[0]), arguments(args=[arg("id")], defaults=[Name(get_move_name(current_cmd, cmd_data[1]))]), [], [Name(id="StateRegister")]))
+            command = FunctionDef(function_clean(cmd_data[0]), arguments(args=[arg("id")], defaults=[Name(get_move_name(current_cmd, cmd_data[1]))]), [], [Name(id="StateRegister")])
+            ast_stack[-1].append(command)
             ast_stack.append(ast_stack[-1][-1].body)
         # 4 is if
         # 54 is ifNot
@@ -252,9 +255,7 @@ def parse_bbscript_routine(file):
                 tmp = BinOp(lval, op, rval)
             elif cmd_data[0] in [4]:
                 tmp = BinOp(lval, op, rval)
-            elif cmd_data[0] in [5, 6]:
-                tmp = BoolOp(op, [UnaryOp(Not(), lval), UnaryOp(Not(),rval)])
-            elif cmd_data[0] in [7, 8]:
+            elif cmd_data[0] in [5, 6, 7, 8]:
                 tmp = BoolOp(op, [lval, rval])
             elif cmd_data[0] in [9, 10, 11, 12, 13]:
                 tmp = Compare(lval, [op], [rval])
@@ -281,9 +282,7 @@ def parse_bbscript_routine(file):
                 tmp = BinOp(lval, op, rval)
             elif cmd_data[0] in [4]:
                 tmp = BinOp(lval, op, rval)
-            elif cmd_data[0] in [5, 6]:
-                tmp = BoolOp(op, [UnaryOp(Not(), lval), UnaryOp(Not(),rval)])
-            elif cmd_data[0] in [7, 8]:
+            elif cmd_data[0] in [5, 6, 7, 8]:
                 tmp = BoolOp(op, [lval, rval])
             elif cmd_data[0] in [9, 10, 11, 12, 13]:
                 tmp = Compare(lval, [op], [rval])
