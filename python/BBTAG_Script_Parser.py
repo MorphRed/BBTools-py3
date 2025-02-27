@@ -2,6 +2,7 @@ import os, struct, json, sys, astor
 from ast import *
 
 GAME = "BBTAG"
+AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 60, 61, 63, 66, 23036, 23037, 23145, 23146, 23148, 23156, 23166]
 
 pypath = os.path.dirname(sys.argv[0])
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
@@ -33,24 +34,74 @@ except IOError:
 
 MODE = "<"
 
-def find_named_value(command, value):
-    str_value = str(value)
+def get_operation(operation_id):
+    if operation_id == 0:
+        op = Add()
+    elif operation_id == 1:
+        op = Sub()
+    elif operation_id == 2:
+        op = Mult()
+    elif operation_id == 3:
+        op = Div()
+    elif operation_id == 4:
+        op = Mod()
+    elif operation_id == 5:
+        op = And()
+    elif operation_id == 6:
+        op = Or()
+    elif operation_id == 7:
+        op = And()
+    elif operation_id == 8:
+        op = Or()
+    elif operation_id == 9:
+        op = Eq()
+    elif operation_id == 10:
+        op = Gt()
+    elif operation_id == 11:
+        op = Lt()
+    elif operation_id == 12:
+        op = GtE()
+    elif operation_id == 13:
+        op = LtE()
+    else:
+        raise Exception("Unvalid operation_id " + str(operation_id))
+
+    return op
+
+def slot_handler(command, cmd_data):
+    str_command = str(command)
+    tmp = []
+    for i, v in enumerate(cmd_data):
+        if i in command_db[str_command]['type_check']:
+            continue
+        elif i-1 in command_db[str_command]['type_check']:
+            if cmd_data[i-1] == 0:
+                tmp.append(Constant(v))
+            else:
+                tmp.append(Name(get_slot_name(v)))
+        else:
+            tmp.append(Constant(v))
+
+    return tmp
+
+def get_move_name(command, cmd_data):
+    str_cmd_data = str(cmd_data)
     if command in [43, 14012]:
-        if str_value in move_inputs:
-            return move_inputs[str_value]
+        if str_cmd_data in move_inputs:
+            return move_inputs[str_cmd_data]
     elif command == 14001:
-        if str_value in normal_inputs['grouped_values']:
-            return normal_inputs['grouped_values'][str_value]
-        s = struct.pack('>H', value)
+        if str_cmd_data in normal_inputs['grouped_values']:
+            return normal_inputs['grouped_values'][str_cmd_data]
+        s = struct.pack('>H', cmd_data)
         button_byte, dir_byte = struct.unpack('>BB', s)
         if str(button_byte) in normal_inputs['button_byte'] and str(dir_byte) in normal_inputs['direction_byte']:
             return normal_inputs['direction_byte'][str(dir_byte)] + normal_inputs['button_byte'][str(button_byte)]
-    return hex(value)
+    return hex(cmd_data)
 
 def get_animation_name(cmd_data):
-    str_value = str(cmd_data)
-    if str_value in animation_db:
-        return animation_db[str_value]
+    str_cmd_data = str(cmd_data)
+    if str_cmd_data in animation_db:
+        return animation_db[str_cmd_data]
     return cmd_data
 
 def get_upon_name(cmd_data):
@@ -59,12 +110,11 @@ def get_upon_name(cmd_data):
         str_cmd_data = upon_db[str_cmd_data]
     return "upon_" + str_cmd_data
 
-
 def get_slot_name(cmd_data):
     str_cmd_data = str(cmd_data)
     if str_cmd_data in slot_db:
         str_cmd_data = slot_db[str_cmd_data]
-    return Name(id="SLOT_" + str_cmd_data)
+    return "SLOT_" + str_cmd_data
 
 # Not used yet
 def get_object_name(cmd_data):
@@ -79,31 +129,32 @@ def sanitizer(command):
         i = values[0]
         value = values[1]
         if command in [43, 14001, 14012] and isinstance(value, int):
-            return Name(find_named_value(command, value))
-        elif command in [17, 29, 30, 21007] and i == 0:
-            return Name(get_upon_name(value).replace("upon_", ""))
+            return Name(get_move_name(command, value))
+        elif command in [17, 29, 30] and i == 0:
+            return Name(get_upon_name(value))
+        elif command in [21007] and i == 1:
+            return Name(get_upon_name(value))
         elif command in [9322, 9324, 9334, 9336]:
             return Name(get_animation_name(value))
         elif command and not isinstance(value, str) and "hex" in command_db[str(command)]:
+            if isinstance(command_db[str(command)]["hex"], list):
+                if i in command_db[str(command)]["hex"]:
+                    return Name(hex(value))
+                else:
+                    return Constant(value)
             return Name(hex(value))
+        elif isinstance(value, str) and "SLOT_" in value:
+            return Name(value)
         return Constant(value)
 
     return sanitize
 
 
 def function_clean(command):
-    if "-" in command:
-        command = command.replace("-", "__ds__")
-    if "@" in command:
-        command = command.replace("@", "__at__")
-    if "?" in command:
-        command = command.replace("?", "__qu__")
-    if " " in command:
-        command = command.replace(" ", "__sp__")
+    command = command.replace("-", "__ds__").replace("@", "__at__").replace("?", "__qu__").replace(" ", "__sp__")
     if command[0].isdigit():
         command = "__" + command
     return command
-
 
 def parse_bbscript_routine(file):
     ast_root = Module([], [])
@@ -157,173 +208,98 @@ def parse_bbscript_routine(file):
             ast_stack[-1].append(
                 FunctionDef(get_upon_name(cmd_data[0]), empty_args, [], []))
             ast_stack.append(ast_stack[-1][-1].body)
+        # 14001 is Move_Register
+        elif current_cmd == 14001:
+            ast_stack[-1].append(FunctionDef(function_clean(cmd_data[0]), arguments(args=[arg("id")], defaults=[Name(get_move_name(current_cmd, cmd_data[1]))]), [], [Name(id="StateRegister")]))
+            ast_stack.append(ast_stack[-1][-1].body)
         # 4 is if
-        elif current_cmd == 4:
-            if cmd_data[1] == 0:
-                try:
-                    if ast_stack[-1][-1]:
-                        arcsysdoubleifspaghetti = ast_stack[-1][-1]
-                except IndexError:
-                    arcsysdoubleifspaghetti = True
-                if isinstance(arcsysdoubleifspaghetti, Expr):
-                    try:
-                        tmp = lastExpr.value
-                        ast_stack[-1].append(If(tmp, [], []))
-                        ast_stack.append(ast_stack[-1][-1].body)
-                        ast_stack[-2].pop(-2)
-                    except Exception:
-                        print("Tell Morph to fix his script")
-                        tmp = get_slot_name(0)
-                        ast_stack[-1].append(If(tmp, [], []))
-                        ast_stack.append(ast_stack[-1][-1].body)
-                else:
-                    ast_stack[-1].append(If(get_slot_name(cmd_data[1])))
-                    '''
-                    ast_stack[-1][-1] = If(
-                        BoolOp(op=Or(), values=[
-                            BoolOp(op=And(), values=[Name(ast_stack[-1][-1].test.id), ast_stack[-1][-1].body[0].value]), 
-                            BoolOp(op=And(), values=[UnaryOp(Not(), Name(ast_stack[-1][-1].test.id)), ast_stack[-1][-1].orelse[0].value])]))
-                    '''
-                    ast_stack.append(ast_stack[-1][-1].body)
-            else:
-                tmp = get_slot_name(cmd_data[1])
-                ast_stack[-1].append(If(tmp, [], []))
-                ast_stack.append(ast_stack[-1][-1].body)
         # 54 is ifNot
-        elif current_cmd == 54:
-            if cmd_data[1] == 0:
-                try:
-                    if ast_stack[-1][-1]:
-                        arcsysdoubleifspaghetti = ast_stack[-1][-1]
-                except IndexError:
-                    arcsysdoubleifspaghetti = True
-                if isinstance(arcsysdoubleifspaghetti, Expr):
-                    try:
-                        tmp = lastExpr.value
-                        ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                        ast_stack.append(ast_stack[-1][-1].body)
-                        ast_stack[-2].pop(-2)
-                    except Exception:
-                        print("Tell Morph to fix his script")
-                        tmp = get_slot_name(0)
-                        ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                        ast_stack.append(ast_stack[-1][-1].body)
-                    '''
-                    ast_stack[-1][-1] = If(UnaryOp(Not(),
-                        BoolOp(op=Or(), values=[Name(ast_stack[-1][-2].value),
-                            BoolOp(op=And(), values=[Name(ast_stack[-1][-1].test.id), ast_stack[-1][-1].body[0].value])])))
-                    ast_stack.append(ast_stack[-1][-1].body)
-                    ast_stack[-2].pop(-2)
-                    '''
-            else:
-                tmp = get_slot_name(cmd_data[1])
-                ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                ast_stack.append(ast_stack[-1][-1].body)
+        elif current_cmd in [4, 54]:
+            command = Name(get_slot_name(cmd_data[1]))
+            if current_cmd == 4:
+                ast_stack[-1].append(If(command, [], []))
+            elif current_cmd == 54:
+                ast_stack[-1].append(If(UnaryOp(Not(), command), [], []))
+            ast_stack.append(ast_stack[-1][-1].body)
         # 56 is else
         elif current_cmd == 56:
             ifnode = ast_stack[-1][-1]
             ast_stack.append(ifnode.orelse)
         # 18 is ifSlotSendTolabel
         elif current_cmd == 18:
-            if cmd_data[2] == 0:
-                tmp = lastExpr.value
-                ast_stack[-1].append(If(tmp, [], []))
-                ast_stack[-1].pop(-2)
-            else:
-                tmp = get_slot_name(cmd_data[2])
-                ast_stack[-1].append(If(tmp, [], []))
+            command = Name(get_slot_name(cmd_data[2]))
+            ast_stack[-1].append(If(command, [], []))
             ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [Constant(cmd_data[0])], [])))
-        # 19 is ifSlotSendTolabel
+        # 19 is ifNotSlotSendTolabel
         elif current_cmd == 19:
-            if cmd_data[2] == 0:
-                tmp = lastExpr.value
-                ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
-                ast_stack[-1].pop(-2)
-            else:
-                tmp = get_slot_name(cmd_data[2])
-                ast_stack[-1].append(If(UnaryOp(Not(), tmp), [], []))
+            command = Name(get_slot_name(cmd_data[2]))
+            ast_stack[-1].append(If(UnaryOp(Not(), command), [], []))
             ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [Constant(cmd_data[0])], [])))
         # 35 is apply function to Object
         elif current_cmd == 36:
             ast_stack[-1].append(
                 FunctionDef(db_data["name"] + "_" + str(cmd_data[0]), empty_args, [], []))
             ast_stack.append(ast_stack[-1][-1].body)
-            # 39 is random
-            '''
-        elif current_cmd == 39: 
-        '''
-        # 40 is operation type aka comparison
-        elif current_cmd == 40 and cmd_data[0] in [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]:
-            if cmd_data[1] == 2:
-                lval = get_slot_name(cmd_data[2])
-            else:
-                lval = Constant(cmd_data[2])
-            if cmd_data[3] == 2:
-                rval = get_slot_name(cmd_data[4])
-            else:
-                rval = Constant(cmd_data[4])
-
-            if cmd_data[0] in [4]:
-                if cmd_data[0] == 4:
-                    op = Mod()
-                lastExpr = Expr(BinOp(lval, op, rval))
+        # 40 is operation stored in SLOT_0
+        elif current_cmd == 40:
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            cmd_data[0] = cmd_data[0].value
+            aval = Name(get_slot_name(0))
+            lval = cmd_data[1]
+            rval = cmd_data[2]
+            op = get_operation(cmd_data[0])
+            if cmd_data[0] in [0, 1, 2, 3]:
+                tmp = BinOp(lval, op, rval)
+            elif cmd_data[0] in [4]:
+                tmp = BinOp(lval, op, rval)
             elif cmd_data[0] in [5, 6]:
-                if cmd_data[0] == 5:
-                    op = And()
-                if cmd_data[0] == 6:
-                    op = Or()
-                lastExpr = Expr(BoolOp(op, [UnaryOp(Not(), lval), UnaryOp(Not(),rval)]))
+                tmp = BoolOp(op, [UnaryOp(Not(), lval), UnaryOp(Not(),rval)])
             elif cmd_data[0] in [7, 8]:
-                if cmd_data[0] == 7:
-                    op = And()
-                if cmd_data[0] == 8:
-                    op = Or()
-                lastExpr = Expr(BoolOp(op, [lval, rval]))
+                tmp = BoolOp(op, [lval, rval])
             elif cmd_data[0] in [9, 10, 11, 12, 13]:
-                if cmd_data[0] == 9:
-                    op = Eq()
-                if cmd_data[0] == 10:
-                    op = Gt()
-                if cmd_data[0] == 11:
-                    op = Lt()
-                if cmd_data[0] == 12:
-                    op = GtE()
-                if cmd_data[0] == 13:
-                    op = LtE()
-                lastExpr = Expr(Compare(lval, [op], [rval]))
-            ast_stack[-1].append(lastExpr)
-        # 41 is StoreValue aka SLOT assignment
+                tmp = Compare(lval, [op], [rval])
+            else:
+                raise Exception("Unhandled operation")
+            command = Assign([aval], tmp)
+            ast_stack[-1].append(command)
+        # 41 is StoreValue, assigning to SLOT
         elif current_cmd == 41:
-            if cmd_data[0] == 2:
-                lval = get_slot_name(cmd_data[1])
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            lval = cmd_data[0]
+            rval = cmd_data[1]
+            command = Assign([lval], rval)
+            ast_stack[-1].append(command)
+        # 47 slot operation saved to slot diff from SLOT_0
+        elif current_cmd == 47:
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            cmd_data[0] = cmd_data[0].value
+            aval = cmd_data[1]
+            lval = cmd_data[2]
+            rval = cmd_data[3]
+            op = get_operation(cmd_data[0])
+            if cmd_data[0] in [0, 1, 2, 3]:
+                tmp = BinOp(lval, op, rval)
+            elif cmd_data[0] in [4]:
+                tmp = BinOp(lval, op, rval)
+            elif cmd_data[0] in [5, 6]:
+                tmp = BoolOp(op, [UnaryOp(Not(), lval), UnaryOp(Not(),rval)])
+            elif cmd_data[0] in [7, 8]:
+                tmp = BoolOp(op, [lval, rval])
+            elif cmd_data[0] in [9, 10, 11, 12, 13]:
+                tmp = Compare(lval, [op], [rval])
             else:
-                lval = Constant(cmd_data[1])
-            if cmd_data[2] == 2:
-                rval = get_slot_name(cmd_data[3])
-            else:
-                rval = Constant(cmd_data[3])
-            tmp = Assign([lval], rval)
-            ast_stack[-1].append(tmp)
+                raise Exception("Unhandled operation")
+            command = Assign([aval], tmp)
+            ast_stack[-1].append(command)
         # 49 is ModifyVar_
-        elif current_cmd == 49 and cmd_data[0] in [0, 1, 2, 3]:
-            if cmd_data[1] == 2:
-                lval = get_slot_name(cmd_data[2])
-            else:
-                lval = Constant(cmd_data[2])
-            if cmd_data[3] == 2:
-                rval = get_slot_name(cmd_data[4])
-            else:
-                rval = Constant(cmd_data[4])
-            if cmd_data[0] == 0:
-                op = Add()
-            if cmd_data[0] == 1:
-                op = Sub()
-            if cmd_data[0] == 2:
-                op = Mult()
-            if cmd_data[0] == 3:
-                op = Div()
-            tmp = Assign([lval], BinOp(lval, op, rval))
-            ast_stack[-1].append(tmp)
+        elif current_cmd == 49:
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            cmd_data[0] = cmd_data[0].value
+            lval = cmd_data[1]
+            rval = cmd_data[2]
+            op = get_operation(cmd_data[0])
+            command = Assign([lval], BinOp(lval, op, rval))
+            ast_stack[-1].append(command)
         elif current_cmd in [11058, 22019]:
             attributes = ""
             if cmd_data[0] == 1:
@@ -339,23 +315,32 @@ def parse_bbscript_routine(file):
             ast_stack[-1].append(
                 Expr(Call(Name(id=db_data["name"]), args=[Constant(attributes)], keywords=[])))
         # Indentation end
-        elif current_cmd in [1, 5, 9, 16, 35, 55, 57]:
+        elif current_cmd in [1, 5, 9, 16, 35, 55, 57, 14002]:
             if len(ast_stack[-1]) == 0:
                 ast_stack[-1].append(Pass())
             if len(ast_stack) > 1:
                 astor_handler = ast_stack.pop()
             else:
-                ast_stack[-1][-1].body.append(
-                    Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[])))
+                command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+                ast_stack[-1][-1].body.append(command)
+
         else:
+            if 'type_check' in command_db[str(current_cmd)]:
+                cmd_data = slot_handler(current_cmd, cmd_data)
+                for i, v in enumerate(cmd_data):
+                    try:
+                        cmd_data[i] = v.id
+                    except AttributeError as _:
+                        cmd_data[i] = v.value
+            command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
             # Things that affect slot_0
-            if current_cmd in [39, 40, 42, 43, 44, 45, 46, 23036, 23037, 23145, 23148, 23156]:
-                lastExpr = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+            if current_cmd in AFFECT_SLOT_0:
+                command = Assign([Name(get_slot_name(0))], command.value)
 
             if len(ast_stack) == 1:
                 ast_stack.append(astor_handler)
-            ast_stack[-1].append(
-                Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[])))
+            ast_stack[-1].append(command)
+
     return ast_root
 
 def parse_bbscript(filename, output_path):
@@ -369,7 +354,7 @@ def parse_bbscript(filename, output_path):
 
 if __name__ == '__main__':
     if len(sys.argv) not in [2, 3] or sys.argv[1].split(".")[-1] != "bin":
-        print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
+        print("Usage:BBTAG_Script_Parser.py scr_xx.bin outdir")
         print("Default output directory if left blank is the input file's directory.")
         sys.exit(1)
     if len(sys.argv) == 2:

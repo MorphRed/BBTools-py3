@@ -411,7 +411,7 @@ def rebuild_bbscript(filename, output_path):
 
 if __name__ == '__main__':
     if len(sys.argv) not in [2, 3] or sys.argv[1].split(".")[-1] != "py":
-        print("Usage:BBCF_Script_Rebuilder.py scr_xx.bin outdir")
+        print("Usage:BBTAG_Script_Rebuilder.py scr_xx.bin outdir")
         print("Default output directory if left blank is the input file's directory.")
         sys.exit(1)
     if len(sys.argv) == 2:
