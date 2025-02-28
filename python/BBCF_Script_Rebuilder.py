@@ -93,14 +93,18 @@ def decode_op(node):
     raise Exception("UNKNOWN OP")
 
 def decode_move(value):
-    tmp = named_value_lookup.get(value.id.lower())
+    value.id = value.id.lower()
+    tmp = named_value_lookup.get(value.id)
     if tmp is not None:
         return int(tmp)
     else:
-        buttonstr = value.id[-1].lower()
-        directionstr = value.id[:-1].lower()
-        return (int(named_button_lookup[buttonstr]) << 8) + int(
-            named_direction_lookup[directionstr])
+        try:
+            return int(value.id.replace("input_", ""), 16)
+        except ValueError:
+            buttonstr = value.id[-1]
+            directionstr = value.id[:-1]
+            return (int(named_button_lookup[buttonstr]) << 8) + int(
+                named_direction_lookup[directionstr])
 
 def decode_upon(s):
     s = s.lower().replace("upon_", "")
@@ -129,45 +133,49 @@ def write_command_by_name(name, params):
     write_command_by_id(cmd_data["id"], params)
 
 
-def write_command_by_id(id, params):
+def write_command_by_id(command, params):
     global output_buffer
-    cmd_data = command_db[id]
-    id = int(id)
+    cmd_data = command_db[command]
+    command = int(command)
+    for index, value in enumerate(params):
+        if isinstance(value, Call):
+            write_command_by_name(value.id, value.args)
+            params[index] = Name("SLOT_0")
     if "type_check" in cmd_data:
         type_check = cmd_data["type_check"]
         type_check.sort()
-        n = max(len(params) + len(type_check), type_check[-1] + 1)
+        n = len(params) + len(type_check)
         for i in range(n):
             if i in type_check:
                 var = decode_var(params[i])
                 params.insert(i, var[0])
                 params[i+1] = var[1]
     my_params = list(params)
-    for index, oValue in enumerate(my_params):
-        if isinstance(oValue, str):
+    for index, value in enumerate(my_params):
+        if isinstance(value, str):
             pass
-        elif isinstance(oValue, int):
+        elif isinstance(value, int):
             pass
-        elif isinstance(oValue, float):
+        elif isinstance(value, float):
             pass
-        elif isinstance(oValue, Constant):
-            my_params[index] = oValue.value
-        elif isinstance(oValue, Name):
-            if id in [43, 14001, 14012]:
-                my_params[index] = decode_move(oValue)
-            elif id in [17, 29, 30, 21007]:
-                my_params[index] = decode_upon(oValue.id)
-            elif id in [9322, 9324, 9334, 9336]:
-                s = oValue.id.lower()
+        elif isinstance(value, Constant):
+            my_params[index] = value.value
+        elif isinstance(value, Name):
+            if command in [43, 14001, 14012]:
+                my_params[index] = decode_move(value)
+            elif command in [17, 29, 30, 21007]:
+                my_params[index] = decode_upon(value.id)
+            elif command in [9322, 9324, 9334, 9336]:
+                s = value.id.lower()
                 if s in animation_db_lookup:
                     my_params[index] = int(animation_db_lookup[s])
                 else:
                     my_params[index] = int(s)
-        elif isinstance(oValue, UnaryOp):
-            my_params[index] = -oValue.operand.value
+        elif isinstance(value, UnaryOp):
+            my_params[index] = -value.operand.value
         else:
-            raise Exception("unknown type " + str(type(oValue)))
-    if id in [11058, 22019] and len(my_params) == 1:
+            raise Exception("unknown type " + str(type(value)))
+    if command in [11058, 22019] and len(my_params) == 1:
         new_params = []
         for attribute in "HBFPT":
             if attribute in my_params[0]:
@@ -175,7 +183,7 @@ def write_command_by_id(id, params):
             else:
                 new_params.append(0)
         my_params = new_params
-    output_buffer.write(struct.pack(MODE + "I", int(id)))
+    output_buffer.write(struct.pack(MODE + "I", int(command)))
     if "format" in cmd_data:
         for i, v1 in enumerate(my_params):
             if isinstance(v1, str):
@@ -187,8 +195,7 @@ def write_command_by_id(id, params):
 
 class Rebuilder(astor.ExplicitNodeVisitor):
     def visit_Module(self, node):
-        global output_buffer
-        global root
+        global output_buffer, root
         root = node
         state_count = 0
         output_buffer.write(struct.pack(MODE + "I", state_count))
@@ -259,7 +266,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             if node.name.startswith('__') and node.name[2].isdigit():
                 node.name = node.name[2:]
             node.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
-            write_command_by_name("Move_Register", [node.name, node.args.defaults[0]])
+            write_command_by_name("Move_Register", [node.name, Name(node.args.args[0].arg)])
             self.visit_body(node.body)
             write_command_by_name("Move_EndRegister", [])
             return

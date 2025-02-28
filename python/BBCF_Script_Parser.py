@@ -106,7 +106,7 @@ def get_move_name(command, cmd_data):
         button_byte, dir_byte = struct.unpack('>BB', s)
         if str(button_byte) in normal_inputs['button_byte'] and str(dir_byte) in normal_inputs['direction_byte']:
             return normal_inputs['direction_byte'][str(dir_byte)] + normal_inputs['button_byte'][str(button_byte)]
-    return hex(cmd_data)
+    return "INPUT_" + str(hex(cmd_data))
 
 def get_animation_name(cmd_data):
     str_cmd_data = str(cmd_data)
@@ -221,7 +221,7 @@ def parse_bbscript_routine(file):
             ast_stack.append(ast_stack[-1][-1].body)
         # 14001 is Move_Register
         elif current_cmd == 14001:
-            command = FunctionDef(function_clean(cmd_data[0]), arguments(args=[arg("id")], defaults=[Name(get_move_name(current_cmd, cmd_data[1]))]), [], [Name(id="StateRegister")])
+            command = FunctionDef(function_clean(cmd_data[0]), arguments(args=[arg(get_move_name(current_cmd, cmd_data[1]))]), [], [Name(id="StateRegister")])
             ast_stack[-1].append(command)
             ast_stack.append(ast_stack[-1][-1].body)
         # 4 is if, 54 is ifNot
