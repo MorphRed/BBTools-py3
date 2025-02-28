@@ -2,7 +2,10 @@ import os, struct, json, sys, astor
 from ast import *
 
 GAME = "BBTAG"
-slot_0 = Name("SLOT_0")
+AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 60, 61, 63, 66, 23036, 23037, 23145, 23146, 23148, 23156, 23166]
+ast_root = Module([], [])
+ast_stack = [ast_root.body]
+slot_0_expr = None
 
 pypath = os.path.dirname(sys.argv[0])
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
@@ -17,9 +20,11 @@ json_data = open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/global.jso
 upon_db = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.json")).read()
 slot_db = json.loads(json_data)
+json_data = open(os.path.join(pypath, "static_db/" + GAME + "/object_db/global.json")).read()
+object_db = json.loads(json_data)
 #Checking for a custom slot/upon db
 character_name = sys.argv[1].replace("scr_", "").split(".")[0]
-if character_name[:-2] == "ea":
+if character_name[:-2] == "ea" and len(character_name) > 2:
     character_name = character_name[:-2]
 try:
     upon_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/" + character_name + ".json")).read()))
@@ -30,409 +35,355 @@ try:
 except IOError:
     pass
 
-command_db_lookup = {}
-slot_db_lookup = {}
-named_value_lookup = {}
-named_button_lookup = {}
-named_direction_lookup = {}
-upon_db_lookup = {}
-animation_db_lookup = {}
-
-for k, v in command_db.items():
-    v["id"] = k
-    if "name" in v:
-        v["name"] = v["name"].lower()
-        command_db_lookup[v["name"]] = v
-    else:
-        command_db_lookup["unknown" + k] = v
-slot_db_lookup = {v.lower(): k for k, v in slot_db.items()}
-for k, v in move_inputs.items():
-    named_value_lookup[v.lower()] = k
-for k, v in normal_inputs['grouped_values'].items():
-    named_value_lookup[v.lower()] = k
-for k, v in normal_inputs['button_byte'].items():
-    named_button_lookup[v.lower()] = k
-for k, v in normal_inputs['direction_byte'].items():
-    named_direction_lookup[v.lower()] = k
-upon_db_lookup = {v.lower(): k for k, v in upon_db.items()}
-animation_db_lookup = {v.lower(): k for k, v in animation_db.items()}
-
 MODE = "<"
-error = False
 
-def decode_op(node):
-    if isinstance(node, BinOp) or isinstance(node, BoolOp):
-        if isinstance(node.op, Add):
-            return 0
-        elif isinstance(node.op, Sub):
-            return 1
-        elif isinstance(node.op, Mult):
-            return 2
-        elif isinstance(node.op, Div):
-            return 3
-        elif isinstance(node.op, Mod):
-            return 4
-        elif isinstance(node.op, And):
-            return 5
-        elif isinstance(node.op, Or):
-            return 6
-        elif isinstance(node.op, BitAnd):
-            return 7
-        elif isinstance(node.op, BitOr):
-            return 8
-    elif isinstance(node, Compare):
-        if isinstance(node.ops[0], Eq):
-            return 9
-        elif isinstance(node.ops[0], Gt):
-            return 10
-        elif isinstance(node.ops[0], Lt):
-            return 11
-        elif isinstance(node.ops[0], GtE):
-            return 12
-        elif isinstance(node.ops[0], LtE):
-            return 13
-    raise Exception("UNKNOWN OP")
-
-def decode_move(value):
-    value.id = value.id.lower()
-    tmp = named_value_lookup.get(value.id)
-    if tmp is not None:
-        return int(tmp)
+def get_operation(operation_id):
+    if operation_id == 0:
+        op = Add()
+    elif operation_id == 1:
+        op = Sub()
+    elif operation_id == 2:
+        op = Mult()
+    elif operation_id == 3:
+        op = Div()
+    elif operation_id == 4:
+        op = Mod()
+    elif operation_id == 5:
+        op = And()
+    elif operation_id == 6:
+        op = Or()
+    elif operation_id == 7:
+        op = BitAnd()
+    elif operation_id == 8:
+        op = BitOr()
+    elif operation_id == 9:
+        op = Eq()
+    elif operation_id == 10:
+        op = Gt()
+    elif operation_id == 11:
+        op = Lt()
+    elif operation_id == 12:
+        op = GtE()
+    elif operation_id == 13:
+        op = LtE()
     else:
-        try:
-            return int(value.id.replace("input_", ""), 16)
-        except ValueError:
-            buttonstr = value.id[-1]
-            directionstr = value.id[:-1]
-            return (int(named_button_lookup[buttonstr]) << 8) + int(
-                named_direction_lookup[directionstr])
+        raise Exception("Unvalid operation_id " + str(operation_id))
 
-def decode_upon(s):
-    s = s.lower().replace("upon_", "")
-    if s in upon_db_lookup:
-        return int(upon_db_lookup[s])
-    else:
-        return int(s)
+    return op
 
-
-def decode_var(node):
-    if isinstance(node, UnaryOp):
-        return [0, -node.operand.value]
-    elif isinstance(node, Constant):
-        return [0, node.value]
-    elif node.id.lower().replace("slot_", "") in slot_db_lookup:
-        return [2, int(slot_db_lookup[node.id.lower().replace("slot_", "")])]
-    else:
-        try:
-            return [2, int(node.id.lower().replace("slot_", ""))]
-        except ValueError:
-            raise Exception("unknown SLOT " + node.id)
-
-
-def write_command_by_name(name, params):
-    cmd_data = command_db_lookup[name.lower()]
-    write_command_by_id(cmd_data["id"], params)
-
-
-def write_command_by_id(command, params):
-    global output_buffer
-    cmd_data = command_db[command]
-    command = int(command)
-    if "type_check" in cmd_data:
-        type_check = cmd_data["type_check"]
-        type_check.sort()
-        n = len(params) + len(type_check)
-        for i in range(n):
-            if i in type_check:
-                var = decode_var(params[i])
-                params.insert(i, var[0])
-                params[i+1] = var[1]
-    my_params = list(params)
-    for index, value in enumerate(my_params):
-        if isinstance(value, str):
-            pass
-        elif isinstance(value, int):
-            pass
-        elif isinstance(value, float):
-            pass
-        elif isinstance(value, Constant):
-            my_params[index] = value.value
-        elif isinstance(value, Name):
-            if command in [43, 14001, 14012]:
-                my_params[index] = decode_move(value)
-            elif command in [17, 29, 30, 21007]:
-                my_params[index] = decode_upon(value.id)
-            elif command in [9322, 9324, 9334, 9336]:
-                s = value.id.lower()
-                if s in animation_db_lookup:
-                    my_params[index] = int(animation_db_lookup[s])
-                else:
-                    my_params[index] = int(s)
-        elif isinstance(value, UnaryOp):
-            my_params[index] = -value.operand.value
-        else:
-            raise Exception("unknown type " + str(type(value)))
-    if command in [11058, 22019] and len(my_params) == 1:
-        new_params = []
-        for attribute in "HBFPT":
-            if attribute in my_params[0]:
-                new_params.append(1)
+def slot_handler(command, cmd_data):
+    str_command = str(command)
+    tmp = []
+    for i, v in enumerate(cmd_data):
+        if i in command_db[str_command]['type_check']:
+            continue
+        elif i-1 in command_db[str_command]['type_check']:
+            if cmd_data[i-1] == 0:
+                tmp.append(Constant(v))
             else:
-                new_params.append(0)
-        my_params = new_params
-    output_buffer.write(struct.pack(MODE + "I", int(command)))
-    if "format" in cmd_data:
-        for i, v1 in enumerate(my_params):
-            if isinstance(v1, str):
-                my_params[i] = v1.encode()
-        output_buffer.write(struct.pack(MODE + cmd_data["format"], *my_params))
-    else:
-        output_buffer.write(my_params[0].encode())
-
-
-class Rebuilder(astor.ExplicitNodeVisitor):
-    def visit_Module(self, node):
-        global output_buffer, root
-        root = node
-        state_count = 0
-        output_buffer.write(struct.pack(MODE + "I", state_count))
-        for function in node.body:
-            if type(function) != FunctionDef:
-                raise Exception("Root level elements must be functions")
-            if function.decorator_list[0].id.lower() != "state":
-                continue
-            function._index = state_count
-            state_count += 1
-            if function.name.startswith('__') and function.name[2].isdigit():
-                function.name = function.name[2:]
-            function.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
-            bytelog = function.name.encode()
-            output_buffer.write(struct.pack(MODE + "32sI", function.name.encode(), 0xFADEF00D))
-        node._dataStart = output_buffer.tell()
-        output_buffer.seek(0)
-        output_buffer.write(struct.pack(MODE + "I", state_count))
-        for child_node in node.body:
-            self.visit_RootFunctionDef(child_node)
-
-    def visit_Str(self, node):
-        pass
-
-    def visit_RootFunctionDef(self, node):
-        global output_buffer, root
-        output_buffer.seek(0, 2)
-        if len(node.decorator_list) == 1:
-            if node.decorator_list[0].id.lower() == "state":
-                # Write offset into state table
-                start_offset = output_buffer.tell() - root._dataStart
-                output_buffer.seek(4 + 36 * node._index + 32)
-                output_buffer.write(struct.pack(MODE + "I", start_offset))
-                output_buffer.seek(0, 2)
-                if node.name.startswith('__') and node.name[2].isdigit():
-                    node.name = node.name[2:]
-                node.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
-                write_command_by_name("startState", [node.name])
-                self.visit_body(node.body)
-                write_command_by_name("endState", [])
-            elif node.decorator_list[0].id.lower() == "subroutine":
-                if node.name.startswith('__') and node.name[2].isdigit():
-                    node.name = node.name[2:]
-                node.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
-                write_command_by_name("startSubroutine", [node.name])
-                self.visit_body(node.body)
-                write_command_by_name("endSubroutine", [])
-        else:
-            raise Exception("haven't implemented this")
-
-    def visit_Pass(self, node):
-        pass
-
-    def visit_Call(self, node):
-        for index, value in enumerate(node.args):
-            if isinstance(value, Call) or isinstance(value, Compare) or isinstance(value, BinOp) or isinstance(value, BoolOp):
-                self.visit(value)
-                node.args[index] = Name("SLOT_0")
-
-        node.func.id = node.func.id.lower()
-        # We have a function call. Is it a named function or is it UnknownXXXXX
-        if "unknown" in node.func.id:
-            cmd_id = node.func.id.replace("unknown", "")
-        elif node.func.id in command_db_lookup:
-            cmd_id = command_db_lookup[node.func.id]["id"]
-        else:
-            raise Exception("unknown command " + node.func.id)
-        write_command_by_id(cmd_id, node.args)
-
-    # Concerns def upon_ and applyFunctionToObject
-    def visit_FunctionDef(self, node):
-        if len(node.decorator_list) > 0 and "stateregister" in node.decorator_list[0].id.lower():
-            if node.name.startswith('__') and node.name[2].isdigit():
-                node.name = node.name[2:]
-            node.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
-            write_command_by_name("Move_Register", [node.name, Name(node.args.args[0].arg)])
-            self.visit_body(node.body)
-            write_command_by_name("Move_EndRegister", [])
-            return
-        node.name = node.name.lower()
-        if "upon" in node.name:
-            write_command_by_name("upon", [decode_upon(node.name)])
-            self.visit_body(node.body)
-            write_command_by_name("endUpon", [])
-        elif "runonobject" in node.name:
-            write_command_by_name("RunOnObject", [int(node.name.replace("runonobject_", ""))])
-            self.visit_body(node.body)
-            write_command_by_name("RunOnSelf", [])
-        else:
-            raise Exception("prohibited inner function")
-
-
-    def visit_If(self, node):
-        find1 = False
-        find2 = False
-        try:
-            if node.body[0].value.func.id.lower() == "conditionalsendtolabel":
-                if isinstance(node.test, UnaryOp):
-                    find2 = True
+                if no_0 and cmd_data[i] == 0:
+                    if len(ast_stack[-1]) > 0 and ast_stack[-1][-1] == slot_0_expr:
+                        tmp.append(slot_0_expr.value)
+                        ast_stack[-1].pop()
+                    else:
+                        tmp.append(Name(get_slot_name(v)))
                 else:
-                    find1 = True
-        except Exception:
-            pass
-        if isinstance(node.test, Name) and find1:
-            write_command_by_id("18", [node.body[0].value.args[0], node.test])
-        elif isinstance(node.test, UnaryOp) and isinstance(node.test.operand, Name) and find2:
-            write_command_by_id("19", [node.body[0].value.args[0], node.test.operand])
-        elif isinstance(node.test, Name):
-            # This is if(SLOT) we need to find out slot index and write it as param of if
-            write_command_by_name("if", [node.test])
-            self.visit_body(node.body)
-            write_command_by_name("endIf", [])
-            if len(node.orelse) > 0:
-                write_command_by_name("else", [])
-                self.visit_body(node.orelse)
-                write_command_by_name("endElse", [])
-        elif isinstance(node.test, UnaryOp) and isinstance(node.test.operand, Name):
-            # This is if(SLOT) we need to find out slot index and write it as param of if
-            write_command_by_name("ifNot", [node.test.operand])
-            self.visit_body(node.body)
-            write_command_by_name("endIfNot", [])
-            if len(node.orelse) > 0:
-                write_command_by_name("else", [])
-                self.visit_body(node.orelse)
-                write_command_by_name("endElse", [])
-        elif (isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp)) and find1:
-            self.visit(node.test)
-            write_command_by_id("18", [node.body[0].value.args[0], slot_0])
-        elif isinstance(node.test, UnaryOp) and (
-                isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)) and find2:
-            self.visit(node.test.operand)
-            write_command_by_id("19", [node.body[0].value.args[0], slot_0])
-        elif isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp):
-            self.visit(node.test)
-            write_command_by_name("if", [slot_0])
-            self.visit_body(node.body)
-            write_command_by_name("endIf", [])
-            if len(node.orelse) > 0:
-                write_command_by_name("else", [])
-                self.visit_body(node.orelse)
-                write_command_by_name("endElse", [])
-        elif isinstance(node.test, UnaryOp) and (
-                isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)):
-            self.visit(node.test.operand)
-            write_command_by_name("ifNot", [slot_0])
-            self.visit_body(node.body)
-            write_command_by_name("endIfNot", [])
-            if len(node.orelse) > 0:
-                write_command_by_name("else", [])
-                self.visit_body(node.orelse)
-                write_command_by_name("endElse", [])
+                    tmp.append(Name(get_slot_name(v)))
         else:
-            raise Exception("UNHANDLED IF")
+            tmp.append(Constant(v))
 
-    def visit_UnaryOp(self, node):
-        return
+    return tmp
 
-    def visit_BoolOp(self, node):
-        self.visit_Assign(Assign([slot_0], node))
+def get_move_name(command, cmd_data):
+    str_cmd_data = str(cmd_data)
+    if command in [43, 14012]:
+        if str_cmd_data in move_inputs:
+            return move_inputs[str_cmd_data]
+    elif command == 14001:
+        if str_cmd_data in normal_inputs['grouped_values']:
+            return normal_inputs['grouped_values'][str_cmd_data]
+        s = struct.pack('>H', cmd_data)
+        button_byte, dir_byte = struct.unpack('>BB', s)
+        if str(button_byte) in normal_inputs['button_byte'] and str(dir_byte) in normal_inputs['direction_byte']:
+            return normal_inputs['direction_byte'][str(dir_byte)] + normal_inputs['button_byte'][str(button_byte)]
+    return "INPUT_" + str(hex(cmd_data))
 
-    def visit_BinOp(self, node):
-        self.visit_Assign(Assign([slot_0], node))
+def get_animation_name(cmd_data):
+    str_cmd_data = str(cmd_data)
+    if str_cmd_data in animation_db:
+        return animation_db[str_cmd_data]
+    return cmd_data
 
-    def visit_Compare(self, node):
-        self.visit_Assign(Assign([slot_0], node))
+def get_upon_name(cmd_data):
+    str_cmd_data = str(cmd_data)
+    if str_cmd_data in upon_db:
+        str_cmd_data = upon_db[str_cmd_data]
+    return "upon_" + str_cmd_data
 
-    def visit_Assign(self, node):
-        if isinstance(node.value, Call):
-            self.visit(node.value)
-            if node.targets[0].id.lower() != "slot_0":
-                node.value = slot_0
-                self.visit(node)
-        else:
-            if isinstance(node.value, BinOp) or isinstance(node.value, BoolOp) or isinstance(node.value, Compare):
-                params = [decode_op(node.value)]
-                if isinstance(node.targets[0], Name) and isinstance(node.value.left, Name) and node.targets[0].id.lower() == node.value.left.id.lower():
-                    if isinstance(node.value, Compare):
-                        write_command_by_name("ModifyVar_", params + [node.targets[0], node.value.comparators[0]])
-                    else:
-                        write_command_by_name("ModifyVar_", params + [node.targets[0], node.value.right])
-                elif node.targets[0].id.lower() == "slot_0":
-                    if isinstance(node.value, Compare):
-                        write_command_by_name("op", params + [node.value.left, node.value.comparators[0]])
-                    else:
-                        write_command_by_name("op", params + [node.value.left, node.value.right])
+def get_slot_name(cmd_data):
+    str_cmd_data = str(cmd_data)
+    if str_cmd_data in slot_db:
+        str_cmd_data = slot_db[str_cmd_data]
+    return "SLOT_" + str_cmd_data
+
+# Not used yet
+def get_object_name(cmd_data):
+    str_cmd_data = str(cmd_data)
+    if str_cmd_data in object_db:
+        str_cmd_data = object_db[str_cmd_data]
+    return str_cmd_data
+
+# Changes numbers to their db value
+def sanitizer(command):
+    def sanitize(values):
+        i = values[0]
+        value = values[1]
+        if isinstance(value, expr):
+            return value
+        elif command in [43, 14001, 14012] and isinstance(value, int):
+            return Name(get_move_name(command, value))
+        elif command in [17, 29, 30] and i == 0:
+            return Name(get_upon_name(value))
+        elif command in [21007] and i == 1:
+            return Name(get_upon_name(value))
+        elif command in [9322, 9324, 9334, 9336]:
+            return Name(get_animation_name(value))
+        elif command and not isinstance(value, str) and "hex" in command_db[str(command)]:
+            if isinstance(command_db[str(command)]["hex"], list):
+                if i in command_db[str(command)]["hex"]:
+                    return Name(hex(value))
                 else:
-                    if isinstance(node.value, Compare):
-                        write_command_by_name("PrivateFunction", params + [node.targets[0], node.value.left, node.value.comparators[0]])
-                    else:
-                        write_command_by_name("PrivateFunction", params + [node.targets[0], node.value.left, node.value.right])
+                    return Constant(value)
+            return Name(hex(value))
+        return Constant(value)
+
+    return sanitize
+
+
+def function_clean(command):
+    command = command.replace("-", "__ds__").replace("@", "__at__").replace("?", "__qu__").replace(" ", "__sp__")
+    if command[0].isdigit():
+        command = "__" + command
+    return command
+
+def parse_bbscript_routine(file):
+    global slot_0_expr
+    empty_args = arguments(posonlyargs=[], args=[], kwonlyargs=[], kw_defaults=[], defaults=[])
+    astor_handler = []
+    file.seek(0, os.SEEK_END)
+    end = file.tell()
+    file.seek(0)
+    FUNCTION_COUNT, = struct.unpack(MODE + "I", file.read(4))
+    file.seek(4 + 0x24 * FUNCTION_COUNT)
+    # Going through the bin
+    while file.tell() != end:
+        loc = file.tell()  # Debug
+        current_cmd, = struct.unpack(MODE + "I", file.read(4))
+        db_data = command_db[str(current_cmd)]
+        if "name" not in db_data:
+            db_data["name"] = "Unknown{0}".format(current_cmd)
+        if "format" not in command_db[str(current_cmd)]:
+            cmd_data = [file.read(command_db[str(current_cmd)]["size"] - 4)]
+        else:
+            cmd_data = list(struct.unpack(MODE + db_data["format"], file.read(struct.calcsize(db_data["format"]))))
+        # Cleaning up the binary string
+        for i, v in enumerate(cmd_data):
+            if isinstance(v, bytes):
+                try:
+                    cmd_data[i] = v.decode().strip("\x00")
+                except UnicodeDecodeError:
+                    # Handles unicode bug if it happens, eg kk400_13
+                    v = v.strip(b"\x00")
+                    debug = ''
+                    for j in v:
+                        debug += chr(j)
+                    cmd_data[i] = debug
+
+        # AST STUFF
+        # 0 is startState
+        if current_cmd == 0:
+            if len(ast_stack) > 1:
+                ast_stack.pop()
+            command = FunctionDef(function_clean(cmd_data[0]), empty_args, [], [Name(id="State")])
+            ast_stack[-1].append(command)
+            ast_stack.append(ast_stack[-1][-1].body)
+        # 8 is startSubroutine
+        elif current_cmd == 8:
+            if len(ast_stack) > 1:
+                ast_stack.pop()
+            command = FunctionDef(function_clean(cmd_data[0]), empty_args, [], [Name(id="Subroutine")])
+            ast_stack[-1].append(command)
+            ast_stack.append(ast_stack[-1][-1].body)
+        # 15 is upon
+        elif current_cmd == 15:
+            command = FunctionDef(get_upon_name(cmd_data[0]), empty_args, [], [])
+            ast_stack[-1].append(command)
+            ast_stack.append(ast_stack[-1][-1].body)
+        # 14001 is Move_Register
+        elif current_cmd == 14001:
+            command = FunctionDef(function_clean(cmd_data[0]), arguments(args=[arg(get_move_name(current_cmd, cmd_data[1]))]), [], [Name(id="StateRegister")])
+            ast_stack[-1].append(command)
+            ast_stack.append(ast_stack[-1][-1].body)
+        # 4 is if, 54 is ifNot
+        elif current_cmd in [4, 54]:
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            command = cmd_data[0]
+            if current_cmd == 4:
+                ast_stack[-1].append(If(command, [], []))
+            elif current_cmd == 54:
+                ast_stack[-1].append(If(UnaryOp(Not(), command), [], []))
+            ast_stack.append(ast_stack[-1][-1].body)
+        # 56 is else
+        elif current_cmd == 56:
+            ifnode = ast_stack[-1][-1]
+            ast_stack.append(ifnode.orelse)
+        # 18 is ifSlotSendTolabel, 19 is ifNotSlotSendTolabel
+        elif current_cmd in [18, 19]:
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            command = cmd_data[1]
+            if current_cmd == 18:
+                ast_stack[-1].append(If(command, [], []))
+            elif current_cmd == 19:
+                ast_stack[-1].append(If(UnaryOp(Not(), command), [], []))
+            ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [cmd_data[0]], [])))
+        # 36 is apply function to Object
+        elif current_cmd == 36:
+            ast_stack[-1].append(
+                FunctionDef(db_data["name"] + "_" + str(cmd_data[0]), empty_args, [], []))
+            ast_stack.append(ast_stack[-1][-1].body)
+        # 40 is operation stored in SLOT_0
+        elif current_cmd == 40:
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            cmd_data[0] = cmd_data[0].value
+            aval = Name(get_slot_name(0))
+            lval = cmd_data[1]
+            rval = cmd_data[2]
+            op = get_operation(cmd_data[0])
+            if cmd_data[0] in [0, 1, 2, 3]:
+                tmp = BinOp(lval, op, rval)
+            elif cmd_data[0] in [4]:
+                tmp = BinOp(lval, op, rval)
+            elif cmd_data[0] in [5, 6, 7, 8]:
+                tmp = BoolOp(op, [lval, rval])
+            elif cmd_data[0] in [9, 10, 11, 12, 13]:
+                tmp = Compare(lval, [op], [rval])
             else:
-                write_command_by_name("StoreValue", [node.targets[0], node.value])
+                raise Exception("Unhandled operation")
+            slot_0_expr = Assign([aval], tmp)
+            command = slot_0_expr
+            ast_stack[-1].append(command)
+        # 41 is StoreValue, assigning to SLOT
+        elif current_cmd == 41:
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            lval = cmd_data[0]
+            rval = cmd_data[1]
+            command = Assign([lval], rval)
+            ast_stack[-1].append(command)
+        # 47 slot operation saved to slot diff from SLOT_0
+        elif current_cmd == 47:
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            cmd_data[0] = cmd_data[0].value
+            aval = cmd_data[1]
+            lval = cmd_data[2]
+            rval = cmd_data[3]
+            op = get_operation(cmd_data[0])
+            if cmd_data[0] in [0, 1, 2, 3]:
+                tmp = BinOp(lval, op, rval)
+            elif cmd_data[0] in [4]:
+                tmp = BinOp(lval, op, rval)
+            elif cmd_data[0] in [5, 6, 7, 8]:
+                tmp = BoolOp(op, [lval, rval])
+            elif cmd_data[0] in [9, 10, 11, 12, 13]:
+                tmp = Compare(lval, [op], [rval])
+            else:
+                raise Exception("Unhandled operation")
+            command = Assign([aval], tmp)
+            ast_stack[-1].append(command)
+        # 49 is ModifyVar_
+        elif current_cmd == 49:
+            cmd_data = slot_handler(current_cmd, cmd_data)
+            cmd_data[0] = cmd_data[0].value
+            lval = cmd_data[1]
+            rval = cmd_data[2]
+            op = get_operation(cmd_data[0])
+            command = Assign([lval], BinOp(lval, op, rval))
+            ast_stack[-1].append(command)
+        elif current_cmd in [11058, 22019]:
+            attributes = ""
+            if cmd_data[0] == 1:
+                attributes += "H"
+            if cmd_data[1] == 1:
+                attributes += "B"
+            if cmd_data[2] == 1:
+                attributes += "F"
+            if cmd_data[3] == 1:
+                attributes += "P"
+            if cmd_data[4] == 1:
+                attributes += "T"
+            ast_stack[-1].append(
+                Expr(Call(Name(id=db_data["name"]), args=[Constant(attributes)], keywords=[])))
+        # Indentation end
+        elif current_cmd in [1, 5, 9, 16, 35, 55, 57, 14002]:
+            if len(ast_stack[-1]) == 0:
+                ast_stack[-1].append(Pass())
+            if len(ast_stack) > 1:
+                astor_handler = ast_stack.pop()
+            else:
+                command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+                ast_stack[-1][-1].body.append(command)
 
-    def visit_body(self, nodebody):
-        global output_buffer, error
-        try:
-            for childNode in nodebody:
-                self.visit(childNode)
-        except Exception as e:
-            # spaghetti pls don't kill me :3
-            error = True
-            print("\033[91m", e, "\n" + astor.to_source(childNode) + "\n" + astor.dump_tree(childNode) + "\033[0m", sep="")
+        else:
+            if 'type_check' in command_db[str(current_cmd)]:
+                cmd_data = slot_handler(current_cmd, cmd_data)
+            command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+            # Things that affect slot_0
+            if current_cmd in AFFECT_SLOT_0:
+                slot_0_expr = Assign([Name(get_slot_name(0))], command.value)
+                command = slot_0_expr
 
-    def visit_Expr(self, node):
-        self.visit(node.value)
+            if len(ast_stack) == 1:
+                ast_stack.append(astor_handler)
+            ast_stack[-1].append(command)
 
-    def generic_visit(self, node):
-        print(type(node).__name__)
+    return ast_root
 
-
-def rebuild_bbscript(filename, output_path):
-    global output_buffer
-    output_name = os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + "_error.bin")
-    source_ast = astor.code_to_ast.parse_file(filename)
-    output_buffer = open(output_name, "wb")
-    Rebuilder().visit(source_ast)
-    output_buffer.close()
-    if not error:
-        os.replace(output_name, output_name.replace("_error.", "."))
-    else:
-        #os.remove(output_name)
-        sys.exit(1)
+def parse_bbscript(filename, output_path):
+    file = open(filename, 'rb')
+    ast_root = parse_bbscript_routine(file)
+    output = os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + ".py")
+    py = open(output, "w", encoding="utf-8")
+    py.write(astor.to_source(ast_root))
+    py.close()
 
 
 if __name__ == '__main__':
     no_slot = False
+    no_0 = False
     input_file = None
     output_path = None
     for v in sys.argv[1:]:
+        if "--" in v:
+            if "--no-slot" in v:
+                no_slot = True
+            elif "--no-0" in v:
+                no_0 = True
+            else:
+                raise Exception("Flag doesn't exist")
+            continue
         if input_file is None:
             input_file = v
         elif output_path is None:
             output_path = v
 
-    if input_file.split(".")[-1] != "py":
-        print("Usage:BBTAG_Script_Rebuilder.py scr_xx.py outdir")
+    if input_file.split(".")[-1] != "bin":
+        print("Usage:BBTAG_Script_Parser.py scr_xx.bin outdir")
         print("Default output directory if left blank is the input file's directory.")
+        print("Flag: --no-slot, --no-0")
         sys.exit(1)
+    if no_slot:
+        slot_db = {}
     if output_path is None:
-        rebuild_bbscript(input_file, os.path.split(input_file)[0])
+        parse_bbscript(input_file, os.path.split(input_file)[0])
     else:
-        rebuild_bbscript(input_file, output_path)
+        parse_bbscript(input_file, output_path)
     print("\033[96m" + "complete" + "\033[0m")
