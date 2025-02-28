@@ -2,6 +2,7 @@ import os, struct, json, sys, astor
 from ast import *
 
 GAME = "BBCF"
+slot_0 = Name("SLOT_0")
 
 pypath = os.path.dirname(sys.argv[0])
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
@@ -137,10 +138,6 @@ def write_command_by_id(command, params):
     global output_buffer
     cmd_data = command_db[command]
     command = int(command)
-    for index, value in enumerate(params):
-        if isinstance(value, Call):
-            write_command_by_name(value.id, value.args)
-            params[index] = Name("SLOT_0")
     if "type_check" in cmd_data:
         type_check = cmd_data["type_check"]
         type_check.sort()
@@ -250,6 +247,11 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         pass
 
     def visit_Call(self, node):
+        for index, value in enumerate(node.args):
+            if isinstance(value, Call) or isinstance(value, Compare) or isinstance(value, BinOp) or isinstance(value, BoolOp):
+                self.visit(value)
+                node.args[index] = Name("SLOT_0")
+
         node.func.id = node.func.id.lower()
         # We have a function call. Is it a named function or is it UnknownXXXXX
         if "unknown" in node.func.id:
@@ -318,14 +320,14 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_name("endElse", [])
         elif (isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp)) and find1:
             self.visit(node.test)
-            write_command_by_id("18", [node.body[0].value.args[0], 2, 0])
+            write_command_by_id("18", [node.body[0].value.args[0], slot_0])
         elif isinstance(node.test, UnaryOp) and (
                 isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)) and find2:
             self.visit(node.test.operand)
-            write_command_by_id("19", [node.body[0].value.args[0], 2, 0])
+            write_command_by_id("19", [node.body[0].value.args[0], slot_0])
         elif isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp):
             self.visit(node.test)
-            write_command_by_name("if", [2, 0])
+            write_command_by_name("if", [slot_0])
             self.visit_body(node.body)
             write_command_by_name("endIf", [])
             if len(node.orelse) > 0:
@@ -335,7 +337,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         elif isinstance(node.test, UnaryOp) and (
                 isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)):
             self.visit(node.test.operand)
-            write_command_by_name("ifNot", [2, 0])
+            write_command_by_name("ifNot", [slot_0])
             self.visit_body(node.body)
             write_command_by_name("endIfNot", [])
             if len(node.orelse) > 0:
@@ -348,9 +350,21 @@ class Rebuilder(astor.ExplicitNodeVisitor):
     def visit_UnaryOp(self, node):
         return
     
+    def visit_BoolOp(self, node):
+        self.visit_Assign(Assign([slot_0], node))
+    
+    def visit_BinOp(self, node):
+        self.visit_Assign(Assign([slot_0], node))
+    
+    def visit_Compare(self, node):
+        self.visit_Assign(Assign([slot_0], node))
+        
     def visit_Assign(self, node):
         if isinstance(node.value, Call):
             self.visit(node.value)
+            if node.targets[0].id.lower() != "slot_0":
+                node.value = slot_0
+                self.visit(node)
         else:
             if isinstance(node.value, BinOp) or isinstance(node.value, BoolOp) or isinstance(node.value, Compare):
                 params = [decode_op(node.value)]
@@ -399,7 +413,7 @@ def rebuild_bbscript(filename, output_path):
     if not error:
         os.replace(output_name, output_name.replace("_error.", "."))
     else:
-        os.remove(output_name)
+        #os.remove(output_name)
         sys.exit(1)
 
 

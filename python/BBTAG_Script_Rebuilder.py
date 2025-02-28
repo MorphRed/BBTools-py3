@@ -2,6 +2,7 @@ import os, struct, json, sys, astor
 from ast import *
 
 GAME = "BBTAG"
+slot_0 = Name("SLOT_0")
 
 pypath = os.path.dirname(sys.argv[0])
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
@@ -318,14 +319,14 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_name("endElse", [])
         elif (isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp)) and find1:
             self.visit(node.test)
-            write_command_by_id("18", [node.body[0].value.args[0], 2, 0])
+            write_command_by_id("18", [node.body[0].value.args[0], slot_0])
         elif isinstance(node.test, UnaryOp) and (
                 isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)) and find2:
             self.visit(node.test.operand)
-            write_command_by_id("19", [node.body[0].value.args[0], 2, 0])
+            write_command_by_id("19", [node.body[0].value.args[0], slot_0])
         elif isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp):
             self.visit(node.test)
-            write_command_by_name("if", [2, 0])
+            write_command_by_name("if", [slot_0])
             self.visit_body(node.body)
             write_command_by_name("endIf", [])
             if len(node.orelse) > 0:
@@ -335,7 +336,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         elif isinstance(node.test, UnaryOp) and (
                 isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)):
             self.visit(node.test.operand)
-            write_command_by_name("ifNot", [2, 0])
+            write_command_by_name("ifNot", [slot_0])
             self.visit_body(node.body)
             write_command_by_name("endIfNot", [])
             if len(node.orelse) > 0:
@@ -347,6 +348,15 @@ class Rebuilder(astor.ExplicitNodeVisitor):
 
     def visit_UnaryOp(self, node):
         return
+
+    def visit_BoolOp(self, node):
+        self.visit_Assign(Assign([slot_0], node))
+
+    def visit_BinOp(self, node):
+        self.visit_Assign(Assign([slot_0], node))
+
+    def visit_Compare(self, node):
+        self.visit_Assign(Assign([slot_0], node))
 
     def visit_Assign(self, node):
         if isinstance(node.value, Call):
@@ -399,7 +409,7 @@ def rebuild_bbscript(filename, output_path):
     if not error:
         os.replace(output_name, output_name.replace("_error.", "."))
     else:
-        os.remove(output_name)
+        #os.remove(output_name)
         sys.exit(1)
 
 
