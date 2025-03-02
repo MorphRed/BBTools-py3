@@ -137,6 +137,8 @@ def write_command_by_name(name, params):
 def write_command_by_id(command, params):
     global output_buffer
     cmd_data = command_db[command]
+    if command in unknown_list:
+        return
     command = int(command)
     if "type_check" in cmd_data:
         type_check = cmd_data["type_check"]
@@ -413,23 +415,55 @@ def rebuild_bbscript(filename, output_path):
     if not error:
         os.replace(output_name, output_name.replace("_error.", "."))
     else:
-        #os.remove(output_name)
+        if not debug:
+            os.remove(output_name)
         sys.exit(1)
 
 
 if __name__ == '__main__':
-    no_slot = False
+    flag_list = "Flags: --debug, --remove"
+    debug = remove_unknown = False
+    unknown_list = []
     input_file = None
     output_path = None
-    for v in sys.argv[1:]:
-        if input_file is None:
+    for i, v in enumerate(sys.argv[1:]):
+        if "-h" in v:
+            print("Usage:BBCF_Script_Rebuilder.py scr_xx.py outdir")
+            print("Default output directory if left blank is the input file's directory.")
+            print(flag_list)
+            print("--debug: Create a scr_xx_error.bin file upon crashing")
+            print("--remove: Delete the corresponding command name/id from the .bin file (THIS CAN BREAK FILES!!!)")
+            sys.exit(0)
+        if "--" in v:
+            if "--debug" == v:
+                debug = True
+            elif "--remove" == v:
+                remove_unknown = True
+            else:
+                raise Exception("Flag doesn't exist")
+            continue
+        if (sys.argv[i] == "--remove" or sys.argv[i][-1] == ",") and remove_unknown:
+            unknown_list += v.split(",")
+        elif input_file is None:
             input_file = v
         elif output_path is None:
             output_path = v
-        
-    if input_file.split(".")[-1] != "py":
+            
+    if remove_unknown:
+        unknown_list = list(filter(None, unknown_list))
+        for i, v in enumerate(unknown_list):
+            if v in command_db:
+                continue
+            try:
+                unknown_list[i] = command_db_lookup[v.lower()]['id']
+            except KeyError:
+                print("Unknown command '" + v + "'")
+                sys.exit(1)
+            
+    if not input_file or input_file.split(".")[-1] != "py":
         print("Usage:BBCF_Script_Rebuilder.py scr_xx.py outdir")
         print("Default output directory if left blank is the input file's directory.")
+        print(flag_list)
         sys.exit(1)
     if output_path is None:
         rebuild_bbscript(input_file, os.path.split(input_file)[0])

@@ -17,7 +17,7 @@
   "75": "CurrentHealth",
   "76": "MaxHealth",
   "78": "DamageMultiplier",
-  "90": "InNeutral",
+  "90": "MatchNeutral",
   "99": "ObjectRotationAlongZ",
   "110": "OverdriveTimer",
   "116": "IsUnlimited",

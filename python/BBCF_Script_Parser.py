@@ -167,7 +167,7 @@ def function_clean(command):
     return command
 
 def parse_bbscript_routine(file):
-    global slot_0_expr
+    global slot_0_expr, debug
     empty_args = arguments(posonlyargs=[], args=[], kwonlyargs=[], kw_defaults=[], defaults=[])
     astor_handler = []
     file.seek(0, os.SEEK_END)
@@ -198,7 +198,7 @@ def parse_bbscript_routine(file):
                     for j in v:
                         debug += chr(j)
                     cmd_data[i] = debug
-            
+        
         # AST STUFF
         # 0 is startState
         if current_cmd == 0:
@@ -331,6 +331,10 @@ def parse_bbscript_routine(file):
             else:
                 command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
                 ast_stack[-1][-1].body.append(command)
+                
+            # Flag stuff
+            if debug and current_cmd in [1, 9]:
+                debug_file.write(astor.to_source(ast_stack[-1][-1]) + "\n\n")
                     
         else:
             if 'type_check' in command_db[str(current_cmd)]:
@@ -344,41 +348,59 @@ def parse_bbscript_routine(file):
             if len(ast_stack) == 1:
                 ast_stack.append(astor_handler)
             ast_stack[-1].append(command)
-                
+            
+            
     return ast_root
 
 def parse_bbscript(filename, output_path):
+    global debug_file
     file = open(filename, 'rb')
+    if debug:
+        debug_file = open(os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + "_error.py"), "w", encoding="utf-8")
     ast_root = parse_bbscript_routine(file)
     output = os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + ".py")
     py = open(output, "w", encoding="utf-8")
     py.write(astor.to_source(ast_root))
+    if debug:
+        os.remove(os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + "_error.py"))
     py.close()
 
 
 if __name__ == '__main__':
-    no_slot = False
-    no_0 = False
+    flag_list = "Flags: -h, --no-slot, --no-0, --debug"
+    no_slot = no_0 = debug = False
     input_file = None
     output_path = None
     for v in sys.argv[1:]:
+        if "-h" in v:
+            print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
+            print("Default output directory if left blank is the input file's directory.")
+            print(flag_list)
+            print("--no-slot: Disable aliasing of slots")
+            print("--no-0: Delete most instances of SLOT_0 by merging them with commands assigning to SLOT_0")
+            print("--debug: Create a scr_xx_error.py file upon crashing")
+            sys.exit(0)
         if "--" in v:
-            if "--no-slot" in v:
+            if "--no-slot" == v:
                 no_slot = True
-            elif "--no-0" in v:
+            elif "--no-0" == v:
                 no_0 = True
+            elif "--debug" == v:
+                debug = True
             else:
-                raise Exception("Flag doesn't exist")
+                print("Flag " + '"' + v + '"' + " doesn't exist")
+                print(flag_list)
+                sys.exit(1)
             continue
         if input_file is None:
             input_file = v
         elif output_path is None:
             output_path = v
 
-    if input_file.split(".")[-1] != "bin":
+    if not input_file or input_file.split(".")[-1] != "bin":
         print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
         print("Default output directory if left blank is the input file's directory.")
-        print("Flag: --no-slot, --no-0")
+        print(flag_list)
         sys.exit(1)
     if no_slot:
         slot_db = {}
