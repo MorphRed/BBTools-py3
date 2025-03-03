@@ -61,7 +61,9 @@ MODE = "<"
 error = False
 
 def decode_op(node):
-    if isinstance(node, BinOp) or isinstance(node, BoolOp):
+    if isinstance(node, UnaryOp):
+        return 14
+    elif isinstance(node, BinOp) or isinstance(node, BoolOp):
         if isinstance(node.op, Add):
             return 0
         elif isinstance(node.op, Sub):
@@ -91,6 +93,8 @@ def decode_op(node):
             return 12
         elif isinstance(node.ops[0], LtE):
             return 13
+        elif isinstance(node.ops[0], NotEq):
+            return 15
     raise Exception("UNKNOWN OP")
 
 def decode_move(value):
@@ -99,13 +103,15 @@ def decode_move(value):
     if tmp is not None:
         return int(tmp)
     else:
-        try:
-            return int(value.id.replace("input_", ""), 16)
-        except ValueError:
-            buttonstr = value.id[-1]
-            directionstr = value.id[:-1]
-            return (int(named_button_lookup[buttonstr]) << 8) + int(
-                named_direction_lookup[directionstr])
+        if value.id.replace("input_", "")[:2] == '0x':
+            try:
+                return int(value.id.replace("input_", ""), 16)
+            except ValueError:
+                pass
+        buttonstr = value.id[-1]
+        directionstr = value.id[:-1]
+        return (int(named_button_lookup[buttonstr]) << 8) + int(
+            named_direction_lookup[directionstr])
 
 def decode_upon(s):
     s = s.lower().replace("upon_", "")
@@ -353,40 +359,75 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         return
     
     def visit_BoolOp(self, node):
+        for i, v in enumerate(node.values):
+            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare):
+                self.visit_Assign(Assign([slot_0], v))
+                node.values[i] = slot_0
         self.visit_Assign(Assign([slot_0], node))
     
     def visit_BinOp(self, node):
+        if node.left:
+            v = node.left
+            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare):
+                self.visit_Assign(Assign([slot_0], v))
+                node.left = slot_0
+        if node.right:
+            v = node.right
+            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare):
+                self.visit_Assign(Assign([slot_0], v))
+                node.right = slot_0
         self.visit_Assign(Assign([slot_0], node))
     
     def visit_Compare(self, node):
+        if node.left:
+            v = node.left
+            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare):
+                self.visit_Assign(Assign([slot_0], v))
+                node.left = slot_0
+        if node.comparators[0]:
+            v = node.comparators[0]
+            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare):
+                self.visit_Assign(Assign([slot_0], v))
+                node.comparators[0] = slot_0
         self.visit_Assign(Assign([slot_0], node))
         
     def visit_Assign(self, node):
+        aval = node.targets[0]
         if isinstance(node.value, Call):
             self.visit(node.value)
-            if node.targets[0].id.lower() != "slot_0":
+            if aval.id.lower() != "slot_0":
                 node.value = slot_0
                 self.visit(node)
-        else:
-            if isinstance(node.value, BinOp) or isinstance(node.value, BoolOp) or isinstance(node.value, Compare):
-                params = [decode_op(node.value)]
-                if isinstance(node.targets[0], Name) and isinstance(node.value.left, Name) and node.targets[0].id.lower() == node.value.left.id.lower():
-                    if isinstance(node.value, Compare):
-                        write_command_by_name("ModifyVar_", params + [node.targets[0], node.value.comparators[0]])
-                    else:
-                        write_command_by_name("ModifyVar_", params + [node.targets[0], node.value.right])
-                elif node.targets[0].id.lower() == "slot_0":
-                    if isinstance(node.value, Compare):
-                        write_command_by_name("op", params + [node.value.left, node.value.comparators[0]])
-                    else:
-                        write_command_by_name("op", params + [node.value.left, node.value.right])
-                else:
-                    if isinstance(node.value, Compare):
-                        write_command_by_name("PrivateFunction", params + [node.targets[0], node.value.left, node.value.comparators[0]])
-                    else:
-                        write_command_by_name("PrivateFunction", params + [node.targets[0], node.value.left, node.value.right])
+        elif isinstance(node.value, BinOp) or isinstance(node.value, BoolOp) or isinstance(node.value, Compare) or (isinstance(node.value, UnaryOp) and isinstance(node.value.operand, BinOp)):
+            op_id = [decode_op(node.value)]
+            if isinstance(node.value, BinOp):
+                lval = node.value.left
+                rval = node.value.right
+            elif isinstance(node.value, BoolOp):
+                lval = node.value.values[0]
+                rval = node.value.values[1]
+            elif isinstance(node.value, Compare):
+                lval = node.value.left
+                rval = node.value.comparators[0]
+            elif isinstance(node.value, UnaryOp) and isinstance(node.value.operand, BinOp):
+                lval = node.value.operand.left
+                rval = node.value.operand.right
             else:
-                write_command_by_name("StoreValue", [node.targets[0], node.value])
+                raise Exception("How did this happen")
+            if isinstance(lval, BinOp) or isinstance(lval, BoolOp) or isinstance(lval, Compare) or isinstance(lval, UnaryOp) or isinstance(lval, Call):
+                self.visit(Assign([slot_0], lval))
+                lval = slot_0
+            if isinstance(rval, BinOp) or isinstance(rval, BoolOp) or isinstance(rval, Compare) or isinstance(rval, UnaryOp) or isinstance(rval, Call):
+                self.visit(Assign([slot_0], rval))
+                rval = slot_0
+            if isinstance(aval, Name) and isinstance(lval, Name) and aval.id.lower() == lval.id.lower():
+                write_command_by_name("ModifyVar_", op_id + [aval, rval])
+            elif aval.id.lower() == "slot_0":
+                write_command_by_name("op", op_id + [lval, rval])
+            else:
+                write_command_by_name("PrivateFunction", op_id + [aval, lval, rval])
+        else:
+            write_command_by_name("StoreValue", [node.targets[0], node.value])
 
     def visit_body(self, nodebody):
         global output_buffer, error

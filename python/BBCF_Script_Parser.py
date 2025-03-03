@@ -66,6 +66,10 @@ def get_operation(operation_id):
         op = GtE()
     elif operation_id == 13:
         op = LtE()
+    elif operation_id == 14:
+        op = BitAnd()
+    elif operation_id == 15:
+        op = NotEq()
     else:
         raise Exception("Unvalid operation_id " + str(operation_id))
     
@@ -82,7 +86,7 @@ def slot_handler(command, cmd_data):
                 tmp.append(Constant(v))
             else:
                 if no_0 and cmd_data[i] == 0:
-                    if len(ast_stack[-1]) > 0 and ast_stack[-1][-1] == slot_0_expr:
+                    if len(ast_stack[-1]) > 0 and ast_stack[-1][-1] == slot_0_expr and (command != '47' and i != 2):
                         tmp.append(slot_0_expr.value)
                         ast_stack[-1].pop()
                     else:
@@ -138,7 +142,9 @@ def sanitizer(command):
     def sanitize(values):
         i = values[0]
         value = values[1]
-        if isinstance(value, expr):
+        if raw:
+            pass
+        elif isinstance(value, expr):
             return value
         elif command in [43, 14001, 14012] and isinstance(value, int):
             return Name(get_move_name(command, value))
@@ -148,7 +154,7 @@ def sanitizer(command):
             return Name(get_upon_name(value))
         elif command in [9322, 9324, 9334, 9336]:
             return Name(get_animation_name(value))
-        elif command and not isinstance(value, str) and "hex" in command_db[str(command)]:
+        if command and not isinstance(value, str) and "hex" in command_db[str(command)]:
             if isinstance(command_db[str(command)]["hex"], list):
                 if i in command_db[str(command)]["hex"]:
                     return Name(hex(value))
@@ -194,11 +200,14 @@ def parse_bbscript_routine(file):
                 except UnicodeDecodeError:
                     # Handles unicode bug if it happens, eg kk400_13
                     v = v.strip(b"\x00")
-                    debug = ''
+                    new_v = ''
                     for j in v:
-                        debug += chr(j)
-                    cmd_data[i] = debug
-        
+                        new_v += chr(j)
+                    cmd_data[i] = new_v
+        if raw and current_cmd not in [0, 1, 8, 9]:
+            command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+            ast_stack[-1].append(command)
+            continue
         # AST STUFF
         # 0 is startState
         if current_cmd == 0:
@@ -265,8 +274,10 @@ def parse_bbscript_routine(file):
                 tmp = BinOp(lval, op, rval)
             elif cmd_data[0] in [5, 6, 7, 8]:
                 tmp = BoolOp(op, [lval, rval])
-            elif cmd_data[0] in [9, 10, 11, 12, 13]:
+            elif cmd_data[0] in [9, 10, 11, 12, 13, 15]:
                 tmp = Compare(lval, [op], [rval])
+            elif cmd_data[0] in [14]:
+                tmp = UnaryOp(Not(), BinOp(lval, op, rval))
             else:
                 raise Exception("Unhandled operation")
             slot_0_expr = Assign([aval], tmp)
@@ -278,6 +289,8 @@ def parse_bbscript_routine(file):
             lval = cmd_data[0]
             rval = cmd_data[1]
             command = Assign([lval], rval)
+            if isinstance(lval, Name) and lval.id == "SLOT_0":
+                slot_0_expr = command
             ast_stack[-1].append(command)
         # 47 slot operation saved to slot diff from SLOT_0
         elif current_cmd == 47:
@@ -293,11 +306,16 @@ def parse_bbscript_routine(file):
                 tmp = BinOp(lval, op, rval)
             elif cmd_data[0] in [5, 6, 7, 8]:
                 tmp = BoolOp(op, [lval, rval])
-            elif cmd_data[0] in [9, 10, 11, 12, 13]:
+            elif cmd_data[0] in [9, 10, 11, 12, 13, 15]:
                 tmp = Compare(lval, [op], [rval])
+            elif cmd_data[0] in [14]:
+                tmp = UnaryOp(Not(), BinOp(lval, op, rval))
             else:
                 raise Exception("Unhandled operation")
-            command = Assign([aval], tmp)
+            if isinstance(aval, Constant):
+                command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+            else:
+                command = Assign([aval], tmp)
             ast_stack[-1].append(command)
         # 49 is ModifyVar_
         elif current_cmd == 49:
@@ -306,7 +324,19 @@ def parse_bbscript_routine(file):
             lval = cmd_data[1]
             rval = cmd_data[2]
             op = get_operation(cmd_data[0])
-            command = Assign([lval], BinOp(lval, op, rval))
+            if cmd_data[0] in [0, 1, 2, 3]:
+                tmp = BinOp(lval, op, rval)
+            elif cmd_data[0] in [4]:
+                tmp = BinOp(lval, op, rval)
+            elif cmd_data[0] in [5, 6, 7, 8]:
+                tmp = BoolOp(op, [lval, rval])
+            elif cmd_data[0] in [9, 10, 11, 12, 13, 15]:
+                tmp = Compare(lval, [op], [rval])
+            elif cmd_data[0] in [14]:
+                tmp = UnaryOp(Not(), BinOp(lval, op, rval))
+            else:
+                raise Exception("Unhandled operation")
+            command = Assign([lval], tmp)
             ast_stack[-1].append(command)
         elif current_cmd in [11058, 22019]:
             attributes = ""
@@ -367,8 +397,8 @@ def parse_bbscript(filename, output_path):
 
 
 if __name__ == '__main__':
-    flag_list = "Flags: -h, --no-slot, --no-0, --debug"
-    no_slot = no_0 = debug = False
+    flag_list = "Flags: -h, --no-slot, --no-0, --raw, --debug"
+    no_slot = no_0 = debug = raw = False
     input_file = None
     output_path = None
     for v in sys.argv[1:]:
@@ -378,6 +408,7 @@ if __name__ == '__main__':
             print(flag_list)
             print("--no-slot: Disable aliasing of slots")
             print("--no-0: Delete most instances of SLOT_0 by merging them with commands assigning to SLOT_0")
+            print("--raw: Remove all abstraction except states and subroutines, !!!Rebuilding not supported!!!")
             print("--debug: Create a scr_xx_error.py file upon crashing")
             sys.exit(0)
         if "--" in v:
@@ -387,6 +418,8 @@ if __name__ == '__main__':
                 no_0 = True
             elif "--debug" == v:
                 debug = True
+            elif "--raw" == v:
+                raw = True
             else:
                 print("Flag " + '"' + v + '"' + " doesn't exist")
                 print(flag_list)

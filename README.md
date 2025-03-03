@@ -39,7 +39,7 @@ def NmlAtk6D():         !!! <-- Case sensitive
                     enterState('AN_NmlAtk6DExe')
         if SLOT_OverDRiveTiMer:                 <-- SLOT_OverdriveTimer case insensitive
             SLOT_51 = 1
-    sprite('tm214_00', 3)
+    sprite('tm214_00', 3)              !!! <-- 'tm214_00' case sensitive
     sprite('tm214_01', 3)
     sprite('tm214_02', 3)
     ...
@@ -49,4 +49,4 @@ def NmlAtk6D():         !!! <-- Case sensitive
 A json file using the character's code is searched in the `static_db/XXX/(slot_db and upon_db)/` directory, `global.json` is required and will be searched first, then if the character file exists, the character json will be applied over <br/>
 Example: Terumi uses `tm` as his character code, so the script will look for `tm.json`
 
-Do remember that the overwritten slot/upon will no longer refer to their corresponding number, which can break rebuilding
+Do remember that the overwritten slot/upon will no longer refer to their corresponding global number, which can break rebuilding

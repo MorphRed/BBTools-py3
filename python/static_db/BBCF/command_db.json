@@ -18,7 +18,7 @@
   "4": {
     "type_check": [0],
     "format": "ii",
-    "name": "if"
+    "name": "If"
   },
   "5": {
     "format": "",
@@ -237,7 +237,7 @@
   },
   "56": {
     "format": "",
-    "name": "else"
+    "name": "Else"
   },
   "57": {
     "format": "",
