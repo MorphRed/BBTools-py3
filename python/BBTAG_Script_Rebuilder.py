@@ -398,7 +398,9 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             if aval.id.lower() != "slot_0":
                 node.value = slot_0
                 self.visit(node)
-        elif isinstance(node.value, BinOp) or isinstance(node.value, BoolOp) or isinstance(node.value, Compare) or (isinstance(node.value, UnaryOp) and isinstance(node.value.operand, BinOp)):
+        elif isinstance(node.value, Name) or isinstance(node.value, Constant) or (isinstance(node.value, UnaryOp) and (isinstance(node.value.operand, Name) or isinstance(node.value.operand, Constant))) :
+            write_command_by_name("StoreValue", [node.targets[0], node.value])
+        else:
             op_id = [decode_op(node.value)]
             if isinstance(node.value, BinOp):
                 lval = node.value.left
@@ -426,8 +428,6 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_name("op", op_id + [lval, rval])
             else:
                 write_command_by_name("PrivateFunction", op_id + [aval, lval, rval])
-        else:
-            write_command_by_name("StoreValue", [node.targets[0], node.value])
 
     def visit_body(self, nodebody):
         global output_buffer, error
