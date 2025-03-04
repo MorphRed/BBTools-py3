@@ -95,7 +95,7 @@ def slot_handler(command, cmd_data):
     return tmp
 
 def abstract_slot_0():
-    if len(ast_stack[-1]) > 0 and ast_stack[-1][-1] == slot_0_expr:
+    if len(ast_stack[-1]) > 0 and ast_stack[-1][-1] == slot_0_expr and no_0:
         ast_stack[-1].pop()
         return slot_0_expr.value
     else:
