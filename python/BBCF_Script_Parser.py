@@ -85,18 +85,21 @@ def slot_handler(command, cmd_data):
             if cmd_data[i-1] == 0:
                 tmp.append(Constant(v))
             else:
-                if no_0 and cmd_data[i] == 0:
-                    if len(ast_stack[-1]) > 0 and ast_stack[-1][-1] == slot_0_expr and (command != '47' and i != 2):
-                        tmp.append(slot_0_expr.value)
-                        ast_stack[-1].pop()
-                    else:
-                        tmp.append(Name(get_slot_name(v)))
+                if no_0_command and cmd_data[i] == 0 and int(command) not in [40, 41, 47, 49]:
+                    tmp.append(abstract_slot_0())
                 else:
                     tmp.append(Name(get_slot_name(v)))
         else:
             tmp.append(Constant(v))
             
     return tmp
+
+def abstract_slot_0():
+    if len(ast_stack[-1]) > 0 and ast_stack[-1][-1] == slot_0_expr:
+        ast_stack[-1].pop()
+        return slot_0_expr.value
+    else:
+        return Name(get_slot_name(0))
 
 def get_move_name(command, cmd_data):
     str_cmd_data = str(cmd_data)
@@ -236,11 +239,14 @@ def parse_bbscript_routine(file):
         # 4 is if, 54 is ifNot
         elif current_cmd in [4, 54]:
             cmd_data = slot_handler(current_cmd, cmd_data)
-            command = cmd_data[0]
+            condition = cmd_data[0]
+            if isinstance(condition, Name) and condition.id == "SLOT_0":
+                condition = abstract_slot_0()
             if current_cmd == 4:
-                ast_stack[-1].append(If(command, [], []))
+                command = If(condition, [], [])
             elif current_cmd == 54:
-                ast_stack[-1].append(If(UnaryOp(Not(), command), [], []))
+                command = If(UnaryOp(Not(), condition), [], [])
+            ast_stack[-1].append(command)
             ast_stack.append(ast_stack[-1][-1].body)
         # 56 is else
         elif current_cmd == 56:
@@ -249,11 +255,14 @@ def parse_bbscript_routine(file):
         # 18 is ifSlotSendTolabel, 19 is ifNotSlotSendTolabel
         elif current_cmd in [18, 19]:
             cmd_data = slot_handler(current_cmd, cmd_data)
-            command = cmd_data[1]
+            condition = cmd_data[1]
+            if isinstance(condition, Name) and condition.id == "SLOT_0":
+                condition = abstract_slot_0()
             if current_cmd == 18:
-                ast_stack[-1].append(If(command, [], []))
+                command = If(condition, [], [])
             elif current_cmd == 19:
-                ast_stack[-1].append(If(UnaryOp(Not(), command), [], []))
+                command = If(UnaryOp(Not(), condition), [], [])
+            ast_stack[-1].append(command)
             ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [cmd_data[0]], [])))
         # 36 is apply function to Object
         elif current_cmd == 36:
@@ -267,6 +276,10 @@ def parse_bbscript_routine(file):
             aval = Name(get_slot_name(0))
             lval = cmd_data[1]
             rval = cmd_data[2]
+            if isinstance(lval, Name) and lval.id == "SLOT_0":
+                lval = abstract_slot_0()
+            if isinstance(rval, Name) and rval.id == "SLOT_0":
+                rval = abstract_slot_0()
             op = get_operation(cmd_data[0])
             if cmd_data[0] in [0, 1, 2, 3]:
                 tmp = BinOp(lval, op, rval)
@@ -283,22 +296,28 @@ def parse_bbscript_routine(file):
             slot_0_expr = Assign([aval], tmp)
             command = slot_0_expr
             ast_stack[-1].append(command)
-        # 41 is StoreValue, assigning to SLOT
+        # 41 is StoreValue, assigning to SLOT_XX
         elif current_cmd == 41:
             cmd_data = slot_handler(current_cmd, cmd_data)
             lval = cmd_data[0]
             rval = cmd_data[1]
+            if isinstance(rval, Name) and rval.id == "SLOT_0":
+                rval = abstract_slot_0()
             command = Assign([lval], rval)
             if isinstance(lval, Name) and lval.id == "SLOT_0":
                 slot_0_expr = command
             ast_stack[-1].append(command)
-        # 47 slot operation saved to slot diff from SLOT_0
+        # 47 slot operation saved to SLOT_XX
         elif current_cmd == 47:
             cmd_data = slot_handler(current_cmd, cmd_data)
             cmd_data[0] = cmd_data[0].value
             aval = cmd_data[1]
             lval = cmd_data[2]
             rval = cmd_data[3]
+            if isinstance(lval, Name) and lval.id == "SLOT_0":
+                lval = abstract_slot_0()
+            if isinstance(rval, Name) and rval.id == "SLOT_0":
+                rval = abstract_slot_0()
             op = get_operation(cmd_data[0])
             if cmd_data[0] in [0, 1, 2, 3]:
                 tmp = BinOp(lval, op, rval)
@@ -316,6 +335,8 @@ def parse_bbscript_routine(file):
                 command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
             else:
                 command = Assign([aval], tmp)
+            if isinstance(aval, Name) and aval.id == "SLOT_0":
+                slot_0_expr = command
             ast_stack[-1].append(command)
         # 49 is ModifyVar_
         elif current_cmd == 49:
@@ -323,6 +344,11 @@ def parse_bbscript_routine(file):
             cmd_data[0] = cmd_data[0].value
             lval = cmd_data[1]
             rval = cmd_data[2]
+            aval = lval
+            if isinstance(lval, Name) and lval.id == "SLOT_0":
+                lval = abstract_slot_0()
+            if isinstance(rval, Name) and rval.id == "SLOT_0":
+                rval = abstract_slot_0()
             op = get_operation(cmd_data[0])
             if cmd_data[0] in [0, 1, 2, 3]:
                 tmp = BinOp(lval, op, rval)
@@ -336,7 +362,9 @@ def parse_bbscript_routine(file):
                 tmp = UnaryOp(Not(), BinOp(lval, op, rval))
             else:
                 raise Exception("Unhandled operation")
-            command = Assign([lval], tmp)
+            command = Assign([aval], tmp)
+            if isinstance(aval, Name) and aval.id == "SLOT_0":
+                slot_0_expr = command
             ast_stack[-1].append(command)
         elif current_cmd in [11058, 22019]:
             attributes = ""
@@ -397,8 +425,8 @@ def parse_bbscript(filename, output_path):
 
 
 if __name__ == '__main__':
-    flag_list = "Flags: -h, --no-slot, --no-0, --raw, --debug"
-    no_slot = no_0 = debug = raw = False
+    flag_list = "Flags: -h, --no-slot, --no-0, --no-0-command, --raw, --debug"
+    no_slot = no_0 = no_0_command = debug = raw = False
     input_file = None
     output_path = None
     for v in sys.argv[1:]:
@@ -408,6 +436,7 @@ if __name__ == '__main__':
             print(flag_list)
             print("--no-slot: Disable aliasing of slots")
             print("--no-0: Delete most instances of SLOT_0 by merging them with commands assigning to SLOT_0")
+            print("--no-0-command: Also merge SLOT_0 inside commands")
             print("--raw: Remove all abstraction except states and subroutines, !!!Rebuilding not supported!!!")
             print("--debug: Create a scr_xx_error.py file upon crashing")
             sys.exit(0)
@@ -416,6 +445,9 @@ if __name__ == '__main__':
                 no_slot = True
             elif "--no-0" == v:
                 no_0 = True
+            elif "--no-0-command" == v:
+                no_0 = True
+                no_0_command = True
             elif "--debug" == v:
                 debug = True
             elif "--raw" == v:
