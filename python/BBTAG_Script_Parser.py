@@ -2,7 +2,7 @@ import os, struct, json, sys, astor
 from ast import *
 
 GAME = "BBTAG"
-AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 60, 61, 63, 66, 23036, 23037, 23145, 23146, 23148, 23156, 23166]
+AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 60, 61, 63, 66, 69, 70, 23036, 23037, 23145, 23146, 23148, 23156, 23166]
 ast_root = Module([], [])
 ast_stack = [ast_root.body]
 slot_0_expr = None
@@ -22,18 +22,6 @@ json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.jso
 slot_db = json.loads(json_data)
 json_data = open(os.path.join(pypath, "static_db/" + GAME + "/object_db/global.json")).read()
 object_db = json.loads(json_data)
-#Checking for a custom slot/upon db
-character_name = sys.argv[1].replace("scr_", "").split(".")[0]
-if character_name[:-2] == "ea" and len(character_name) > 2:
-    character_name = character_name[:-2]
-try:
-    upon_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/" + character_name + ".json")).read()))
-except IOError:
-    pass
-try:
-    slot_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/" + character_name + ".json")).read()))
-except IOError:
-    pass
 
 MODE = "<"
 
@@ -461,7 +449,20 @@ if __name__ == '__main__':
             input_file = v
         elif output_path is None:
             output_path = v
-
+            
+    #Checking for a custom slot/upon db
+    character_name = os.path.split(input_file)[-1].replace("scr_", "").split(".")[0]
+    if character_name[-2:] == "ea" and len(character_name) > 2:
+        character_name = character_name[:-2]
+    try:
+        upon_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/" + character_name + ".json")).read()))
+    except IOError:
+        pass
+    try:
+        slot_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/" + character_name + ".json")).read()))
+    except IOError:
+        pass
+    
     if not input_file or input_file.split(".")[-1] != "bin":
         print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
         print("Default output directory if left blank is the input file's directory.")

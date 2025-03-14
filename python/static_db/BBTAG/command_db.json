@@ -12,18 +12,16 @@
     "format": "32si"
   },
   "3": {
-    "name": "loopRest",
+    "name": "spriteEnd",
     "format": ""
   },
   "4": {
     "type_check": [0],
-    "startBlock": true,
-    "name": "if",
+    "name": "If",
     "format": "ii"
   },
   "5": {
     "name": "endIf",
-    "endBlock": true,
     "format": ""
   },
   "6": {
@@ -231,7 +229,7 @@
     "format": ""
   },
   "56": {
-    "name": "else",
+    "name": "Else",
     "format": ""
   },
   "57": {

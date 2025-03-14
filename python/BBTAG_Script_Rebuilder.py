@@ -4,32 +4,6 @@ from ast import *
 GAME = "BBTAG"
 slot_0 = Name("SLOT_0")
 
-pypath = os.path.dirname(sys.argv[0])
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
-command_db = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/move_inputs.json")).read()
-move_inputs = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/normal_inputs.json")).read()
-normal_inputs = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/hit_animation.json")).read()
-animation_db = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/global.json")).read()
-upon_db = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.json")).read()
-slot_db = json.loads(json_data)
-#Checking for a custom slot/upon db
-character_name = sys.argv[1].replace("scr_", "").split(".")[0]
-if character_name[:-2] == "ea":
-    character_name = character_name[:-2]
-try:
-    upon_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/" + character_name + ".json")).read()))
-except IOError:
-    pass
-try:
-    slot_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/" + character_name + ".json")).read()))
-except IOError:
-    pass
-
 command_db_lookup = {}
 slot_db_lookup = {}
 named_value_lookup = {}
@@ -37,25 +11,6 @@ named_button_lookup = {}
 named_direction_lookup = {}
 upon_db_lookup = {}
 animation_db_lookup = {}
-
-for k, v in command_db.items():
-    v["id"] = k
-    if "name" in v:
-        v["name"] = v["name"].lower()
-        command_db_lookup[v["name"]] = v
-    else:
-        command_db_lookup["unknown" + k] = v
-slot_db_lookup = {v.lower(): k for k, v in slot_db.items()}
-for k, v in move_inputs.items():
-    named_value_lookup[v.lower()] = k
-for k, v in normal_inputs['grouped_values'].items():
-    named_value_lookup[v.lower()] = k
-for k, v in normal_inputs['button_byte'].items():
-    named_button_lookup[v.lower()] = k
-for k, v in normal_inputs['direction_byte'].items():
-    named_direction_lookup[v.lower()] = k
-upon_db_lookup = {v.lower(): k for k, v in upon_db.items()}
-animation_db_lookup = {v.lower(): k for k, v in animation_db.items()}
 
 MODE = "<"
 error = False
@@ -310,22 +265,22 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             write_command_by_id("19", [node.body[0].value.args[0], node.test.operand])
         elif isinstance(node.test, Name):
             # This is if(SLOT) we need to find out slot index and write it as param of if
-            write_command_by_name("if", [node.test])
+            write_command_by_id("4", [node.test])
             self.visit_body(node.body)
-            write_command_by_name("endIf", [])
+            write_command_by_id("5", [])
             if len(node.orelse) > 0:
-                write_command_by_name("else", [])
+                write_command_by_id("56", [])
                 self.visit_body(node.orelse)
-                write_command_by_name("endElse", [])
+                write_command_by_id("57", [])
         elif isinstance(node.test, UnaryOp) and isinstance(node.test.operand, Name):
             # This is if(SLOT) we need to find out slot index and write it as param of if
-            write_command_by_name("ifNot", [node.test.operand])
+            write_command_by_id("54", [node.test.operand])
             self.visit_body(node.body)
-            write_command_by_name("endIfNot", [])
+            write_command_by_id("55", [])
             if len(node.orelse) > 0:
-                write_command_by_name("else", [])
+                write_command_by_id("56", [])
                 self.visit_body(node.orelse)
-                write_command_by_name("endElse", [])
+                write_command_by_id("57", [])
         elif (isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp)) and find1:
             self.visit(node.test)
             write_command_by_id("18", [node.body[0].value.args[0], slot_0])
@@ -335,23 +290,25 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             write_command_by_id("19", [node.body[0].value.args[0], slot_0])
         elif isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp):
             self.visit(node.test)
-            write_command_by_name("if", [slot_0])
+            # if
+            write_command_by_id("4", [slot_0])
             self.visit_body(node.body)
-            write_command_by_name("endIf", [])
+            # endIf
+            write_command_by_id("5", [])
             if len(node.orelse) > 0:
-                write_command_by_name("else", [])
+                write_command_by_id("56", [])
                 self.visit_body(node.orelse)
-                write_command_by_name("endElse", [])
+                write_command_by_id("57", [])
         elif isinstance(node.test, UnaryOp) and (
                 isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)):
             self.visit(node.test.operand)
-            write_command_by_name("ifNot", [slot_0])
+            write_command_by_id("54", [slot_0])
             self.visit_body(node.body)
-            write_command_by_name("endIfNot", [])
+            write_command_by_id("55", [])
             if len(node.orelse) > 0:
-                write_command_by_name("else", [])
+                write_command_by_id("56", [])
                 self.visit_body(node.orelse)
-                write_command_by_name("endElse", [])
+                write_command_by_id("57", [])
         else:
             raise Exception("UNHANDLED IF")
 
@@ -399,7 +356,8 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 node.value = slot_0
                 self.visit(node)
         elif isinstance(node.value, Name) or isinstance(node.value, Constant) or (isinstance(node.value, UnaryOp) and (isinstance(node.value.operand, Name) or isinstance(node.value.operand, Constant))) :
-            write_command_by_name("StoreValue", [node.targets[0], node.value])
+            # StoreValue
+            write_command_by_id("41", [node.targets[0], node.value])
         else:
             op_id = [decode_op(node.value)]
             if isinstance(node.value, BinOp):
@@ -423,11 +381,14 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 self.visit(Assign([slot_0], rval))
                 rval = slot_0
             if isinstance(aval, Name) and isinstance(lval, Name) and aval.id.lower() == lval.id.lower():
-                write_command_by_name("ModifyVar_", op_id + [aval, rval])
+                # ModifyVar
+                write_command_by_id("49", op_id + [aval, rval])
             elif aval.id.lower() == "slot_0":
-                write_command_by_name("op", op_id + [lval, rval])
+                # op
+                write_command_by_id("40", op_id + [lval, rval])
             else:
-                write_command_by_name("PrivateFunction", op_id + [aval, lval, rval])
+                # Unknown47 / PrivateFunction
+                write_command_by_id("47", op_id + [aval, lval, rval])
 
     def visit_body(self, nodebody):
         global output_buffer, error
@@ -467,6 +428,7 @@ if __name__ == '__main__':
     unknown_list = []
     input_file = None
     output_path = None
+
     for i, v in enumerate(sys.argv[1:]):
         if "-h" in v:
             print("Usage:BBTAG_Script_Rebuilder.py scr_xx.py outdir")
@@ -490,6 +452,53 @@ if __name__ == '__main__':
         elif output_path is None:
             output_path = v
 
+    pypath = os.path.dirname(sys.argv[0])
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
+    command_db = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/move_inputs.json")).read()
+    move_inputs = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/normal_inputs.json")).read()
+    normal_inputs = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/hit_animation.json")).read()
+    animation_db = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/global.json")).read()
+    upon_db = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.json")).read()
+    slot_db = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/object_db/global.json")).read()
+    object_db = json.loads(json_data)
+    #Checking for a custom slot/upon db
+    character_name = os.path.split(input_file)[-1].replace("scr_", "").split(".")[0]
+    if character_name[-2:] == "ea" and len(character_name) > 2:
+        character_name = character_name[:-2]
+    try:
+        upon_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/" + character_name + ".json")).read()))
+    except IOError:
+        pass
+    try:
+        slot_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/" + character_name + ".json")).read()))
+    except IOError:
+        pass
+
+    for k, v in command_db.items():
+        v["id"] = k
+        if "name" in v:
+            v["name"] = v["name"].lower()
+            command_db_lookup[v["name"]] = v
+        else:
+            command_db_lookup["unknown" + k] = v
+    slot_db_lookup = {v.lower(): k for k, v in slot_db.items()}
+    for k, v in move_inputs.items():
+        named_value_lookup[v.lower()] = k
+    for k, v in normal_inputs['grouped_values'].items():
+        named_value_lookup[v.lower()] = k
+    for k, v in normal_inputs['button_byte'].items():
+        named_button_lookup[v.lower()] = k
+    for k, v in normal_inputs['direction_byte'].items():
+        named_direction_lookup[v.lower()] = k
+    upon_db_lookup = {v.lower(): k for k, v in upon_db.items()}
+    animation_db_lookup = {v.lower(): k for k, v in animation_db.items()}
+
     if remove_unknown:
         unknown_list = list(filter(None, unknown_list))
         for i, v in enumerate(unknown_list):
@@ -502,7 +511,7 @@ if __name__ == '__main__':
                 sys.exit(1)
 
     if not input_file or input_file.split(".")[-1] != "py":
-        print("Usage:BBTAG_Script_Rebuilder.py scr_xx.py outdir")
+        print("Usage:BBCF_Script_Rebuilder.py scr_xx.py outdir")
         print("Default output directory if left blank is the input file's directory.")
         print(flag_list)
         sys.exit(1)
