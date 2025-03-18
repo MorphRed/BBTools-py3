@@ -1,8 +1,9 @@
+import astor_install
+
 import os, struct, json, sys, astor
 from ast import *
-
 GAME = "BBTAG"
-slot_0 = Name("SLOT_0")
+slot_0_temp = Name("SLOT_0")
 
 command_db_lookup = {}
 slot_db_lookup = {}
@@ -16,7 +17,7 @@ MODE = "<"
 error = False
 
 def decode_op(node):
-    if isinstance(node, UnaryOp):
+    if isinstance(node, UnaryOp) and isinstance(node.op, Invert):
         return 14
     elif isinstance(node, BinOp) or isinstance(node, BoolOp):
         if isinstance(node.op, Add):
@@ -50,7 +51,7 @@ def decode_op(node):
             return 13
         elif isinstance(node.ops[0], NotEq):
             return 15
-    raise Exception("UNKNOWN OP")
+    raise Exception("Unknown op", node)
 
 def decode_move(value):
     value.id = value.id.lower()
@@ -87,7 +88,7 @@ def decode_var(node):
         try:
             return [2, int(node.id.lower().replace("slot_", ""))]
         except ValueError:
-            raise Exception("unknown SLOT " + node.id)
+            raise Exception("unknown SLOT " + node.id, node)
 
 
 def write_command_by_name(name, params):
@@ -134,7 +135,7 @@ def write_command_by_id(command, params):
         elif isinstance(value, UnaryOp):
             my_params[index] = -value.operand.value
         else:
-            raise Exception("unknown type " + str(type(value)))
+            raise Exception("Unknown type " + str(type(value)))
     if command in [11058, 22019] and len(my_params) == 1:
         new_params = []
         for attribute in "HBFPT":
@@ -161,8 +162,8 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         output_buffer.write(struct.pack(MODE + "I", state_count))
         for function in node.body:
             if type(function) != FunctionDef:
-                raise Exception("Root level elements must be functions")
-            if function.decorator_list[0].id.lower() != "state":
+                raise Exception("Root level elements must be functions", function)
+            if len(function.decorator_list) == 0 or function.decorator_list[0].id.lower() != "state":
                 continue
             function._index = state_count
             state_count += 1
@@ -193,27 +194,27 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 if node.name.startswith('__') and node.name[2].isdigit():
                     node.name = node.name[2:]
                 node.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
-                write_command_by_name("startState", [node.name])
+                write_command_by_id("0", [node.name])
                 self.visit_body(node.body)
-                write_command_by_name("endState", [])
+                write_command_by_id("1", [])
             elif node.decorator_list[0].id.lower() == "subroutine":
                 if node.name.startswith('__') and node.name[2].isdigit():
                     node.name = node.name[2:]
                 node.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
-                write_command_by_name("startSubroutine", [node.name])
+                write_command_by_id("8", [node.name])
                 self.visit_body(node.body)
-                write_command_by_name("endSubroutine", [])
+                write_command_by_id("9", [])
         else:
-            raise Exception("haven't implemented this")
+            raise Exception("Root functions must have a decorator", node)
 
     def visit_Pass(self, node):
         pass
 
     def visit_Call(self, node):
         for index, value in enumerate(node.args):
-            if isinstance(value, Call) or isinstance(value, Compare) or isinstance(value, BinOp) or isinstance(value, BoolOp):
-                self.visit(value)
-                node.args[index] = Name("SLOT_0")
+            if isinstance(value, Call) or isinstance(value, Compare) or isinstance(value, BinOp) or isinstance(value, BoolOp) or (isinstance(value, UnaryOp) and isinstance(value.op, Invert)):
+                self.visit_Assign(Assign([slot_0_temp], value))
+                node.args[index] = slot_0_temp
 
         node.func.id = node.func.id.lower()
         # We have a function call. Is it a named function or is it UnknownXXXXX
@@ -222,7 +223,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         elif node.func.id in command_db_lookup:
             cmd_id = command_db_lookup[node.func.id]["id"]
         else:
-            raise Exception("unknown command " + node.func.id)
+            raise Exception("Unknown command", node)
         write_command_by_id(cmd_id, node.args)
 
     # Concerns def upon_ and applyFunctionToObject
@@ -231,129 +232,117 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             if node.name.startswith('__') and node.name[2].isdigit():
                 node.name = node.name[2:]
             node.name.replace('__sp__', ' ').replace('__qu__', '?').replace('__at__', '@').replace('__ds__', '-' )
-            write_command_by_name("Move_Register", [node.name, Name(node.args.args[0].arg)])
+            write_command_by_id("14001", [node.name, Name(node.args.args[0].arg)])
             self.visit_body(node.body)
-            write_command_by_name("Move_EndRegister", [])
+            write_command_by_id("14002", [])
             return
         node.name = node.name.lower()
         if "upon" in node.name:
-            write_command_by_name("upon", [decode_upon(node.name)])
+            write_command_by_id("15", [decode_upon(node.name)])
             self.visit_body(node.body)
-            write_command_by_name("endUpon", [])
+            write_command_by_id("16", [])
         elif "runonobject" in node.name:
-            write_command_by_name("RunOnObject", [int(node.name.replace("runonobject_", ""))])
+            write_command_by_id("36", [int(node.name.replace("runonobject_", ""))])
             self.visit_body(node.body)
-            write_command_by_name("RunOnSelf", [])
+            write_command_by_id("35", [])
         else:
-            raise Exception("prohibited inner function")
+            raise Exception("Prohibited inner function", node)
 
 
     def visit_If(self, node):
         find1 = False
         find2 = False
+
+        def is_not(node_test):
+            return isinstance(node_test, UnaryOp) and isinstance(node_test.op, Not)
+        def is_slot(node_test):
+            return isinstance(node_test, Name) or isinstance(node_test, Call) or isinstance(node_test, Compare) or isinstance(node_test, BinOp) or isinstance(node_test, BoolOp) or (isinstance(node_test, UnaryOp) and isinstance(node_test.op, Invert))
+
         try:
-            if node.body[0].value.func.id.lower() == "conditionalsendtolabel":
-                if isinstance(node.test, UnaryOp):
+            if command_db_lookup[node.body[0].value.func.id.lower()]["id"] == "18" or command_db_lookup[node.body[0].value.func.id.lower()]["id"] == "19":
+                if is_not(node.test):
                     find2 = True
                 else:
                     find1 = True
         except Exception:
             pass
-        if isinstance(node.test, Name) and find1:
-            write_command_by_id("18", [node.body[0].value.args[0], node.test])
-        elif isinstance(node.test, UnaryOp) and isinstance(node.test.operand, Name) and find2:
-            write_command_by_id("19", [node.body[0].value.args[0], node.test.operand])
-        elif isinstance(node.test, Name):
-            # This is if(SLOT) we need to find out slot index and write it as param of if
-            write_command_by_id("4", [node.test])
+        if find1 and is_slot(node.test):
+            if isinstance(node.test, Name):
+                write_command_by_id("18", [node.body[0].value.args[0], node.test])
+            else:
+                self.visit(node.test)
+                write_command_by_id("18", [node.body[0].value.args[0], slot_0_temp])
+                if len(node.orelse) > 0:
+                    raise Exception("This is not a real if: else nodes don't work here")
+        elif find2 and is_not(node.test) and is_slot(node.test.operand):
+            if isinstance(node.test.operand, Name):
+                write_command_by_id("19", [node.body[0].value.args[0], node.test.operand])
+            else:
+                self.visit(node.test.operand)
+                write_command_by_id("19", [node.body[0].value.args[0], slot_0_temp])
+                if len(node.orelse) > 0:
+                    raise Exception("This is not a real if: else nodes don't work here")
+        elif is_slot(node.test):
+            if isinstance(node.test, Name):
+                write_command_by_id("4", [node.test])
+            else:
+                self.visit(node.test)
+                write_command_by_id("4", [slot_0_temp])
             self.visit_body(node.body)
             write_command_by_id("5", [])
-            if len(node.orelse) > 0:
-                write_command_by_id("56", [])
-                self.visit_body(node.orelse)
-                write_command_by_id("57", [])
-        elif isinstance(node.test, UnaryOp) and isinstance(node.test.operand, Name):
-            # This is if(SLOT) we need to find out slot index and write it as param of if
-            write_command_by_id("54", [node.test.operand])
+        elif is_not(node.test) and is_slot(node.test.operand):
+            if isinstance(node.test.operand, Name):
+                write_command_by_id("54", [node.test.operand])
+            else:
+                self.visit(node.test.operand)
+                write_command_by_id("54", [slot_0_temp])
             self.visit_body(node.body)
             write_command_by_id("55", [])
-            if len(node.orelse) > 0:
-                write_command_by_id("56", [])
-                self.visit_body(node.orelse)
-                write_command_by_id("57", [])
-        elif (isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp)) and find1:
-            self.visit(node.test)
-            write_command_by_id("18", [node.body[0].value.args[0], slot_0])
-        elif isinstance(node.test, UnaryOp) and (
-                isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)) and find2:
-            self.visit(node.test.operand)
-            write_command_by_id("19", [node.body[0].value.args[0], slot_0])
-        elif isinstance(node.test, Call) or isinstance(node.test, Compare) or isinstance(node.test, BinOp) or isinstance(node.test, BoolOp):
-            self.visit(node.test)
-            # if
-            write_command_by_id("4", [slot_0])
-            self.visit_body(node.body)
-            # endIf
-            write_command_by_id("5", [])
-            if len(node.orelse) > 0:
-                write_command_by_id("56", [])
-                self.visit_body(node.orelse)
-                write_command_by_id("57", [])
-        elif isinstance(node.test, UnaryOp) and (
-                isinstance(node.test.operand, Call) or isinstance(node.test.operand, Compare) or isinstance(node.test.operand, BinOp) or isinstance(node.test.operand, BoolOp)):
-            self.visit(node.test.operand)
-            write_command_by_id("54", [slot_0])
-            self.visit_body(node.body)
-            write_command_by_id("55", [])
-            if len(node.orelse) > 0:
-                write_command_by_id("56", [])
-                self.visit_body(node.orelse)
-                write_command_by_id("57", [])
         else:
-            raise Exception("UNHANDLED IF")
+            raise Exception("Unhandled if")
+        if len(node.orelse) > 0:
+            write_command_by_id("56", [])
+            self.visit_body(node.orelse)
+            write_command_by_id("57", [])
 
     def visit_UnaryOp(self, node):
         return
 
     def visit_BoolOp(self, node):
         for i, v in enumerate(node.values):
-            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare):
-                self.visit_Assign(Assign([slot_0], v))
-                node.values[i] = slot_0
-        self.visit_Assign(Assign([slot_0], node))
+            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare) or (isinstance(v, UnaryOp) and isinstance(v.op, Invert)):
+                self.visit_Assign(Assign([slot_0_temp], v))
+                node.values[i] = slot_0_temp
+        self.visit_Assign(Assign([slot_0_temp], node))
 
     def visit_BinOp(self, node):
-        if node.left:
-            v = node.left
-            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare):
-                self.visit_Assign(Assign([slot_0], v))
-                node.left = slot_0
-        if node.right:
-            v = node.right
-            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare):
-                self.visit_Assign(Assign([slot_0], v))
-                node.right = slot_0
-        self.visit_Assign(Assign([slot_0], node))
+        v = node.left
+        if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare) or (isinstance(v, UnaryOp) and isinstance(v.op, Invert)):
+            self.visit_Assign(Assign([slot_0_temp], v))
+            node.left = slot_0_temp
+        v = node.right
+        if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare) or (isinstance(v, UnaryOp) and isinstance(v.op, Invert)):
+            self.visit_Assign(Assign([slot_0_temp], v))
+            node.right = slot_0_temp
+        self.visit_Assign(Assign([slot_0_temp], node))
 
     def visit_Compare(self, node):
-        if node.left:
-            v = node.left
-            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare):
-                self.visit_Assign(Assign([slot_0], v))
-                node.left = slot_0
-        if node.comparators[0]:
-            v = node.comparators[0]
-            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare):
-                self.visit_Assign(Assign([slot_0], v))
-                node.comparators[0] = slot_0
-        self.visit_Assign(Assign([slot_0], node))
+        v = node.left
+        if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare) or (isinstance(v, UnaryOp) and isinstance(v.op, Invert)):
+            self.visit_Assign(Assign([slot_0_temp], v))
+            node.left = slot_0_temp
+        v = node.comparators[0]
+        if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare) or (isinstance(v, UnaryOp) and isinstance(v.op, Invert)):
+            self.visit_Assign(Assign([slot_0_temp], v))
+            node.comparators[0] = slot_0_temp
+        self.visit_Assign(Assign([slot_0_temp], node))
 
     def visit_Assign(self, node):
         aval = node.targets[0]
         if isinstance(node.value, Call):
             self.visit(node.value)
             if aval.id.lower() != "slot_0":
-                node.value = slot_0
+                node.value = slot_0_temp
                 self.visit(node)
         elif isinstance(node.value, Name) or isinstance(node.value, Constant) or (isinstance(node.value, UnaryOp) and (isinstance(node.value.operand, Name) or isinstance(node.value.operand, Constant))) :
             # StoreValue
@@ -369,17 +358,17 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             elif isinstance(node.value, Compare):
                 lval = node.value.left
                 rval = node.value.comparators[0]
-            elif isinstance(node.value, UnaryOp) and isinstance(node.value.operand, BinOp):
+            elif isinstance(node.value, UnaryOp) and isinstance(node.value.op, Invert):
                 lval = node.value.operand.left
                 rval = node.value.operand.right
             else:
                 raise Exception("How did this happen")
             if isinstance(lval, BinOp) or isinstance(lval, BoolOp) or isinstance(lval, Compare) or isinstance(lval, UnaryOp) or isinstance(lval, Call):
-                self.visit(Assign([slot_0], lval))
-                lval = slot_0
+                self.visit(Assign([slot_0_temp], lval))
+                lval = slot_0_temp
             if isinstance(rval, BinOp) or isinstance(rval, BoolOp) or isinstance(rval, Compare) or isinstance(rval, UnaryOp) or isinstance(rval, Call):
-                self.visit(Assign([slot_0], rval))
-                rval = slot_0
+                self.visit(Assign([slot_0_temp], rval))
+                rval = slot_0_temp
             if isinstance(aval, Name) and isinstance(lval, Name) and aval.id.lower() == lval.id.lower():
                 # ModifyVar
                 write_command_by_id("49", op_id + [aval, rval])
@@ -392,13 +381,8 @@ class Rebuilder(astor.ExplicitNodeVisitor):
 
     def visit_body(self, nodebody):
         global output_buffer, error
-        try:
-            for childNode in nodebody:
-                self.visit(childNode)
-        except Exception as e:
-            # spaghetti pls don't kill me :3
-            error = True
-            print("\033[91m", e, "\n" + astor.to_source(childNode) + "\n" + astor.dump_tree(childNode) + "\033[0m", sep="")
+        for childNode in nodebody:
+            self.visit(childNode)
 
     def visit_Expr(self, node):
         self.visit(node.value)
@@ -412,14 +396,20 @@ def rebuild_bbscript(filename, output_path):
     output_name = os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + "_error.bin")
     source_ast = astor.code_to_ast.parse_file(filename)
     output_buffer = open(output_name, "wb")
-    Rebuilder().visit(source_ast)
+    try:
+        Rebuilder().visit(source_ast)
+    except Exception as e:
+        if len(e.args) > 1:
+            print("\033[91m", e.args[0], "\n", astor.to_source(e.args[1]), "at line ", e.args[1].lineno, "\033[0m", sep="")
+        else:
+            print("\033[91m", e, "\033[0m", sep="")
+
+        if debug:
+            output_buffer.close()
+            os.replace(output_name, output_name.replace("_error.", "."))
+        sys.exit(0)
     output_buffer.close()
-    if not error:
-        os.replace(output_name, output_name.replace("_error.", "."))
-    else:
-        if not debug:
-            os.remove(output_name)
-        sys.exit(1)
+    os.replace(output_name, output_name.replace("_error.", "."))
 
 
 if __name__ == '__main__':
@@ -431,7 +421,7 @@ if __name__ == '__main__':
 
     for i, v in enumerate(sys.argv[1:]):
         if "-h" in v:
-            print("Usage:BBTAG_Script_Rebuilder.py scr_xx.py outdir")
+            print("Usage:BBCF_Script_Rebuilder.py scr_xx.py outdir")
             print("Default output directory if left blank is the input file's directory.")
             print(flag_list)
             print("--debug: Create a scr_xx_error.bin file upon crashing")
@@ -511,7 +501,7 @@ if __name__ == '__main__':
                 sys.exit(1)
 
     if not input_file or input_file.split(".")[-1] != "py":
-        print("Usage:BBCF_Script_Rebuilder.py scr_xx.py outdir")
+        print("Usage:BBTAG_Script_Rebuilder.py scr_xx.py outdir")
         print("Default output directory if left blank is the input file's directory.")
         print(flag_list)
         sys.exit(1)

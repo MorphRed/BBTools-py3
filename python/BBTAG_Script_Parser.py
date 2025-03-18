@@ -1,3 +1,5 @@
+import astor_install
+
 import os, struct, json, sys, astor
 from ast import *
 
@@ -6,23 +8,6 @@ AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 60, 61, 63, 66, 69, 70, 23036, 2303
 ast_root = Module([], [])
 ast_stack = [ast_root.body]
 slot_0_expr = None
-
-pypath = os.path.dirname(sys.argv[0])
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
-command_db = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/move_inputs.json")).read()
-move_inputs = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/normal_inputs.json")).read()
-normal_inputs = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/hit_animation.json")).read()
-animation_db = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/global.json")).read()
-upon_db = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.json")).read()
-slot_db = json.loads(json_data)
-json_data = open(os.path.join(pypath, "static_db/" + GAME + "/object_db/global.json")).read()
-object_db = json.loads(json_data)
-
 MODE = "<"
 
 def get_operation(operation_id):
@@ -257,13 +242,24 @@ def parse_bbscript_routine(file):
             ast_stack[-1].append(
                 FunctionDef(db_data["name"] + "_" + str(cmd_data[0]), empty_args, [], []))
             ast_stack.append(ast_stack[-1][-1].body)
-        # 40 is operation stored in SLOT_0
-        elif current_cmd == 40:
+        # 40 is operation stored in SLOT_0, 47 is operation stored in value given, 49 is ModifyVar_
+        elif current_cmd in [40, 47, 49]:
             cmd_data = slot_handler(current_cmd, cmd_data)
             cmd_data[0] = cmd_data[0].value
-            aval = Name(get_slot_name(0))
-            lval = cmd_data[1]
-            rval = cmd_data[2]
+            if current_cmd == 40:
+                aval = Name(get_slot_name(0))
+                lval = cmd_data[1]
+                rval = cmd_data[2]
+            elif current_cmd == 47:
+                aval = cmd_data[1]
+                lval = cmd_data[2]
+                rval = cmd_data[3]
+            elif current_cmd == 49:
+                lval = cmd_data[1]
+                rval = cmd_data[2]
+                aval = lval
+            else:
+                raise Exception("Unknown command in operation")
             if isinstance(lval, Name) and lval.id == "SLOT_0":
                 lval = abstract_slot_0()
             if isinstance(rval, Name) and rval.id == "SLOT_0":
@@ -278,11 +274,15 @@ def parse_bbscript_routine(file):
             elif cmd_data[0] in [9, 10, 11, 12, 13, 15]:
                 tmp = Compare(lval, [op], [rval])
             elif cmd_data[0] in [14]:
-                tmp = UnaryOp(Not(), BinOp(lval, op, rval))
+                tmp = UnaryOp(Invert(), BinOp(lval, op, rval))
             else:
                 raise Exception("Unhandled operation")
-            slot_0_expr = Assign([aval], tmp)
-            command = slot_0_expr
+            if isinstance(aval, Constant):
+                command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+            else:
+                command = Assign([aval], tmp)
+            if isinstance(aval, Name) and aval.id == "SLOT_0":
+                slot_0_expr = command
             ast_stack[-1].append(command)
         # 41 is StoreValue, assigning to SLOT_XX
         elif current_cmd == 41:
@@ -293,65 +293,6 @@ def parse_bbscript_routine(file):
                 rval = abstract_slot_0()
             command = Assign([lval], rval)
             if isinstance(lval, Name) and lval.id == "SLOT_0":
-                slot_0_expr = command
-            ast_stack[-1].append(command)
-        # 47 slot operation saved to SLOT_XX
-        elif current_cmd == 47:
-            cmd_data = slot_handler(current_cmd, cmd_data)
-            cmd_data[0] = cmd_data[0].value
-            aval = cmd_data[1]
-            lval = cmd_data[2]
-            rval = cmd_data[3]
-            if isinstance(lval, Name) and lval.id == "SLOT_0":
-                lval = abstract_slot_0()
-            if isinstance(rval, Name) and rval.id == "SLOT_0":
-                rval = abstract_slot_0()
-            op = get_operation(cmd_data[0])
-            if cmd_data[0] in [0, 1, 2, 3]:
-                tmp = BinOp(lval, op, rval)
-            elif cmd_data[0] in [4]:
-                tmp = BinOp(lval, op, rval)
-            elif cmd_data[0] in [5, 6, 7, 8]:
-                tmp = BoolOp(op, [lval, rval])
-            elif cmd_data[0] in [9, 10, 11, 12, 13, 15]:
-                tmp = Compare(lval, [op], [rval])
-            elif cmd_data[0] in [14]:
-                tmp = UnaryOp(Not(), BinOp(lval, op, rval))
-            else:
-                raise Exception("Unhandled operation")
-            if isinstance(aval, Constant):
-                command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
-            else:
-                command = Assign([aval], tmp)
-            if isinstance(aval, Name) and aval.id == "SLOT_0":
-                slot_0_expr = command
-            ast_stack[-1].append(command)
-        # 49 is ModifyVar_
-        elif current_cmd == 49:
-            cmd_data = slot_handler(current_cmd, cmd_data)
-            cmd_data[0] = cmd_data[0].value
-            lval = cmd_data[1]
-            rval = cmd_data[2]
-            aval = lval
-            if isinstance(lval, Name) and lval.id == "SLOT_0":
-                lval = abstract_slot_0()
-            if isinstance(rval, Name) and rval.id == "SLOT_0":
-                rval = abstract_slot_0()
-            op = get_operation(cmd_data[0])
-            if cmd_data[0] in [0, 1, 2, 3]:
-                tmp = BinOp(lval, op, rval)
-            elif cmd_data[0] in [4]:
-                tmp = BinOp(lval, op, rval)
-            elif cmd_data[0] in [5, 6, 7, 8]:
-                tmp = BoolOp(op, [lval, rval])
-            elif cmd_data[0] in [9, 10, 11, 12, 13, 15]:
-                tmp = Compare(lval, [op], [rval])
-            elif cmd_data[0] in [14]:
-                tmp = UnaryOp(Not(), BinOp(lval, op, rval))
-            else:
-                raise Exception("Unhandled operation")
-            command = Assign([aval], tmp)
-            if isinstance(aval, Name) and aval.id == "SLOT_0":
                 slot_0_expr = command
             ast_stack[-1].append(command)
         elif current_cmd in [11058, 22019]:
@@ -419,7 +360,7 @@ if __name__ == '__main__':
     output_path = None
     for v in sys.argv[1:]:
         if "-h" in v:
-            print("Usage:BBTAG_Script_Parser.py scr_xx.bin outdir")
+            print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
             print("Default output directory if left blank is the input file's directory.")
             print(flag_list)
             print("--no-slot: Disable aliasing of slots")
@@ -449,7 +390,23 @@ if __name__ == '__main__':
             input_file = v
         elif output_path is None:
             output_path = v
-            
+
+
+    pypath = os.path.dirname(sys.argv[0])
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
+    command_db = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/move_inputs.json")).read()
+    move_inputs = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/normal_inputs.json")).read()
+    normal_inputs = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/named_values/hit_animation.json")).read()
+    animation_db = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/upon_db/global.json")).read()
+    upon_db = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/global.json")).read()
+    slot_db = json.loads(json_data)
+    json_data = open(os.path.join(pypath, "static_db/" + GAME + "/object_db/global.json")).read()
+    object_db = json.loads(json_data)
     #Checking for a custom slot/upon db
     character_name = os.path.split(input_file)[-1].replace("scr_", "").split(".")[0]
     if character_name[-2:] == "ea" and len(character_name) > 2:
@@ -462,9 +419,9 @@ if __name__ == '__main__':
         slot_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/" + character_name + ".json")).read()))
     except IOError:
         pass
-    
+
     if not input_file or input_file.split(".")[-1] != "bin":
-        print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
+        print("Usage:BBTAG_Script_Parser.py scr_xx.bin outdir")
         print("Default output directory if left blank is the input file's directory.")
         print(flag_list)
         sys.exit(1)

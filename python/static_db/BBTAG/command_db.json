@@ -1735,6 +1735,10 @@
     "size": 8,
     "name": "UseStrongHitspark"
   },
+  "9021": {
+  "format": "i",
+  "size": 8
+  },
   "9070": {
     "format": "i",
     "name": "AirPushbackX"
