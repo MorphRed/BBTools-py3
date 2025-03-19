@@ -4,7 +4,7 @@ import os, struct, json, sys, astor
 from ast import *
 
 GAME = "BBCF"
-AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 60, 61, 63, 66, 23036, 23037, 23145, 23146, 23148, 23156, 23166]
+AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 59, 60, 61, 63, 66, 69, 70, 1116, 2065, 23036, 23037, 23045, 23145, 23146, 23148, 23156, 23166, 23177, 30042]
 ast_root = Module([], [])
 ast_stack = [ast_root.body]
 slot_0_expr = None

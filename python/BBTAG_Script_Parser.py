@@ -4,7 +4,7 @@ import os, struct, json, sys, astor
 from ast import *
 
 GAME = "BBTAG"
-AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 60, 61, 63, 66, 69, 70, 23036, 23037, 23145, 23146, 23148, 23156, 23166]
+AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 59, 60, 61, 63, 66, 69, 70, 1116, 2065, 23036, 23037, 23045, 23145, 23146, 23148, 23156, 23166, 23177, 30042]
 ast_root = Module([], [])
 ast_stack = [ast_root.body]
 slot_0_expr = None
@@ -224,7 +224,11 @@ def parse_bbscript_routine(file):
         # 56 is else
         elif current_cmd == 56:
             ifnode = ast_stack[-1][-1]
-            ast_stack.append(ifnode.orelse)
+            try:
+                ast_stack.append(ifnode.orelse)
+            except Exception as _:
+                # When arcsys puts a random else bracket in the code that does nothing :)
+                ast_stack.append([])
         # 18 is ifSlotSendTolabel, 19 is ifNotSlotSendTolabel
         elif current_cmd in [18, 19]:
             cmd_data = slot_handler(current_cmd, cmd_data)
