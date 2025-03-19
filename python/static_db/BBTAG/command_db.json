@@ -93,19 +93,8 @@
     "name": "enterState",
     "format": "32s"
   },
-  "22": {
-    "auto": "autostr",
-    "format": "32s",
-    "size": 36
-  },
-  "23": {
-    "size": 68
-  },
   "24": {
-    "size": 40
-  },
-  "25": {
-    "size": 40
+    "format": "32si"
   },
   "26": {
     "format": "32s"
@@ -751,25 +740,22 @@
     "format": "i"
   },
   "1109": {
-    "size": 12,
     "format": "ii"
   },
   "1110": {
-    "size": 12,
     "format": "ii"
   },
   "1111": {
-    "size": 12,
     "format": "ii"
   },
   "1112": {
-    "size": 4
+    "format": ""
   },
   "1114": {
-    "size": 4
+    "format": "ii"
   },
   "1116": {
-    "size": 4
+    "format": "ii"
   },
   "2000": {
     "format": "",
@@ -825,6 +811,10 @@
     "format": "",
     "name": "AttackDefaults_AstralHeatProjectile"
   },
+  "2013": {
+    "format": "i",
+    "size": 8
+  },
   "2015": {
     "format": "i",
     "size": 8,
@@ -863,6 +853,9 @@
   "2022": {
     "format": "",
     "name": "InitializeForLockObject"
+  },
+  "2023": {
+    "size": 12
   },
   "2034": {
     "format": "i",
@@ -1015,89 +1008,70 @@
     "format": "i"
   },
   "2070": {
-    "size": 20
+    "format": "4i"
   },
   "2071": {
-    "size": 24
+    "format": "5i"
   },
   "2072": {
-    "size": 24
+    "format": "5i"
   },
   "2073": {
-    "size": 8,
     "format": "i"
   },
   "2074": {
-    "size": 8,
     "format": "i"
   },
   "2075": {
-    "size": 8,
     "format": "i"
   },
   "3000": {
-    "size": 8,
     "format": "i"
   },
   "3001": {
-    "size": 8,
     "format": "i"
   },
   "3002": {
-    "size": 8,
     "format": "i"
   },
   "3003": {
-    "size": 8,
     "format": "i"
   },
   "3004": {
     "format": "i",
-    "size": 8,
     "name": "ConstantAlphaModifier"
   },
   "3005": {
-    "size": 8,
     "format": "i"
   },
   "3006": {
-    "size": 8,
     "format": "i"
   },
   "3007": {
-    "size": 8,
     "format": "i"
   },
   "3008": {
-    "size": 8,
     "format": "i"
   },
   "3009": {
-    "size": 8,
     "format": "i"
   },
   "3010": {
-    "size": 8,
     "format": "i"
   },
   "3011": {
-    "size": 8,
     "format": "i"
   },
   "3012": {
-    "size": 8,
     "format": "i"
   },
   "3013": {
-    "size": 8,
     "format": "i"
   },
   "3014": {
-    "size": 8,
     "format": "i"
   },
   "3015": {
-    "size": 8,
     "format": "i"
   },
   "3016": {
@@ -1138,7 +1112,6 @@
   },
   "3025": {
     "hex": [0],
-    "size": 12,
     "format": "II",
     "name": "ColorTransition"
   },
@@ -1401,26 +1374,23 @@
     "format": "i"
   },
   "4013": {
-    "size": 8,
     "format": "i"
   },
   "4014": {
     "auto": "autostr",
-    "size": 36,
     "format": "32s"
   },
   "4015": {
     "format": ""
   },
   "4016": {
-    "size": 40
+    "format": "32si"
   },
   "4017": {
-    "size": 12,
     "format": "ii"
   },
   "4018": {
-    "size": 52
+    "format": "i32s3i"
   },
   "4019": {
     "size": 8,
@@ -1517,6 +1487,9 @@
     "format": "i",
     "size": 8,
     "name": "ThrowLock"
+  },
+  "5004": {
+    "format": ""
   },
   "5005": {
     "format": "i",
@@ -2024,6 +1997,10 @@
     "format": "",
     "name": "CHFreezeTimeReset"
   },
+  "9266": {
+      "format": "i",
+      "size": 8
+  },
   "9274": {
     "format": "i",
     "name": "AttackP1"
@@ -2153,6 +2130,10 @@
     "format": "i",
     "name": "CHWallstickDuration"
   },
+  "9366": {
+    "size": 8,
+    "format": "i"
+  },
   "10000": {
     "format": "i",
     "size": 8,
@@ -2251,74 +2232,59 @@
   },
   "11039": {
     "format": "i",
-    "size": 8,
     "name": "MidGuardCrush"
   },
   "11040": {
     "format": "i",
-    "size": 8,
     "name": "AirGuardCrush"
   },
   "11042": {
     "format": "i",
-    "size": 8,
     "name": "CounterHitSetting"
   },
   "11043": {
     "format": "i",
-    "size": 8,
     "name": "HeatGainMultiplier"
   },
   "11044": {
     "format": "i",
-    "size": 8,
     "name": "IgnoreBurst"
   },
   "11045": {
     "format": "i",
-    "size": 8,
     "name": "PreventAirborneHit"
   },
   "11046": {
     "format": "i",
-    "size": 8,
     "name": "PreventGroundedHit"
   },
   "11047": {
     "auto": "autostr",
     "format": "32s",
-    "size": 36,
     "name": "GotoStateIfThrow"
   },
   "11048": {
-    "size": 8,
     "format": "i"
   },
   "11049": {
-    "size": 8,
     "format": "i"
   },
   "11050": {
-    "format": "i32s",
-    "size": 40
+    "format": "i32s"
   },
   "11051": {
     "size": 40
   },
   "11052": {
-    "size": 8,
     "format": "i"
   },
   "11053": {
-    "size": 8,
     "format": "i"
   },
   "11054": {
-    "size": 8,
     "format": "i"
   },
   "11055": {
-    "size": 8,
     "format": "i"
   },
   "11056": {
@@ -2326,225 +2292,173 @@
     "name": "AttackDirection"
   },
   "11057": {
-    "size": 8,
     "format": "i"
   },
   "11058": {
     "format": "5i",
-    "name": "AttackAttributes",
-    "size": 24
+    "name": "AttackAttributes"
   },
   "11059": {
-    "size": 8,
     "format": "i"
   },
   "11060": {
-    "size": 8,
     "format": "i"
   },
   "11061": {
-    "size": 8,
     "format": "i"
   },
   "11062": {
-    "size": 8,
     "format": "i"
   },
   "11063": {
-    "size": 8,
     "format": "i"
   },
   "11064": {
-    "size": 8,
     "format": "i"
   },
   "11065": {
-    "size": 8,
     "format": "i"
   },
   "11066": {
-    "size": 8,
     "format": "i"
   },
   "11067": {
-    "size": 8,
     "format": "i"
   },
   "11068": {
-    "size": 8,
     "format": "i"
   },
   "11069": {
     "auto": "autostr",
     "format": "32s",
-    "size": 36,
     "name": "DamageFromStateOnly"
   },
   "11070": {
-    "size": 8,
     "format": "i"
   },
   "11071": {
-    "size": 8,
     "format": "i"
   },
   "11072": {
-    "size": 16,
     "format": "iii"
   },
   "11073": {
-    "size": 8,
     "format": "i"
   },
   "11074": {
     "size": 32
   },
   "11075": {
-    "size": 12,
     "format": "ii"
   },
   "11076": {
-    "size": 8,
     "format": "i"
   },
   "11077": {
-    "size": 8,
     "format": "i"
   },
   "11078": {
-    "size": 8,
     "format": "i"
   },
   "11079": {
-    "size": 8,
     "format": "i"
   },
   "11080": {
-    "size": 8,
     "format": "i"
   },
   "11081": {
-    "size": 8,
     "format": "i"
   },
   "11082": {
-    "size": 8,
     "format": "i"
   },
   "11083": {
-    "size": 8,
     "format": "i"
   },
   "11084": {
-    "size": 8,
     "format": "i"
   },
   "11085": {
-    "size": 8,
     "format": "i"
   },
   "11086": {
-    "size": 8,
     "format": "i"
   },
   "11087": {
-    "size": 12,
     "format": "ii"
   },
   "11088": {
-    "size": 8,
     "name": "FatalCounter",
     "format": "i"
   },
   "11089": {
-    "size": 8,
     "format": "i"
   },
   "11090": {
     "name": "BonusProration",
-    "size": 8,
     "format": "i"
   },
   "11091": {
     "name": "MinimumDamage",
-    "size": 8,
     "format": "i"
   },
   "11092": {
     "format": "i",
-    "size": 8,
     "name": "SingleProration"
   },
   "11093": {
-    "size": 8,
     "format": "i"
   },
   "11094": {
-    "size": 8,
     "format": "i"
   },
   "11095": {
-    "size": 8,
     "format": "i"
   },
   "11096": {
-    "size": 12,
     "format": "ii"
   },
   "11097": {
-    "size": 12,
     "format": "ii"
   },
   "11098": {
-    "size": 12,
     "format": "ii"
   },
   "11099": {
-    "size": 8,
     "format": "i"
   },
   "11100": {
-    "size": 8,
     "format": "i"
   },
   "11101": {
-    "size": 8,
     "format": "i"
   },
   "11102": {
-    "size": 8,
     "format": "i"
   },
   "11103": {
     "auto": "autostr",
-    "size": 36,
     "format": "32s"
   },
   "11104": {
-    "size": 8,
     "format": "i"
   },
   "11105": {
-    "size": 8,
     "format": "i"
   },
   "11106": {
-    "size": 8,
     "format": "i"
   },
   "11107": {
-    "size": 8,
     "format": "i"
   },
   "11108": {
-    "format": "i",
-    "size": 8
+    "format": "i"
   },
   "11109": {
-    "size": 8
+    "format": "i"
   },
   "11110": {
-    "size": 8,
     "format": "i"
   },
   "12000": {
@@ -2995,6 +2909,10 @@
     "size": 8,
     "name": "ForceBloomMaskOn"
   },
+  "13045": {
+    "format": "i",
+    "size": 8
+  },
   "13054": {
     "format": "i",
     "size": 8,
@@ -3058,7 +2976,6 @@
   "14013": {
     "auto": "autostr",
     "format": "32s",
-    "size": 36,
     "name": "StateCall"
   },
   "14014": {
@@ -3078,7 +2995,6 @@
   },
   "14019": {
     "auto": "autostr",
-    "size": 36,
     "format": "32s"
   },
   "14020": {
@@ -3354,7 +3270,6 @@
     "format": "i"
   },
   "15020": {
-    "size": 20,
     "format": "4i"
   },
   "15021": {
@@ -3362,7 +3277,7 @@
     "name": "AirborneOpponentPriority"
   },
   "15022": {
-    "size": 20
+    "format": "4i"
   },
   "15023": {
     "size": 8,
@@ -3373,21 +3288,19 @@
     "name": "TempPriorityMultiplier"
   },
   "15025": {
-    "size": 24
+    "format": "5i"
   },
   "15026": {
-    "size": 16,
-    "format": "iii"
+    "format": "3i"
   },
   "15027": {
-    "size": 8,
     "format": "i"
   },
   "16000": {
-    "size": 44
+    "format": "32s2i"
   },
   "16001": {
-    "size": 44
+    "format": "32s2i"
   },
   "17000": {
     "format": "",
@@ -3476,7 +3389,7 @@
     "format": ""
   },
   "17021": {
-    "size": 4
+    "format": ""
   },
   "17022": {
     "size": 4
@@ -3609,238 +3522,185 @@
     "format": "i"
   },
   "20004": {
-    "size": 8,
     "format": "i"
   },
   "20005": {
-    "size": 12,
     "format": "ii"
   },
   "20006": {
-    "size": 8,
     "format": "i"
   },
   "20007": {
-    "size": 8,
     "format": "i"
   },
   "20008": {
-    "size": 8,
     "format": "i"
   },
   "20009": {
-    "size": 8,
     "format": "i"
   },
   "20010": {
-    "size": 16,
-    "format": "iii"
+    "format": "3i"
   },
   "20011": {
-    "size": 12
+    "format": "2i"
   },
   "21000": {
-    "size": 8,
     "format": "i"
   },
   "21001": {
-    "size": 8,
     "format": "i"
   },
   "21002": {
-    "size": 8,
     "format": "i"
   },
   "21003": {
-    "size": 12,
     "format": "ii"
   },
   "21004": {
-    "size": 8,
     "format": "i"
   },
   "21005": {
-    "size": 8,
     "format": "i"
   },
   "21006": {
-    "size": 12,
     "format": "ii"
   },
   "21007": {
     "format": "ii",
-    "size": 12,
     "name": "ObjectUpon"
   },
   "21008": {
-    "size": 8,
     "format": "i"
   },
   "21009": {
-    "size": 28
+    "format": "6i"
   },
   "21010": {
-    "size": 8,
     "format": "i"
   },
   "21011": {
-    "format": "i",
-    "size": 8,
+    "format": "i".
     "name": "DemoTimer"
   },
   "21012": {
     "auto": "autostr",
     "format": "32si",
-    "size": 40,
     "name": "TriggerUponForState"
   },
   "21013": {
     "format": "32si",
-    "size": 40,
     "name": "DisableEffect"
   },
   "21014": {
-    "size": 8,
     "format": "i"
   },
   "21015": {
-    "format": "32sii",
-    "size": 44
+    "format": "32sii"
   },
   "22000": {
     "format": ""
   },
   "22001": {
-    "size": 8,
     "format": "i"
   },
   "22002": {
     "format": ""
   },
   "22003": {
-    "size": 8,
     "format": "i"
   },
   "22004": {
     "format": "ii",
-    "size": 12,
     "name": "ForcedLandingRecovery"
   },
   "22005": {
     "auto": "autostr",
-    "size": 36,
     "format": "32s"
   },
   "22006": {
-    "size": 8,
     "format": "i"
   },
   "22007": {
-    "size": 8,
     "name": "setInvincible",
     "format": "i"
   },
   "22008": {
     "name": "setInvincibleFor",
-    "size": 8,
     "format": "i"
   },
   "22009": {
-    "size": 8,
     "format": "i"
   },
   "22019": {
     "format": "5i",
-    "size": 24,
     "name": "SpecificInvincibility"
   },
   "22020": {
-    "size": 8,
     "name": "GuardPoint_",
     "format": "i"
   },
   "22021": {
-    "size": 8,
     "format": "i"
   },
   "22022": {
-    "size": 8,
     "format": "i"
   },
   "22023": {
-    "size": 8,
     "format": "i"
   },
   "22024": {
-    "size": 8,
     "format": "i"
   },
   "22025": {
-    "size": 16,
-    "format": "iii"
+    "format": "3i"
   },
   "22026": {
-    "size": 8,
     "format": "i"
   },
   "22027": {
-    "size": 8,
     "format": "i"
   },
   "22028": {
-    "size": 8,
     "format": "i"
   },
   "22029": {
-    "size": 8,
     "format": "i"
   },
   "22030": {
-    "size": 8,
     "format": "i"
   },
   "22031": {
-    "size": 12,
     "format": "ii"
   },
   "22032": {
-    "size": 8,
     "format": "i"
   },
   "22033": {
-    "size": 8,
     "format": "i"
   },
   "22034": {
-    "size": 8,
     "format": "i"
   },
   "22035": {
-    "size": 8,
     "format": "i"
   },
   "22036": {
-    "size": 8,
     "format": "i"
   },
   "22037": {
-    "size": 8,
     "format": "i"
   },
   "22038": {
-    "format": "i",
-    "size": 8
+    "format": "i"
   },
   "22039": {
-    "size": 8,
     "format": "i"
   },
   "22500": {
-    "size": 8,
     "format": "i"
   },
   "23000": {
-    "size": 16,
     "format": "iii"
   },
   "23001": {
@@ -3851,43 +3711,33 @@
     "format": ""
   },
   "23003": {
-    "size": 36,
     "format": "8i"
   },
   "23004": {
-    "size": 12,
     "format": "ii"
   },
   "23005": {
-    "size": 12,
     "format": "ii"
   },
   "23006": {
-    "size": 12,
     "format": "ii"
   },
   "23007": {
-    "size": 12,
     "format": "ii"
   },
   "23008": {
-    "size": 12,
     "format": "ii"
   },
   "23009": {
-    "size": 12,
     "format": "ii"
   },
   "23010": {
-    "size": 12,
     "format": "ii"
   },
   "23011": {
-    "size": 8,
     "format": "i"
   },
   "23012": {
-    "size": 16,
     "format": "iii"
   },
   "23013": {
@@ -4015,87 +3865,73 @@
     "format": "iii"
   },
   "23044": {
-    "size": 12,
     "format": "ii"
   },
   "23045": {
-    "format": "i",
-    "size": 8
+    "format": "i"
   },
   "23046": {
-    "size": 8
+    "format": "i"
   },
   "23047": {
-    "size": 12
+    "format": "ii"
   },
   "23048": {
-    "size": 8
+    "format": "i"
   },
   "23049": {
-    "size": 12
+    "format": "ii"
   },
   "23050": {
-    "size": 12
+    "format": "ii"
   },
   "23051": {
-    "size": 68
+    "format": "64s"
   },
   "23052": {
-    "size": 8
+    "format": "i"
   },
   "23053": {
-    "size": 12
+    "format": "2i"
   },
   "23054": {
-    "format": "32si",
-    "size": 40
+    "format": "32si"
   },
   "23055": {
-    "size": 4
+    "format": ""
   },
   "23056": {
-    "format": "",
-    "size": 4
+    "format": ""
   },
   "23057": {
-    "format": "i",
-    "size": 8
+    "format": "i"
   },
   "23058": {
-    "format": "i",
-    "size": 8
+    "format": "i"
   },
   "23059": {
-    "size": 8,
     "format": "i"
   },
   "23060": {
-    "size": 8,
     "format": "i"
   },
   "23066": {
-    "size": 8,
     "format": "i"
   },
   "23067": {
     "auto": "autostr",
-    "size": 36,
     "format": "32s"
   },
   "23068": {
-    "size": 8,
     "format": "i"
   },
   "23069": {
-    "size": 8,
     "format": "i"
   },
   "23070": {
-    "size": 8,
     "format": "i"
   },
   "23071": {
-    "size": 8,
     "format": "i"
   },
   "23072": {
@@ -4115,50 +3951,39 @@
     "name": "NegativeForBackDash"
   },
   "23077": {
-    "size": 8,
     "format": "i"
   },
   "23078": {
-    "size": 8,
     "format": "i"
   },
   "23079": {
-    "size": 8,
     "format": "i"
   },
   "23080": {
-    "size": 16,
     "format": "iii"
   },
   "23081": {
-    "size": 8,
     "format": "i"
   },
   "23082": {
-    "size": 20
+    "format": "4i"
   },
   "23083": {
-    "size": 8,
     "format": "i"
   },
   "23084": {
-    "size": 8,
     "format": "i"
   },
   "23085": {
-    "size": 8,
     "format": "i"
   },
   "23086": {
-    "size": 8,
     "format": "i"
   },
   "23087": {
-    "size": 8,
     "format": "i"
   },
   "23088": {
-    "size": 12,
     "format": "ii"
   },
   "23089": {
@@ -4301,7 +4126,7 @@
     "size": 8
   },
   "23125": {
-    "size": 4
+    "format": ""
   },
   "23126": {
     "size": 8,
@@ -4331,15 +4156,14 @@
     "format": "iii"
   },
   "23144": {
-    "size": 48
+    "format": "11i"
   },
   "23145": {
     "auto": "autostr",
-    "size": 36,
     "format": "32s"
   },
   "23146": {
-    "size": 40
+    "format": "i32s"
   },
   "23147": {
     "format": ""
@@ -4369,47 +4193,38 @@
     "format": "i"
   },
   "23154": {
-    "size": 8,
     "format": "i"
   },
   "23155": {
-    "size": 44
+    "format": "i32s"
   },
   "23156": {
     "auto": "autostr",
-    "size": 36,
     "format": "32s"
   },
   "23157": {
-    "size": 8,
     "format": "i"
   },
   "23158": {
-    "size": 12
+    "format": "2i"
   },
   "23159": {
     "auto": "autostr",
-    "size": 36,
     "format": "32s"
   },
   "23160": {
-    "size": 8,
     "format": "i"
   },
   "23161": {
-    "size": 8,
     "format": "i"
   },
   "23162": {
-    "size": 8,
     "format": "i"
   },
   "23163": {
-    "size": 8,
     "format": "i"
   },
   "23164": {
-    "size": 8,
     "format": "i"
   },
   "23165": {
@@ -4460,103 +4275,92 @@
   },
   "23183": {
     "type_check": [2],
-    "format": "32s3i",
-    "size": 48
+    "format": "32s3i"
   },
   "23184": {
     "format": "8i",
     "size": 36
   },
   "23185": {
-    "format": "32si",
-    "size": 40
+    "format": "32si"
   },
   "30000": {
     "format": ""
   },
   "30001": {
-    "size": 40
+    "format": "32si"
   },
   "30002": {
-    "size": 16,
-    "format": "iii"
+    "format": "3i"
   },
   "30003": {
-    "size": 8,
     "format": "i"
   },
   "30004": {
-    "size": 16
   },
   "30005": {
-    "size": 8,
     "format": "i"
   },
   "30006": {
-    "size": 16,
     "format": "iii"
   },
   "30007": {
-    "size": 8
+    "format": "i"
   },
   "30008": {
-    "size": 12
+    "format": "2i"
   },
   "30009": {
-    "size": 8
+    "format": "i"
   },
   "30010": {
-    "size": 8
+    "format": "i"
   },
   "30011": {
-    "size": 4
+    "format": ""
   },
   "30012": {
-    "format": "i",
-    "size": 8
+    "format": "i"
   },
   "30013": {
-    "size": 4
+    "format": ""
   },
   "30014": {
-    "size": 4
+    "format": ""
   },
   "30015": {
-    "size": 4
+    "format": ""
   },
   "30016": {
-    "size": 8
+    "format": "i"
   },
   "30017": {
-    "size": 8
+    "format": "i"
   },
   "30018": {
-    "size": 4
+    "format": ""
   },
   "30019": {
-    "format": "ii",
-    "size": 12
+    "format": "ii"
   },
   "30020": {
-    "size": 4
+    "format": ""
   },
   "30021": {
-    "size": 4
+    "format": ""
   },
   "30026": {
-    "size": 4
+    "format": ""
   },
   "30027": {
-    "size": 4
+    "format": ""
   },
   "30028": {
     "format": "i",
-    "name": "selfDamage",
-    "size": 8
+    "name": "selfDamage"
   },
   "30029": {
-    "format": "i",
-    "size": 8
+    "format": "i"
   },
   "30030": {
     "format": "i",
@@ -4746,10 +4550,10 @@
     "size": 8
   },
   "30080": {
-    "size": 4
+    "format": ""
   },
   "30081": {
-    "size": 4
+    "format": ""
   },
   "30082": {
     "format": "i",
