@@ -44,7 +44,7 @@ def get_operation(operation_id):
     elif operation_id == 15:
         op = NotEq()
     else:
-        raise Exception("Unvalid operation_id " + str(operation_id))
+        raise Exception("Invalid operation_id " + str(operation_id))
     
     return op
 
