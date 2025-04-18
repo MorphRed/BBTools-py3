@@ -372,12 +372,12 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             if isinstance(rval, Call) or is_operation(rval):
                 self.visit(Assign([slot_0_temp], rval))
                 rval = slot_0_temp
-            if isinstance(aval, Name) and isinstance(lval, Name) and aval.id.lower() == lval.id.lower():
-                # ModifyVar
-                write_command_by_id("49", op_id + [aval, rval])
-            elif aval.id.lower() == "slot_0":
+            if aval.id.lower() == "slot_0":
                 # op
                 write_command_by_id("40", op_id + [lval, rval])
+            elif isinstance(aval, Name) and isinstance(lval, Name) and aval.id.lower() == lval.id.lower():
+                # ModifyVar
+                write_command_by_id("49", op_id + [aval, rval])
             else:
                 # Unknown47 / PrivateFunction
                 write_command_by_id("47", op_id + [aval, lval, rval])
