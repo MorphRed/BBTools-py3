@@ -175,7 +175,6 @@ def parse_bbscript_routine(file):
                     cmd_data[i] = v.decode().strip("\x00")
                 except UnicodeDecodeError:
                     # Handles unicode bug if it happens, eg kk400_13
-                    v = v.strip(b"\x00")
                     new_v = ''
                     for j in v:
                         new_v += chr(j)
@@ -364,7 +363,7 @@ if __name__ == '__main__':
     output_path = None
     for v in sys.argv[1:]:
         if "-h" in v:
-            print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
+            print("Usage:" + GAME + "_Script_Parser.py scr_xx.bin outdir")
             print("Default output directory if left blank is the input file's directory.")
             print(flag_list)
             print("--no-slot: Disable aliasing of slots")
@@ -394,7 +393,12 @@ if __name__ == '__main__':
             input_file = v
         elif output_path is None:
             output_path = v
-
+            
+    if not input_file or input_file.split(".")[-1] != "bin":
+        print("Usage:" + GAME + "_Script_Parser.py scr_xx.bin outdir")
+        print("Default output directory if left blank is the input file's directory.")
+        print(flag_list)
+        sys.exit(1)
 
     pypath = os.path.dirname(sys.argv[0])
     json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
@@ -411,6 +415,7 @@ if __name__ == '__main__':
     slot_db = json.loads(json_data)
     json_data = open(os.path.join(pypath, "static_db/" + GAME + "/object_db/global.json")).read()
     object_db = json.loads(json_data)
+    
     #Checking for a custom slot/upon db
     character_name = os.path.split(input_file)[-1].replace("scr_", "").split(".")[0]
     if character_name[-2:] == "ea" and len(character_name) > 2:
@@ -424,11 +429,6 @@ if __name__ == '__main__':
     except IOError:
         pass
 
-    if not input_file or input_file.split(".")[-1] != "bin":
-        print("Usage:BBTAG_Script_Parser.py scr_xx.bin outdir")
-        print("Default output directory if left blank is the input file's directory.")
-        print(flag_list)
-        sys.exit(1)
     if no_slot:
         slot_db = {}
     if output_path is None:

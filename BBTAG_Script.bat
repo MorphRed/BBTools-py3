@@ -1,7 +1,7 @@
 @echo off
 set ext=%~x1
 if [%ext%] == [.bin] (
-    python "%~dp0/python/BBTAG_Script_Parser.py" "%~f1"
+    python "%~dp0/python/BBTAG_Script_Parser.py" "--no-0" "%~f1"
 ) else if [%ext%] == [.py] (
     python "%~dp0/python/BBTAG_Script_Rebuilder.py" "%~f1"
 ) else (

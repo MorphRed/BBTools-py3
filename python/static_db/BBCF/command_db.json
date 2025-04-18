@@ -1552,7 +1552,8 @@
   "4046": {
     "format": "3I",
     "size": 16,
-    "name": "ParticleColor"
+    "name": "ParticleColor",
+    "hex": true
   },
   "4047": {
     "format": "3i",
@@ -2384,34 +2385,26 @@
   },
   "11049": {
     "format": "i",
-    "size": 8,
     "name": "ChipLifestealOld"
   },
   "11050": {
-    "auto": "autostr",
     "format": "i32s",
-    "size": 40,
     "name": "DamageEffect"
   },
   "11051": {
-    "auto": "autostr",
     "format": "i32s",
-    "size": 40,
     "name": "GuardEffect"
   },
   "11052": {
     "format": "i",
-    "size": 8,
     "name": "BarrierDepleteOnHit"
   },
   "11053": {
     "format": "i",
-    "size": 8,
     "name": "AddMagnetism"
   },
   "11054": {
     "format": "i",
-    "size": 8,
     "name": "RangeCheck"
   },
   "11055": {

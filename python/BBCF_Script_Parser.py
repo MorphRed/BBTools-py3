@@ -45,7 +45,7 @@ def get_operation(operation_id):
         op = NotEq()
     else:
         raise Exception("Invalid operation_id " + str(operation_id))
-    
+
     return op
 
 def slot_handler(command, cmd_data):
@@ -64,7 +64,7 @@ def slot_handler(command, cmd_data):
                     tmp.append(Name(get_slot_name(v)))
         else:
             tmp.append(Constant(v))
-            
+
     return tmp
 
 def abstract_slot_0():
@@ -224,7 +224,11 @@ def parse_bbscript_routine(file):
         # 56 is else
         elif current_cmd == 56:
             ifnode = ast_stack[-1][-1]
-            ast_stack.append(ifnode.orelse)
+            try:
+                ast_stack.append(ifnode.orelse)
+            except Exception as _:
+                # When arcsys puts a random else bracket in the code that does nothing :)
+                ast_stack.append([])
         # 18 is ifSlotSendTolabel, 19 is ifNotSlotSendTolabel
         elif current_cmd in [18, 19]:
             cmd_data = slot_handler(current_cmd, cmd_data)
@@ -318,11 +322,11 @@ def parse_bbscript_routine(file):
             else:
                 command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
                 ast_stack[-1][-1].body.append(command)
-                
+
             # Flag stuff
             if debug and current_cmd in [1, 9]:
                 debug_file.write(astor.to_source(ast_stack[-1][-1]) + "\n\n")
-                    
+
         else:
             if 'type_check' in command_db[str(current_cmd)]:
                 cmd_data = slot_handler(current_cmd, cmd_data)
@@ -331,12 +335,12 @@ def parse_bbscript_routine(file):
             if current_cmd in AFFECT_SLOT_0:
                 slot_0_expr = Assign([Name(get_slot_name(0))], command.value)
                 command = slot_0_expr
-                
+
             if len(ast_stack) == 1:
                 ast_stack.append(astor_handler)
             ast_stack[-1].append(command)
-            
-            
+
+
     return ast_root
 
 def parse_bbscript(filename, output_path):
@@ -360,7 +364,7 @@ if __name__ == '__main__':
     output_path = None
     for v in sys.argv[1:]:
         if "-h" in v:
-            print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
+            print("Usage:" + GAME + "_Script_Parser.py scr_xx.bin outdir")
             print("Default output directory if left blank is the input file's directory.")
             print(flag_list)
             print("--no-slot: Disable aliasing of slots")
@@ -391,6 +395,11 @@ if __name__ == '__main__':
         elif output_path is None:
             output_path = v
 
+    if not input_file or input_file.split(".")[-1] != "bin":
+        print("Usage:" + GAME + "_Script_Parser.py scr_xx.bin outdir")
+        print("Default output directory if left blank is the input file's directory.")
+        print(flag_list)
+        sys.exit(1)
 
     pypath = os.path.dirname(sys.argv[0])
     json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
@@ -407,6 +416,7 @@ if __name__ == '__main__':
     slot_db = json.loads(json_data)
     json_data = open(os.path.join(pypath, "static_db/" + GAME + "/object_db/global.json")).read()
     object_db = json.loads(json_data)
+
     #Checking for a custom slot/upon db
     character_name = os.path.split(input_file)[-1].replace("scr_", "").split(".")[0]
     if character_name[-2:] == "ea" and len(character_name) > 2:
@@ -419,12 +429,7 @@ if __name__ == '__main__':
         slot_db.update(json.loads(open(os.path.join(pypath, "static_db/" + GAME + "/slot_db/" + character_name + ".json")).read()))
     except IOError:
         pass
-    
-    if not input_file or input_file.split(".")[-1] != "bin":
-        print("Usage:BBCF_Script_Parser.py scr_xx.bin outdir")
-        print("Default output directory if left blank is the input file's directory.")
-        print(flag_list)
-        sys.exit(1)
+
     if no_slot:
         slot_db = {}
     if output_path is None:

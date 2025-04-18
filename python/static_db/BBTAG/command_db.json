@@ -1269,10 +1269,9 @@
     "format": "ii"
   },
   "3068": {
-    "size": 24
+    "format": "5i"
   },
   "3069": {
-    "size": 8,
     "format": "i"
   },
   "3070": {
@@ -2270,10 +2269,12 @@
     "format": "i"
   },
   "11050": {
-    "format": "i32s"
+    "format": "i32s",
+    "name": "DamageEffect"
   },
   "11051": {
-    "size": 40
+    "format": "i32s",
+    "name": "GuardEffect"
   },
   "11052": {
     "format": "i"

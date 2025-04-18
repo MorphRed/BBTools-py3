@@ -145,16 +145,19 @@ def write_command_by_id(command, params):
                 new_params.append(0)
         my_params = new_params
     output_buffer.write(struct.pack(MODE + "I", int(command)))
+    for i, v1 in enumerate(my_params):
+        if isinstance(v1, str):
+            my_params[i] = v1.encode()
     if "format" in cmd_data:
-        for i, v1 in enumerate(my_params):
-            if isinstance(v1, str):
-                my_params[i] = v1.encode()
         output_buffer.write(struct.pack(MODE + cmd_data["format"], *my_params))
     else:
-        output_buffer.write(my_params[0].encode())
+        output_buffer.write(struct.pack(MODE + str(cmd_data["size"] - 4) + "s", *my_params))
 
+def is_operation(value):
+    return isinstance(value, Compare) or isinstance(value, BinOp) or isinstance(value, BoolOp) or (isinstance(value, UnaryOp) and isinstance(value.op, Invert))
 
 class Rebuilder(astor.ExplicitNodeVisitor):
+
     def visit_Module(self, node):
         global output_buffer, root
         root = node
@@ -212,7 +215,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
 
     def visit_Call(self, node):
         for index, value in enumerate(node.args):
-            if isinstance(value, Call) or isinstance(value, Compare) or isinstance(value, BinOp) or isinstance(value, BoolOp) or (isinstance(value, UnaryOp) and isinstance(value.op, Invert)):
+            if isinstance(value, Call) or is_operation(value):
                 self.visit_Assign(Assign([slot_0_temp], value))
                 node.args[index] = slot_0_temp
 
@@ -256,7 +259,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
         def is_not(node_test):
             return isinstance(node_test, UnaryOp) and isinstance(node_test.op, Not)
         def is_slot(node_test):
-            return isinstance(node_test, Name) or isinstance(node_test, Call) or isinstance(node_test, Compare) or isinstance(node_test, BinOp) or isinstance(node_test, BoolOp) or (isinstance(node_test, UnaryOp) and isinstance(node_test.op, Invert))
+            return isinstance(node_test, Name) or isinstance(node_test, Call) or is_operation(node_test)
 
         try:
             if command_db_lookup[node.body[0].value.func.id.lower()]["id"] == "18" or command_db_lookup[node.body[0].value.func.id.lower()]["id"] == "19":
@@ -310,29 +313,29 @@ class Rebuilder(astor.ExplicitNodeVisitor):
 
     def visit_BoolOp(self, node):
         for i, v in enumerate(node.values):
-            if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare) or (isinstance(v, UnaryOp) and isinstance(v.op, Invert)):
+            if isinstance(v, Call) or is_operation(v):
                 self.visit_Assign(Assign([slot_0_temp], v))
                 node.values[i] = slot_0_temp
         self.visit_Assign(Assign([slot_0_temp], node))
 
     def visit_BinOp(self, node):
         v = node.left
-        if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare) or (isinstance(v, UnaryOp) and isinstance(v.op, Invert)):
+        if isinstance(v, Call) or is_operation(v):
             self.visit_Assign(Assign([slot_0_temp], v))
             node.left = slot_0_temp
         v = node.right
-        if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare) or (isinstance(v, UnaryOp) and isinstance(v.op, Invert)):
+        if isinstance(v, Call) or is_operation(v):
             self.visit_Assign(Assign([slot_0_temp], v))
             node.right = slot_0_temp
         self.visit_Assign(Assign([slot_0_temp], node))
 
     def visit_Compare(self, node):
         v = node.left
-        if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare) or (isinstance(v, UnaryOp) and isinstance(v.op, Invert)):
+        if isinstance(v, Call) or is_operation(v):
             self.visit_Assign(Assign([slot_0_temp], v))
             node.left = slot_0_temp
         v = node.comparators[0]
-        if isinstance(v, BoolOp) or isinstance(v, BinOp) or isinstance(v, Call) or isinstance(v, Compare) or (isinstance(v, UnaryOp) and isinstance(v.op, Invert)):
+        if isinstance(v, Call) or is_operation(v):
             self.visit_Assign(Assign([slot_0_temp], v))
             node.comparators[0] = slot_0_temp
         self.visit_Assign(Assign([slot_0_temp], node))
@@ -363,10 +366,10 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 rval = node.value.operand.right
             else:
                 raise Exception("How did this happen")
-            if isinstance(lval, BinOp) or isinstance(lval, BoolOp) or isinstance(lval, Compare) or isinstance(lval, UnaryOp) or isinstance(lval, Call):
+            if isinstance(lval, Call) or is_operation(lval):
                 self.visit(Assign([slot_0_temp], lval))
                 lval = slot_0_temp
-            if isinstance(rval, BinOp) or isinstance(rval, BoolOp) or isinstance(rval, Compare) or isinstance(rval, UnaryOp) or isinstance(rval, Call):
+            if isinstance(rval, Call) or is_operation(rval):
                 self.visit(Assign([slot_0_temp], rval))
                 rval = slot_0_temp
             if isinstance(aval, Name) and isinstance(lval, Name) and aval.id.lower() == lval.id.lower():
@@ -421,7 +424,7 @@ if __name__ == '__main__':
 
     for i, v in enumerate(sys.argv[1:]):
         if "-h" in v:
-            print("Usage:BBCF_Script_Rebuilder.py scr_xx.py outdir")
+            print("Usage:" + GAME + "_Script_Rebuilder.py scr_xx.py outdir")
             print("Default output directory if left blank is the input file's directory.")
             print(flag_list)
             print("--debug: Create a scr_xx_error.bin file upon crashing")
@@ -441,7 +444,13 @@ if __name__ == '__main__':
             input_file = v
         elif output_path is None:
             output_path = v
-
+            
+    if not input_file or input_file.split(".")[-1] != "py":
+        print("Usage:" + GAME + "_Script_Rebuilder.py scr_xx.py outdir")
+        print("Default output directory if left blank is the input file's directory.")
+        print(flag_list)
+        sys.exit(1)
+        
     pypath = os.path.dirname(sys.argv[0])
     json_data = open(os.path.join(pypath, "static_db/" + GAME + "/command_db.json")).read()
     command_db = json.loads(json_data)
@@ -500,11 +509,6 @@ if __name__ == '__main__':
                 print("Unknown command '" + v + "'")
                 sys.exit(1)
 
-    if not input_file or input_file.split(".")[-1] != "py":
-        print("Usage:BBTAG_Script_Rebuilder.py scr_xx.py outdir")
-        print("Default output directory if left blank is the input file's directory.")
-        print(flag_list)
-        sys.exit(1)
     if output_path is None:
         rebuild_bbscript(input_file, os.path.split(input_file)[0])
     else:
