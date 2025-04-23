@@ -9,16 +9,16 @@
   },
   "2": {
     "format": "32si",
-    "name": "sprite"
+    "name": "Sprite"
   },
   "3": {
     "format": "",
-    "name": "spriteEnd"
+    "name": "WaitUntilSpriteEnd"
   },
   "4": {
     "type_check": [0],
     "format": "ii",
-    "name": "If"
+    "name": "if"
   },
   "5": {
     "format": "",
@@ -26,11 +26,11 @@
   },
   "6": {
     "format": "i",
-    "name": "label"
+    "name": "Label"
   },
   "7": {
     "format": "i",
-    "name": "gotoLabel"
+    "name": "GotoLabel"
   },
   "8": {
     "format": "32s",
@@ -42,11 +42,11 @@
   },
   "10": {
     "format": "32s",
-    "name": "callSubroutine"
+    "name": "CallSubroutine"
   },
   "11": {
     "format": "i",
-    "name": "sendToLabel"
+    "name": "SendToLabel"
   },
   "12": {
     "format": "",
@@ -54,7 +54,8 @@
   },
   "13": {
     "format": "i",
-    "name": "DeleteObject"
+    "size": 8,
+    "name": "DeleteObjectByID"
   },
   "14": {
     "format": "",
@@ -70,23 +71,25 @@
   },
   "17": {
     "format": "i",
-    "name": "clearUponHandler",
+    "name": "ClearUpon",
     "size": 8
   },
   "18": {
     "type_check": [1],
     "format": "3i",
-    "name": "conditionalSendToLabel"
+    "name": "GotoIf"
   },
   "19": {
     "type_check": [1],
     "format": "3i",
-    "name": "conditionalSendToLabel"
+    "size": 16,
+    "name": "GotoIfNot"
   },
   "20": {
     "type_check": [1],
     "format": "3i",
-    "name": "SpriteDurationIfNot"
+    "size": 16,
+    "name": "ReplaceSpriteIf"
   },
   "21": {
     "format": "32s",
@@ -99,50 +102,53 @@
     "name": "EnterStateIfNotInState"
   },
   "23": {
+    "format": "32s32s",
     "size": 68,
-    "name": "EnterStateIfInState"
+    "name": "EnterState2IfInState1"
   },
   "24": {
     "format": "32si",
-    "name": "PrivateFunction2"
+    "name": "EnterStateWithPriority"
   },
   "25": {
-    "size": 40
+    "format": "32si",
+    "name": "EnterStateIfNotInStateWithPriority"
   },
   "26": {
     "format": "32s",
-    "name": "DespawnEAEffect"
+    "name": "DeleteObjectByName"
   },
   "28": {
     "format": "i32s",
-    "name": "EnterStateIfEventID"
+    "name": "IfUponThenEnterState"
   },
   "29": {
     "format": "ii",
-    "name": "uponSendToLabel"
+    "name": "IfUponThenGotoLabel"
   },
   "30": {
     "format": "ii",
-    "name": "RunLoopUpon",
+    "name": "UponArgument1",
     "size": 12
   },
   "31": {
     "format": "ii",
+    "name": "UponArgument2",
     "size": 12
   },
   "32": {
     "format": "16s",
     "size": 20,
-    "name": "CallObject"
+    "name": "CallPublicFunction"
   },
   "35": {
     "format": "",
-    "name": "RunOnSelf"
+    "name": "EndControlObject"
   },
   "36": {
     "format": "i",
     "size": 8,
-    "name": "RunOnObject"
+    "name": "ControlObject"
   },
   "38": {
     "format": "ii",
@@ -152,12 +158,12 @@
   "39": {
     "type_check": [1],
     "format": "3i",
-    "name": "random_"
+    "name": "OperateOneOperand"
   },
   "40": {
     "type_check": [1, 3],
     "format": "5i",
-    "name": "op",
+    "name": "OperateTwoOperands",
     "size": 24
   },
   "41": {
@@ -177,12 +183,13 @@
   },
   "44": {
     "format": "i",
-    "size": 8,
+    "hex": true,
     "name": "CheckCondition"
   },
   "45": {
+    "format": "4i",
     "size": 20,
-    "name": "CalculateSlot0"
+    "name": "MultiplyBy"
   },
   "46": {
     "format": "i",
@@ -193,18 +200,18 @@
     "type_check": [1, 3, 5],
     "format": "7i",
     "size": 32,
-    "name": "PrivateFunction"
+    "name": "OperandAandBtoC"
   },
   "48": {
     "type_check": [1, 4],
     "format": "6i",
     "size": 28,
-    "name": "CopyFromRightToLeft"
+    "name": "OperandCopy"
   },
   "49": {
     "type_check": [1, 3],
     "format": "5i",
-    "name": "ModifyVar_",
+    "name": "OperandAandBtoA",
     "size": 24
   },
   "50": {
@@ -224,12 +231,13 @@
   "53": {
     "format": "i",
     "size": 8,
-    "name": "CollideWithWall"
+    "name": "DestroyOnStageEdge"
   },
   "54": {
     "type_check": [0],
     "format": "ii",
-    "name": "ifNot"
+    "name": "ifNot",
+    "size": 12
   },
   "55": {
     "format": "",
@@ -237,7 +245,7 @@
   },
   "56": {
     "format": "",
-    "name": "Else"
+    "name": "else"
   },
   "57": {
     "format": "",
@@ -246,26 +254,33 @@
   "58": {
     "type_check": [1],
     "format": "32sii",
+    "size": 44,
     "name": "TrainingModeSLOT"
   },
   "59": {
     "format": "iiii",
     "size": 20,
-    "name": "ObjectUpon24"
+    "name": "ObjectDistanceCheckByRefPoint"
   },
   "60": {
-    "format": "16s"
+    "format": "16s",
+    "size": 20,
+    "name": "CharacterIDCheckNoUnlimited"
   },
   "61": {
     "type_check": [0, 2],
     "format": "12i",
-    "size": 52
+    "size": 52,
+    "name": "RNGFunction"
   },
   "62": {
+    "format": "6i",
     "size": 28
   },
   "63": {
-    "format": "16s"
+    "format": "16s",
+    "size": 20,
+    "name": "CharacterIDCheckNoCostume"
   },
   "64": {
     "format": "i",
@@ -273,7 +288,8 @@
   },
   "65": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "ObjectCounterhit"
   },
   "66": {
     "format": "16sii",
@@ -281,88 +297,93 @@
   },
   "67": {
     "format": "5i",
-    "size": 24
+    "size": 24,
+    "name": "GuardpointAttributeCheck"
   },
   "68": {
     "format": "5i",
-    "size": 24
+    "size": 24,
+    "name": "StatusCheck"
   },
   "1000": {
     "format": "i",
     "size": 8,
-    "name": "XPositionRelativeFacing"
+    "name": "SetPosXRelative"
   },
   "1001": {
     "format": "i",
     "size": 8,
-    "name": "XPositionRelativeFacingAbsolute"
+    "name": "SetPosXAbsolute"
   },
   "1002": {
     "format": "i",
     "size": 8,
-    "name": "AddX"
+    "name": "AddPosXRelative"
   },
   "1003": {
     "format": "i",
     "size": 8,
-    "name": "AbsoluteX"
+    "name": "AddPosXAbsolute"
   },
   "1004": {
-    "format": ""
+    "format": "",
+    "name": "PushPosX"
   },
   "1005": {
-    "format": ""
+    "format": "",
+    "name": "PopPosX"
   },
   "1006": {
     "format": "i",
     "size": 8,
-    "name": "AbsoluteY"
+    "name": "SetPosY"
   },
   "1007": {
     "format": "i",
     "size": 8,
-    "name": "AddY"
+    "name": "AddPosY"
   },
   "1008": {
-    "format": ""
+    "format": "",
+    "name": "PushPosY"
   },
   "1009": {
     "format": "",
-    "name": "NoVerticalTracking"
+    "name": "PopPosY"
   },
   "1010": {
     "format": "ii",
     "size": 12,
-    "name": "DeviationX"
+    "name": "RandomAddPosXRelative"
   },
   "1011": {
     "format": "ii",
     "size": 12,
-    "name": "DeviationY"
+    "name": "RandomAddPosY"
   },
   "1012": {
     "format": "ii",
     "size": 12,
-    "name": "DeviationXAbsolute"
+    "name": "RandomAddPosXAbsolute"
   },
   "1013": {
     "format": "i",
-    "name": "physicsXImpulse"
+    "name": "SetSpeedXRelative"
   },
   "1014": {
     "format": "i",
     "size": 8,
-    "name": "physicsXImpulseAbsolute"
+    "name": "SetSpeedXAbsolute"
   },
   "1015": {
     "format": "i",
     "size": 8,
-    "name": "XSpeed"
+    "name": "AddSpeedXRelative"
   },
   "1016": {
     "format": "i",
     "size": 8,
-    "name": "XSpeedAbsolute"
+    "name": "AddSpeedXAbsolute"
   },
   "1017": {
     "format": "",
@@ -375,16 +396,16 @@
   "1019": {
     "format": "i",
     "size": 8,
-    "name": "XImpulseAcceleration"
+    "name": "SpeedXPercentage"
   },
   "1020": {
     "format": "i",
-    "name": "physicsYImpulse"
+    "name": "SetSpeedY"
   },
   "1021": {
     "format": "i",
     "size": 8,
-    "name": "YSpeed"
+    "name": "AddSpeedY"
   },
   "1022": {
     "format": "",
@@ -396,27 +417,27 @@
   },
   "1024": {
     "format": "i",
-    "name": "YAccel"
+    "name": "SpeedYPercentage"
   },
   "1025": {
     "format": "ii",
     "size": 12,
-    "name": "RandSpeedX"
+    "name": "RandomAddSpeedXRelative"
   },
   "1026": {
     "format": "ii",
     "size": 12,
-    "name": "RandSpeedY"
+    "name": "RandomAddSpeedY"
   },
   "1027": {
     "format": "ii",
     "size": 12,
-    "name": "RandSpeedXAbsolute"
+    "name": "RandomAddSpeedXAbsolute"
   },
   "1028": {
     "format": "i",
     "size": 8,
-    "name": "SetAcceleration"
+    "name": "SetAccelerationRelative"
   },
   "1029": {
     "format": "i",
@@ -426,7 +447,7 @@
   "1030": {
     "format": "i",
     "size": 8,
-    "name": "AddAcceleration"
+    "name": "AddAccelerationRelative"
   },
   "1031": {
     "format": "i",
@@ -444,11 +465,11 @@
   "1034": {
     "format": "i",
     "size": 8,
-    "name": "PerAcceleration"
+    "name": "AccelerationPercentage"
   },
   "1035": {
     "format": "i",
-    "name": "setGravity"
+    "name": "SetGravity"
   },
   "1036": {
     "format": "i",
@@ -466,30 +487,30 @@
   "1039": {
     "format": "i",
     "size": 8,
-    "name": "PerGravity"
+    "name": "GravityPercentage"
   },
   "1040": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddAcceleration"
+    "name": "RandomAddAccelerationRelative"
   },
   "1041": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddGravity"
+    "name": "RandomAddGravity"
   },
   "1042": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddAccelerationAbsolute"
+    "name": "RandomAddAccelerationAbsolute"
   },
   "1043": {
     "format": "",
-    "name": "EndYPhysicsImpulse"
+    "name": "DefaultToObjectGravity"
   },
   "1044": {
     "format": "",
-    "name": "GravityDefault"
+    "name": "DefaultGravity"
   },
   "1045": {
     "format": "i",
@@ -499,7 +520,7 @@
   "1046": {
     "format": "i",
     "size": 8,
-    "name": "SetInertiaAbsolute"
+    "name": "SetInertiaOverride"
   },
   "1047": {
     "format": "i",
@@ -509,7 +530,7 @@
   "1048": {
     "format": "i",
     "size": 8,
-    "name": "AddInertiaAbsolute"
+    "name": "AddInertiaOverride"
   },
   "1049": {
     "format": "",
@@ -522,7 +543,7 @@
   "1051": {
     "format": "i",
     "size": 8,
-    "name": "PerInertia"
+    "name": "InertiaPercentage"
   },
   "1052": {
     "format": "i",
@@ -532,16 +553,16 @@
   "1053": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddInertia"
+    "name": "RandomAddInertia"
   },
   "1054": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddInertiaAbsolute"
+    "name": "RandomAddInertiaAbsolute"
   },
   "1055": {
     "format": "",
-    "name": "DamageGravity"
+    "name": "DefaultToDamageGravity"
   },
   "1056": {
     "format": "i",
@@ -556,7 +577,7 @@
   "1058": {
     "format": "i",
     "size": 8,
-    "name": "PerScaleX"
+    "name": "ScaleXPercentage"
   },
   "1059": {
     "format": "i",
@@ -566,22 +587,22 @@
   "1060": {
     "format": "i",
     "size": 8,
-    "name": "AddScaleSpeedX"
+    "name": "AddScaleXPerFrame"
   },
   "1061": {
     "format": "i",
     "size": 8,
-    "name": "PerScaleSpeedX"
+    "name": "ScaleXPercentagePerFrame"
   },
   "1062": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddScaleX"
+    "name": "RandomAddScaleX"
   },
   "1063": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddScaleSpeedX"
+    "name": "RandomAddScaleXPerFrame"
   },
   "1064": {
     "format": "i",
@@ -596,70 +617,71 @@
   "1066": {
     "format": "i",
     "size": 8,
-    "name": "PerScaleY"
+    "name": "ScaleYPercentage"
   },
   "1067": {
     "format": "i",
     "size": 8,
-    "name": "SetScaleSpeedY"
+    "name": "SetScaleYPerFrame"
   },
   "1068": {
     "format": "i",
     "size": 8,
-    "name": "AddScaleSpeedY"
+    "name": "AddScaleYPerFrame"
   },
   "1069": {
     "format": "i",
     "size": 8,
-    "name": "PerScaleSpeedY"
+    "name": "ScaleYPercentagePerFrame"
   },
   "1070": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddScaleY"
+    "name": "RandomAddScaleY"
   },
   "1071": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddScaleSpeedY"
+    "name": "RandomAddScaleYPerFrame"
   },
   "1072": {
     "format": "i",
     "size": 8,
-    "name": "RotationAngle"
+    "name": "SetAngle"
   },
   "1073": {
     "format": "i",
     "size": 8,
-    "name": "Rotation"
+    "name": "AddAngle"
   },
   "1074": {
     "format": "i",
     "size": 8,
-    "name": "AddRotationPerFrame"
+    "name": "SetAnglePerFrame"
   },
   "1075": {
     "format": "i",
     "size": 8,
-    "name": "PerAngleSpeed"
+    "name": "AddAnglePerFrame"
   },
   "1076": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AnglePercentagePerFrame"
   },
   "1077": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddRotation"
+    "name": "RandomAddAngle"
   },
   "1078": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddRotationSpeed"
+    "name": "RandomAddAnglePerFrame"
   },
   "1079": {
     "format": "",
-    "name": "RandRotationAngle"
+    "name": "RandomAngle"
   },
   "1080": {
     "format": "i",
@@ -677,12 +699,13 @@
   },
   "1083": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "SetBounceRate"
   },
   "1084": {
     "format": "i",
     "size": 8,
-    "name": "EndMomentum"
+    "name": "ResetSpeed"
   },
   "1085": {
     "format": "3i",
@@ -692,12 +715,12 @@
   "1086": {
     "format": "i",
     "size": 8,
-    "name": "TeleportToObject"
+    "name": "MoveTo"
   },
   "1087": {
     "format": "ii",
     "size": 12,
-    "name": "TeleportObjectToDestination"
+    "name": "MoveObjectTo"
   },
   "1088": {
     "format": "i",
@@ -712,37 +735,37 @@
   "1090": {
     "format": "i",
     "size": 8,
-    "name": "PerScaleZ"
+    "name": "ScaleZPercentage"
   },
   "1091": {
     "format": "i",
     "size": 8,
-    "name": "SetScaleSpeedZ"
+    "name": "SetScaleZPerFrame"
   },
   "1092": {
     "format": "i",
     "size": 8,
-    "name": "AddScaleSpeedZ"
+    "name": "AddScaleZPerFrame"
   },
   "1093": {
     "format": "i",
     "size": 8,
-    "name": "PerScaleSpeedZ"
+    "name": "ScaleZPercentagePerFrame"
   },
   "1094": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddScaleZ"
+    "name": "RandomAddScaleZ"
   },
   "1095": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddScaleSpeedZ"
+    "name": "RandomAddScaleZPerFrame"
   },
   "1096": {
     "format": "i",
     "size": 8,
-    "name": "Size"
+    "name": "SetScale"
   },
   "1097": {
     "format": "i",
@@ -752,65 +775,64 @@
   "1098": {
     "format": "i",
     "size": 8,
-    "name": "PerScale"
+    "name": "ScalePercentage"
   },
   "1099": {
     "format": "i",
     "size": 8,
-    "name": "SetScaleSpeed"
+    "name": "SetScalePerFrame"
   },
   "1100": {
     "format": "i",
     "size": 8,
-    "name": "AddScaleSpeed"
+    "name": "AddScalePerFrame"
   },
   "1101": {
     "format": "i",
     "size": 8,
-    "name": "PerScaleSpeed"
+    "name": "ScalePercentagePerFrame"
   },
   "1102": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddScale"
+    "name": "RandomAddScale"
   },
   "1103": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddScaleSpeed"
+    "name": "RandomAddScalePerFrame"
   },
   "1104": {
     "format": "i",
-    "size": 8,
-    "name": "SetAngleBySpeed"
+    "size": 8
   },
   "1105": {
     "format": "i",
-    "size": 8,
-    "name": "SetSpeedByPolarCoordinate"
+    "size": 8
   },
   "1108": {
     "format": "i",
     "size": 8,
-    "name": "RotationSomething"
+    "name": "SetAngleBySpeed"
   },
   "1109": {
     "format": "ii",
     "size": 12,
-    "name": "HitboxMovement"
+    "name": "SetSpeedByPolarCoordinate"
   },
   "1110": {
     "format": "ii",
     "size": 12,
-    "name": "XSpeed2"
+    "name": "SetSpeedByAngle"
   },
   "1111": {
     "format": "ii",
-    "size": 12
+    "size": 12,
+    "name": "SetSpeedTowardsObject"
   },
   "2000": {
     "format": "",
-    "name": "RefreshMultihit"
+    "name": "RefreshHit"
   },
   "2001": {
     "format": "",
@@ -818,7 +840,7 @@
   },
   "2002": {
     "format": "",
-    "name": "StartMultihit"
+    "name": "NoAttackDuringSprite"
   },
   "2003": {
     "format": "i",
@@ -828,15 +850,15 @@
   "2004": {
     "format": "ii",
     "size": 12,
-    "name": "StayAfterMovement"
+    "name": "UseCenterOffset"
   },
   "2005": {
     "format": "",
-    "name": "Flip"
+    "name": "ReverseDirection"
   },
   "2006": {
     "format": "",
-    "name": "ForceFaceSprite"
+    "name": "FaceTarget"
   },
   "2007": {
     "format": "",
@@ -899,7 +921,7 @@
   },
   "2022": {
     "format": "",
-    "name": "InitializeForLockObject"
+    "name": "AttackDefaults_ThrowProjectile"
   },
   "2034": {
     "format": "i",
@@ -929,7 +951,7 @@
   "2039": {
     "format": "i",
     "size": 8,
-    "name": "PerActionMark"
+    "name": "ActionMarkPercentage"
   },
   "2040": {
     "format": "i",
@@ -953,7 +975,7 @@
   "2044": {
     "format": "i",
     "size": 8,
-    "name": "PerCommonActionMark"
+    "name": "CommonActionMarkPercentage"
   },
   "2045": {
     "format": "i",
@@ -971,7 +993,8 @@
     "name": "ForceFloorReflectOff"
   },
   "2048": {
-    "format": "i",
+    "format": "I",
+    "hex": true,
     "size": 8,
     "name": "SetFloorReflectColor"
   },
@@ -983,7 +1006,7 @@
   "2052": {
     "format": "i",
     "size": 8,
-    "name": "EnableOutsideForces"
+    "name": "EnableExternalForces"
   },
   "2053": {
     "format": "i",
@@ -998,12 +1021,12 @@
   "2055": {
     "format": "i",
     "size": 8,
-    "name": "ContinueState"
+    "name": "MaxActionTime"
   },
   "2056": {
     "format": "i",
     "size": 8,
-    "name": "SetAttackObjectMax"
+    "name": "MaxObjectHitInteractions"
   },
   "2057": {
     "format": "i",
@@ -1030,7 +1053,7 @@
   },
   "2062": {
     "format": "",
-    "name": "DepleteOD"
+    "name": "DepleteODIfActive"
   },
   "2063": {
     "format": ""
@@ -1050,31 +1073,32 @@
   "2067": {
     "format": "ii",
     "size": 12,
-    "name": "BarrierGaugeOnCall"
+    "name": "BarrierChange"
   },
   "2070": {
     "size": 20,
-    "format": "4i"
+    "format": "4i",
+    "name": "TrackObjectToPrivatePoint"
   },
   "2071": {
     "format": "5i",
     "size": 24,
-    "name": "PrivateFunction3"
+    "name": "TrackObjectByDistance"
   },
   "2072": {
     "format": "5i",
     "size": 24,
-    "name": "ObjectUpon26"
+    "name": "TrackObjectBySpeed"
   },
   "3000": {
     "format": "i",
     "size": 8,
-    "name": "PaletteID"
+    "name": "SetPaletteID"
   },
   "3001": {
     "format": "i",
     "size": 8,
-    "name": "AlphaValue"
+    "name": "SetAlpha"
   },
   "3002": {
     "format": "i",
@@ -1084,126 +1108,128 @@
   "3003": {
     "format": "i",
     "size": 8,
-    "name": "AlphaMultiplier"
+    "name": "AlphaPercentage"
   },
   "3004": {
     "format": "i",
     "size": 8,
-    "name": "ConstantAlphaModifier"
+    "name": "SetAlphaPerFrame"
   },
   "3005": {
     "format": "i",
     "size": 8,
-    "name": "AddToAlphaModifier"
+    "name": "AddAlphaPerFrame"
   },
   "3006": {
     "format": "i",
     "size": 8,
-    "name": "MultiplyAlphaModifier"
+    "name": "AlphaPercentagePerFrame"
   },
   "3007": {
     "format": "i",
     "size": 8,
-    "name": "RedColorValue"
+    "name": "SetRed"
   },
   "3008": {
     "format": "i",
     "size": 8,
-    "name": "AddRedColorValue"
+    "name": "AddRed"
   },
   "3009": {
     "format": "i",
     "size": 8,
-    "name": "PerRedColorValue"
+    "name": "RedPercentage"
   },
   "3010": {
     "format": "i",
     "size": 8,
-    "name": "ConstantRedModifier"
+    "name": "SetRedPerFrame"
   },
   "3011": {
     "format": "i",
     "size": 8,
-    "name": "AddConstantRedModifier"
+    "name": "AddRedPerFrame"
   },
   "3012": {
     "format": "i",
     "size": 8,
-    "name": "PerConstantRedModifier"
+    "name": "RedPercentagePerFrame"
   },
   "3013": {
     "format": "i",
     "size": 8,
-    "name": "GreenColorValue"
+    "name": "SetGreen"
   },
   "3014": {
     "format": "i",
     "size": 8,
-    "name": "AddGreenColorValue"
+    "name": "AddGreen"
   },
   "3015": {
     "format": "i",
     "size": 8,
-    "name": "PerGreenColorValue"
+    "name": "GreenPercentage"
   },
   "3016": {
     "format": "i",
     "size": 8,
-    "name": "ConstantGreenModifier"
+    "name": "SetGreenPerFrame"
   },
   "3017": {
     "format": "i",
     "size": 8,
-    "name": "AddConstantGreenModifier"
+    "name": "AddGreenPerFrame"
   },
   "3018": {
     "format": "i",
     "size": 8,
-    "name": "PerConstantGreenModifier"
+    "name": "GreenPercentagePerFrame"
   },
   "3019": {
     "format": "i",
     "size": 8,
-    "name": "BlueColorValue"
+    "name": "SetBlue"
   },
   "3020": {
     "format": "i",
     "size": 8,
-    "name": "AddBlueColorValue"
+    "name": "AddBlue"
   },
   "3021": {
     "format": "i",
     "size": 8,
-    "name": "PerBlueColorValue"
+    "name": "BluePercentage"
   },
   "3022": {
     "format": "i",
     "size": 8,
-    "name": "ConstantBlueModifier"
+    "name": "SetBluePerFrame"
   },
   "3023": {
     "format": "i",
     "size": 8,
-    "name": "AddConstantBlueModifier"
+    "name": "AddBluePerFrame"
   },
   "3024": {
     "format": "i",
     "size": 8,
-    "name": "PerConstantBlueModifier"
+    "name": "BluePercentagePerFrame"
   },
   "3025": {
-    "format": "II",
+    "format": "Ii",
+    "hex": [0],
     "size": 12,
-    "name": "ColorTransition",
-    "hex": [0]
+    "name": "SetDestinationColor"
   },
   "3026": {
     "format": "I",
-    "name": "ColorForTransition",
-    "hex": true
+    "hex": true,
+    "size": 8,
+    "name": "SetColor"
   },
   "3027": {
-    "format": "i",
+    "format": "I",
+    "hex": true,
     "size": 8,
     "name": "SetAfterimageColor"
   },
@@ -1213,7 +1239,7 @@
   },
   "3029": {
     "format": "i",
-    "name": "EnableAfterimage",
+    "name": "Afterimage",
     "size": 8
   },
   "3030": {
@@ -1244,7 +1270,7 @@
   "3038": {
     "format": "i",
     "size": 8,
-    "name": "Visibility"
+    "name": "Hide2DObjects"
   },
   "3040": {
     "format": "i",
@@ -1254,75 +1280,77 @@
   "3041": {
     "format": "i",
     "size": 8,
-    "name": "PaletteColor1"
+    "name": "PaletteParam0"
   },
   "3042": {
     "format": "i",
     "size": 8,
-    "name": "PaletteColor2"
+    "name": "PaletteParam1"
   },
   "3043": {
     "format": "i",
     "size": 8,
-    "name": "PaletteColor3"
+    "name": "PaletteParam2"
   },
   "3044": {
-    "format": "I",
+    "format": "i",
     "size": 8,
-    "name": "PaletteColor4"
+    "name": "PaletteParam3"
   },
   "3045": {
     "format": "i",
     "size": 8,
-    "name": "CustomPalette"
+    "name": "EffFadeParam0"
   },
   "3046": {
     "format": "i",
     "size": 8,
-    "name": "SetCustomPaletteAlpha"
+    "name": "EffFadeParam1"
   },
   "3047": {
     "format": "i",
     "size": 8,
-    "name": "SetBasePaletteAlpha"
+    "name": "EffFadeParam2"
   },
   "3048": {
     "format": "i",
     "size": 8,
-    "name": "SetBasePaletteColor"
+    "name": "EffFadeParam3"
   },
   "3053": {
     "format": "i",
     "size": 8,
-    "name": "TurnParticleColorable1"
+    "name": "UseCustomPalette"
   },
   "3054": {
     "format": "ii",
-    "size": 12
+    "size": 12,
+    "name": "SetCustomPaletteAlpha"
   },
   "3055": {
     "format": "ii",
     "size": 12,
-    "name": "AlphaIsColorOnPalette"
+    "name": "SetBasePaletteAlpha"
   },
   "3056": {
     "format": "ii",
     "size": 12,
-    "name": "ChangeColorOnPalette"
+    "name": "SetBasePaletteColor"
   },
   "3057": {
     "format": "i",
     "size": 8,
-    "name": "ParticleTransparency"
+    "name": "DistortionTexture"
   },
   "3058": {
     "format": "i",
     "size": 8,
-    "name": "PlayerTransparency"
+    "name": "SetDistortionTextureLevel"
   },
   "3059": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "SetDistortionTextureLevelSpeed"
   },
   "3060": {
     "format": "i32s",
@@ -1381,42 +1409,42 @@
   },
   "3071": {
     "format": "i",
-    "name": "AfterimageCount",
+    "name": "AfterimageMaxAmount",
     "size": 8
   },
   "3072": {
     "format": "4i",
-    "name": "AfterimageColor_1",
+    "name": "AfterimageFirstColor",
     "size": 20
   },
   "3073": {
     "format": "4i",
-    "name": "AfterimageColor_2",
+    "name": "AfterimageLastColor",
     "size": 20
   },
   "3074": {
     "format": "4i",
-    "name": "AfterimageMask_1",
+    "name": "AfterimageFirstAddColor",
     "size": 20
   },
   "3075": {
     "format": "4i",
-    "name": "AfterimageMask_2",
+    "name": "AfterimageLastAddColor",
     "size": 20
   },
   "3076": {
     "format": "i",
-    "name": "AfterimageSize_1",
+    "name": "AfterimageFirstScale",
     "size": 8
   },
   "3077": {
     "format": "i",
-    "name": "AfterimageSize_2",
+    "name": "AfterimageLastScale",
     "size": 8
   },
   "3078": {
     "format": "i",
-    "name": "EnableAfterimagePulse",
+    "name": "AfterimagePulse",
     "size": 8
   },
   "3079": {
@@ -1439,72 +1467,72 @@
   "4003": {
     "format": "32s32s",
     "size": 68,
-    "name": "Eff3DEffect"
+    "name": "LinkModel"
   },
   "4004": {
     "format": "32si",
     "size": 40,
-    "name": "E0EAEffect"
+    "name": "CreateCommonObject"
   },
   "4006": {
     "format": "i",
     "size": 8,
-    "name": "E0EAEffectRotation"
+    "name": "LinkObjectAngle"
   },
   "4007": {
     "format": "i",
     "size": 8,
-    "name": "E0EAEffectPosition"
+    "name": "LinkObjectPosition"
   },
   "4008": {
     "format": "i",
     "size": 8,
-    "name": "E0EAEffectDirection"
+    "name": "LinkObjectDirection"
   },
   "4009": {
     "format": "i",
     "size": 8,
-    "name": "IgnorePauses"
+    "name": "LinkObjectTimestop"
   },
   "4010": {
     "format": "i",
     "size": 8,
-    "name": "RemoveOnCallStateEnd"
+    "name": "RemoveOnLinkObjectStateChange"
   },
   "4011": {
     "format": "i",
     "size": 8,
-    "name": "CancelIfPlayerHit"
+    "name": "RemoveIfLinkObjectHit"
   },
   "4012": {
     "format": "i",
     "size": 8,
-    "name": "E0EAEffectPositionCenter"
+    "name": "LinkObjectPositionCenter"
   },
   "4013": {
     "format": "i",
     "size": 8,
-    "name": "E0EAEffectScale"
+    "name": "LinkObjectScale"
   },
   "4014": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "FloorSprite"
+    "name": "LinkFloorDecal"
   },
   "4015": {
     "format": "",
-    "name": "FaceSpawnLocation"
+    "name": "DisableLinkModelPerspective"
   },
   "4016": {
     "size": 40,
     "format": "32si",
-    "name": "CommonPolyline"
+    "name": "LinkCommonPolyline"
   },
   "4017": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddSpeedSphere"
+    "name": "RandomAddSpeedInSphere"
   },
   "4018": {
     "format": "i32s3i",
@@ -1514,25 +1542,27 @@
   "4019": {
     "format": "i",
     "size": 8,
-    "name": "E0EAEffectObjectZ"
+    "name": "LinkObjectZ"
   },
   "4020": {
     "format": "i",
     "size": 8,
-    "name": "ObjectHitbox"
+    "name": "LinkObjectCollision"
   },
   "4021": {
     "format": "32si",
     "size": 40,
-    "name": "E0EAEffectPolyline"
+    "name": "LinkPolyline"
   },
   "4022": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "LinkObjectX"
   },
   "4023": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "LinkObjectY"
   },
   "4024": {
     "format": "i",
@@ -1541,19 +1571,18 @@
   "4025": {
     "format": "i",
     "size": 8,
-    "name": "RemoveOnContact"
+    "name": "LinkAlpha"
   },
   "4045": {
     "auto": "autostr",
     "format": "32si",
     "size": 40,
-    "name": "CallCustomizableParticle"
+    "name": "CreateArgumentedParticle"
   },
   "4046": {
-    "format": "3I",
+    "format": "12B",
     "size": 16,
-    "name": "ParticleColor",
-    "hex": true
+    "name": "ParticleColor"
   },
   "4047": {
     "format": "3i",
@@ -1563,30 +1592,31 @@
   "4048": {
     "format": "i",
     "size": 8,
-    "name": "ParticleRotationAngle"
+    "name": "ParticleAngle"
   },
   "4049": {
     "format": "i",
     "size": 8,
-    "name": "ParticleSize"
+    "name": "ParticleScale"
   },
   "4050": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "ParticlePaletteIndex"
   },
   "4051": {
     "format": "i",
     "size": 8,
-    "name": "ParticleFacing"
+    "name": "ParticleDirection"
   },
   "4052": {
     "format": "",
-    "name": "ParticleRandomRotation"
+    "name": "ParticleRandomAngle"
   },
   "4053": {
     "format": "ii",
     "size": 12,
-    "name": "ParticleDeviation"
+    "name": "ParticleRandomAngleMinMax"
   },
   "4054": {
     "format": "i",
@@ -1605,12 +1635,12 @@
   "5000": {
     "format": "ii",
     "size": 12,
-    "name": "OppThrowAnimation"
+    "name": "EnemyThrowAnimation"
   },
   "5001": {
     "format": "5i",
     "size": 24,
-    "name": "OppThrowPosition"
+    "name": "EnemyThrowPosition"
   },
   "5003": {
     "format": "i",
@@ -1619,12 +1649,12 @@
   },
   "5004": {
     "format": "",
-    "name": "ClipThroughOpp"
+    "name": "DisableThrowPositionLink"
   },
   "5005": {
     "format": "i",
     "size": 8,
-    "name": "DisableOppSprite"
+    "name": "ThrowHideEnemy"
   },
   "6001": {
     "format": "i",
@@ -1646,11 +1676,11 @@
   },
   "7003": {
     "format": "32s",
-    "name": "PrivateSE"
+    "name": "CharacterSE"
   },
   "7004": {
     "format": "16s",
-    "name": "SmartVoiceline"
+    "name": "VoicelineNoRepeat"
   },
   "7006": {
     "format": "16si16si16si16si",
@@ -1660,106 +1690,108 @@
   "7007": {
     "format": "16si16si16si16si",
     "size": 84,
-    "name": "SmartRandomVoiceline"
+    "name": "RandomVoicelineNoRepeat"
   },
   "7008": {
     "format": "ii",
     "size": 12,
-    "name": "DamageLevelVoice"
+    "name": "DamageVoiceline"
   },
   "7009": {
     "format": "i",
     "size": 8,
-    "name": "RandomCommonVoiceline"
+    "name": "AttackVoiceline"
   },
   "7010": {
     "format": "i16s",
-    "name": "CommonVoicelines"
+    "name": "SetCommonVoicelines"
   },
   "7011": {
     "format": "i",
     "size": 8,
-    "name": "SmartCommonVoicelines"
+    "name": "CommonVoiceline"
   },
   "7012": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "CommonVoicelineNoRepeat"
   },
   "7013": {
     "format": "ii",
-    "size": 12
+    "size": 12,
+    "name": "CommonDamageVoiceline"
   },
   "7014": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "SpecialSE"
+    "name": "LoopingSE"
   },
   "7015": {
     "format": "",
-    "name": "EndSE"
+    "name": "EndLoopingSE"
   },
   "8000": {
     "format": "3i",
     "size": 16,
-    "name": "LandingEffects"
+    "name": "LandingEffect"
   },
   "8001": {
     "format": "ii",
     "size": 12,
-    "name": "JumpEffects"
+    "name": "JumpEffect"
   },
   "8002": {
     "format": "",
-    "name": "JumpSoundEffects"
+    "name": "JumpSound"
   },
   "8003": {
     "format": "3i",
     "size": 16,
-    "name": "KnockdownEffects"
+    "name": "KnockdownEffect"
   },
   "8004": {
     "format": "3i",
     "size": 16,
-    "name": "AltKnockdownEffects"
+    "name": "GroundbounceEffect"
   },
   "8005": {
     "format": "3i",
     "size": 16,
-    "name": "RecoveryEffects"
+    "name": "RecoveryEffect"
   },
   "8006": {
     "format": "3i",
     "size": 16,
-    "name": "DashEffects"
+    "name": "DashEffect"
   },
   "8007": {
     "format": "3i",
     "size": 16,
-    "name": "PreDashEffects"
+    "name": "PreDashEffect"
   },
   "8008": {
     "format": "3i",
     "size": 16,
-    "name": "WallbounceEffects"
+    "name": "WallbounceEffect"
   },
   "8009": {
     "format": "i",
     "size": 8,
-    "name": "AirDashEffects"
+    "name": "AirDashEffect"
   },
   "8010": {
     "format": "3i",
     "size": 16,
-    "name": "SkidEffects"
+    "name": "EndDashEffect"
   },
   "8011": {
     "format": "3i",
-    "name": "SFX_FOOTSTEP_"
+    "name": "WalkEffect"
   },
   "9000": {
     "format": "",
-    "name": "DefaultAttack"
+    "name": "ResetAttackParameters"
   },
   "9001": {
     "format": "i",
@@ -1768,7 +1800,7 @@
   },
   "9002": {
     "format": "i",
-    "name": "AttackLevel_"
+    "name": "AttackLevel"
   },
   "9003": {
     "format": "i",
@@ -1781,65 +1813,67 @@
   "9007": {
     "format": "i16s",
     "size": 24,
-    "name": "SubVoice"
+    "name": "SubVoiceline"
   },
   "9008": {
     "format": "i16s",
     "size": 24,
-    "name": "SmartSubVoice"
+    "name": "SubVoicelineNoRepeat"
   },
   "9009": {
+    "format": "i16si16si16si16si",
     "size": 88,
-    "name": "RandomSubVoice"
+    "name": "RandomSubVoiceline"
   },
   "9010": {
     "format": "i16si16si16si16si",
     "size": 88,
-    "name": "SmartRandomSubVoice"
+    "name": "RandomSubVoicelineNoRepeat"
   },
   "9011": {
+    "format": "i16si16s",
     "size": 44,
     "name": "OrderedVoiceline"
   },
   "9012": {
     "format": "ii16si",
     "size": 32,
-    "name": "RegisterSubVoice"
+    "name": "SetCommonSubVoiceline"
   },
   "9013": {
     "format": "i16s",
     "size": 24,
-    "name": "ObjectUpon25"
+    "name": "SubVoiceline2"
   },
   "9015": {
     "format": "i",
     "size": 8,
-    "name": "UsePunchHitspark"
+    "name": "PunchHitspark"
   },
   "9016": {
     "format": "i",
     "size": 8,
-    "name": "UseSlashHitspark"
+    "name": "SlashHitspark"
   },
   "9017": {
     "format": "i",
     "size": 8,
-    "name": "UseFireHitspark"
+    "name": "FireHitspark"
   },
   "9018": {
     "format": "i",
     "size": 8,
-    "name": "UseElectricHitspark"
+    "name": "ElectricHitspark"
   },
   "9019": {
     "format": "i",
     "size": 8,
-    "name": "UseFreezeHitspark"
+    "name": "FreezeHitspark"
   },
   "9020": {
     "format": "i",
     "size": 8,
-    "name": "UseStrongHitspark"
+    "name": "StrongHitspark"
   },
   "9070": {
     "format": "i",
@@ -1847,7 +1881,7 @@
   },
   "9071": {
     "format": "",
-    "name": "ResetPushback"
+    "name": "ResetAirPushbackX"
   },
   "9072": {
     "format": "i",
@@ -1856,7 +1890,7 @@
   },
   "9073": {
     "format": "",
-    "name": "ResetCHPushback"
+    "name": "ResetCHAirPushbackX"
   },
   "9082": {
     "format": "i",
@@ -1864,7 +1898,7 @@
   },
   "9083": {
     "format": "",
-    "name": "ResetVerticalDrag"
+    "name": "ResetAirPushbackY"
   },
   "9084": {
     "format": "i",
@@ -1872,61 +1906,61 @@
   },
   "9085": {
     "format": "",
-    "name": "ResetCHVerticalDrag"
+    "name": "ResetCHAirPushbackY"
   },
   "9094": {
     "format": "i",
-    "name": "YImpulseBeforeWallbounce",
+    "name": "GravityOnHit",
     "size": 8
   },
   "9095": {
     "format": "",
-    "name": "ResetGravity"
+    "name": "ResetGravityOnHit"
   },
   "9096": {
     "format": "i",
     "size": 8,
-    "name": "CHGravity"
+    "name": "CHGravityOnHit"
   },
   "9097": {
     "format": "",
-    "name": "ResetCHGravity"
+    "name": "ResetCHGravityOnHit"
   },
   "9106": {
     "format": "i",
-    "name": "WallbounceReboundTime",
+    "name": "WallbounceStrength",
     "size": 8
   },
   "9107": {
     "format": "",
-    "name": "WallbounceReboundTimeReset"
+    "name": "ResetWallbounceStrength"
   },
   "9108": {
     "format": "i",
     "size": 8,
-    "name": "CHWallbounceReboundTime"
+    "name": "CHWallbounceStrength"
   },
   "9109": {
     "format": "",
-    "ame": "CHWallbounceReboundTimeReset"
+    "name": "CHResetWallbounceStrength"
   },
   "9118": {
     "format": "i",
     "size": 8,
-    "name": "BouncePercentage"
+    "name": "GroundbounceStrength"
   },
   "9119": {
     "format": "",
-    "name": "BouncePercentageReset"
+    "name": "ResetGroundbounceStrength"
   },
   "9120": {
     "format": "i",
     "size": 8,
-    "name": "CHBouncePercentage"
+    "name": "CHGroundbounceStrength"
   },
   "9121": {
     "format": "",
-    "name": "CHBouncePercentageReset"
+    "name": "ResetCHGroundbounceStrength"
   },
   "9130": {
     "format": "i",
@@ -1935,7 +1969,7 @@
   },
   "9131": {
     "format": "",
-    "name": "StaggerReset"
+    "name": "ResetStagger"
   },
   "9132": {
     "format": "i",
@@ -1944,7 +1978,7 @@
   },
   "9133": {
     "format": "",
-    "name": "CHStaggerReset"
+    "name": "ResetCHStagger"
   },
   "9142": {
     "format": "i",
@@ -1953,7 +1987,7 @@
   },
   "9143": {
     "format": "",
-    "name": "CrumpleReset"
+    "name": "ResetCrumple"
   },
   "9144": {
     "format": "i",
@@ -1962,7 +1996,7 @@
   },
   "9145": {
     "format": "",
-    "name": "CHCrumpleReset"
+    "name": "ResetCHCrumple"
   },
   "9154": {
     "format": "i",
@@ -1971,7 +2005,7 @@
   },
   "9155": {
     "format": "",
-    "name": "HitstunReset"
+    "name": "ResetHitstun"
   },
   "9156": {
     "format": "i",
@@ -1988,7 +2022,7 @@
   },
   "9167": {
     "format": "",
-    "name": "AirUntechableTimeReset"
+    "name": "ResetAirUntechableTime"
   },
   "9168": {
     "format": "i",
@@ -1997,7 +2031,7 @@
   },
   "9169": {
     "format": "",
-    "name": "CHAirUntechableTimeReset"
+    "name": "ResetCHAirUntechableTime"
   },
   "9178": {
     "format": "i",
@@ -2015,25 +2049,25 @@
   },
   "9181": {
     "format": "",
-    "name": "CHResetWallbounce"
+    "name": "ResetCHWallbounce"
   },
   "9190": {
     "format": "i",
     "size": 8,
-    "name": "GroundBounce"
+    "name": "Groundbounce"
   },
   "9191": {
     "format": "",
-    "name": "GroundBounceReset"
+    "name": "ResetGroundbounce"
   },
   "9192": {
     "format": "i",
     "size": 8,
-    "name": "CHGroundBounce"
+    "name": "CHGroundbounce"
   },
   "9193": {
     "format": "",
-    "name": "CHGroundBounceReset"
+    "name": "ResetCHGroundbounce"
   },
   "9202": {
     "format": "i",
@@ -2042,7 +2076,7 @@
   },
   "9203": {
     "format": "",
-    "name": "FloorslideReset"
+    "name": "ResetFloorslide"
   },
   "9204": {
     "format": "i",
@@ -2051,80 +2085,88 @@
   },
   "9205": {
     "format": "",
-    "name": "CHFloorslideReset"
+    "name": "ResetCHFloorslide"
   },
   "9214": {
     "format": "i",
-    "name": "PushbackX"
+    "name": "Pushback"
   },
   "9215": {
     "format": "",
-    "name": "ResetPushbackX"
+    "name": "ResetPushback"
   },
   "9216": {
     "format": "i",
     "size": 8,
-    "name": "CHPushbackX"
+    "name": "CHPushback"
   },
   "9217": {
     "format": "",
-    "name": "CHResetPushbackX"
+    "name": "ResetCHPushback"
   },
   "9218": {
     "format": "i",
-    "name": "BounceOffWall"
+    "size": 8,
+    "name": "ApplyGroundPushbackOnAirHit"
   },
   "9219": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "CHApplyGroundPushbackOnAirHit"
   },
   "9238": {
     "format": "i",
+    "size": 8,
     "name": "ComboCorrectionPoint"
   },
   "9239": {
     "format": "",
-    "name": "ComboCorrectionPointReset"
+    "name": "ResetComboCorrectionPoint"
   },
   "9240": {
     "format": "i",
+    "size": 8,
     "name": "CHComboCorrectionPoint"
   },
   "9241": {
     "format": "",
-    "name": "CHComboCorrectionPointReset"
+    "name": "ResetCHComboCorrectionPoint"
   },
   "9250": {
     "format": "i",
-    "name": "FreezeCount"
+    "size": 8,
+    "name": "FreezeLimit"
   },
   "9251": {
     "format": "",
-    "name": "FreezeCountReset"
+    "name": "ResetFreezeLimit"
   },
   "9252": {
     "format": "i",
-    "name": "CHFreezeCount"
+    "size": 8,
+    "name": "CHFreezeLimit"
   },
   "9253": {
     "format": "",
-    "name": "CHFreezeCountReset"
+    "name": "ResetCHFreezeLimit"
   },
   "9262": {
     "format": "i",
+    "size": 8,
     "name": "FreezeTime"
   },
   "9263": {
     "format": "",
-    "name": "FreezeTimeReset"
+    "name": "ResetFreezeTime"
   },
   "9264": {
     "format": "i",
+    "size": 8,
     "name": "CHFreezeTime"
   },
   "9265": {
     "format": "",
-    "name": "CHFreezeTimeReset"
+    "name": "ResetCHFreezeTime"
   },
   "9274": {
     "format": "i",
@@ -2136,11 +2178,12 @@
   },
   "9276": {
     "format": "i",
+    "size": 8,
     "name": "CHAttackP1"
   },
   "9277": {
     "format": "",
-    "name": "CHResetAttackP1"
+    "name": "ResetCHAttackP1"
   },
   "9286": {
     "format": "i",
@@ -2152,98 +2195,109 @@
   },
   "9288": {
     "format": "i",
+    "size": 8,
     "name": "CHAttackP2"
   },
   "9289": {
     "format": "",
-    "name": "CHResetAttackP2"
+    "name": "ResetCHAttackP2"
   },
   "9310": {
     "format": "i",
+    "size": 8,
     "name": "HardKnockdown"
   },
   "9311": {
     "format": "",
-    "name": "HardKnockdownReset"
+    "name": "ResetHardKnockdown"
   },
   "9312": {
     "format": "i",
+    "size": 8,
     "name": "CHHardKnockdown"
   },
   "9313": {
     "format": "",
-    "name": "CHHardKnockdownReset"
+    "name": "ResetCHHardKnockdown"
   },
   "9322": {
     "format": "i",
-    "name": "GroundedHitstunAnimation"
+    "name": "GroundedHitReaction"
   },
   "9323": {
     "format": "",
-    "name": "ResetGroundedHitstunAnimation"
+    "name": "ResetGroundedHitReaction"
   },
   "9324": {
     "format": "i",
-    "name": "CHGroundedHitstunAnimation"
+    "size": 8,
+    "name": "CHGroundedHitReaction"
   },
   "9325": {
     "format": "",
-    "name": "ResetCHGroundedHitstunAnimation"
+    "name": "ResetCHGroundedHitReaction"
   },
   "9334": {
     "format": "i",
-    "name": "AirHitstunAnimation"
+    "name": "AirHitReaction"
   },
   "9335": {
     "format": "",
-    "name": "AirHitstunAnimationReset"
+    "name": "ResetAirHitReaction"
   },
   "9336": {
     "format": "i",
-    "name": "CHAirHitstunAnimation"
+    "size": 8,
+    "name": "CHAirHitReaction"
   },
   "9337": {
     "format": "",
-    "name": "CHAirHitstunAnimationReset"
+    "name": "ResetCHAirHitReaction"
   },
   "9346": {
     "format": "i",
-    "name": "NonCornerWallbounce"
+    "size": 8,
+    "name": "DisableMidscreenWallbounce"
   },
   "9347": {
     "format": "",
-    "name": "NonCornerWallbounceReset"
+    "name": "ResetDisableMidscreenWallbounce"
   },
   "9348": {
     "format": "i",
-    "name": "NonCornerCHWallbounce"
+    "size": 8,
+    "name": "DisableCHMidscreenWallbounce"
   },
   "9349": {
     "format": "",
-    "name": "NonCornerCHWallbounceReset"
+    "name": "ResetDisableCHMidscreenWallbounce"
   },
   "9358": {
     "format": "i",
-    "name": "AirHitstunAfterWallbounce"
+    "name": "HitstunAfterWallbounce",
+    "size": 8
   },
   "9359": {
     "format": "",
-    "name": "AirHitstunAfterWallbounceReset"
+    "name": "ResetHitstunAfterWallbounce"
   },
   "9360": {
     "format": "i",
-    "name": "CHAirHitstunAfterWallbounce"
+    "size": 8,
+    "name": "CHHitstunAfterWallbounce"
   },
   "9361": {
     "format": "",
-    "name": "CHAirHitstunAfterWallbounceReset"
+    "name": "ResetCHHitstunAfterWallbounce"
   },
   "9362": {
     "format": "i",
+    "size": 8,
     "name": "Wallstick"
   },
   "9363": {
     "format": "i",
+    "size": 8,
     "name": "CHWallstick"
   },
   "9364": {
@@ -2253,15 +2307,18 @@
   },
   "9365": {
     "format": "i",
+    "size": 8,
     "name": "CHWallstickDuration"
   },
   "10000": {
     "format": "i",
+    "size": 8,
     "name": "DamageMultiplier"
   },
   "10001": {
     "format": "i",
-    "name": "CopyAttackValues"
+    "size": 8,
+    "name": "CopyAttackValuesFromObject"
   },
   "11000": {
     "format": "i",
@@ -2269,50 +2326,62 @@
   },
   "11001": {
     "format": "3i",
+    "size": 16,
     "name": "EnemyHitstopAddition"
   },
   "11002": {
     "format": "i",
+    "size": 8,
     "name": "ThrowTechWindow"
   },
   "11023": {
     "format": "i",
+    "size": 8,
     "name": "HitAnywhere"
   },
   "11024": {
     "format": "i",
+    "size": 8,
     "name": "ThrowAttack"
   },
   "11025": {
     "format": "i",
-    "name": "DoNotHitKnockedDownOpp"
+    "size": 8,
+    "name": "DoNotHitDownEnemy"
   },
   "11026": {
     "format": "i",
+    "size": 8,
     "name": "BurstAttribute"
   },
   "11028": {
     "format": "i",
+    "size": 8,
     "name": "Blockstun"
   },
   "11029": {
     "format": "i",
+    "size": 8,
     "name": "AirBlockstun"
   },
   "11030": {
     "format": "i",
-    "name": "GuardCrushHitstun"
+    "size": 8,
+    "name": "GuardCrushTime"
   },
   "11031": {
     "format": "i",
+    "size": 8,
     "name": "ChipPercentage"
   },
   "11032": {
     "format": "4i",
-    "name": "DistanceCheck"
+    "size": 20,
+    "name": "AttackRange"
   },
   "11033": {
     "format": "i",
+    "size": 8,
     "name": "ProjectileLevel"
   },
   "11034": {
@@ -2322,61 +2391,61 @@
   },
   "11035": {
     "format": "i",
-    "name": "HitLow"
+    "name": "AttackLowAtrributeLevel"
   },
   "11036": {
     "format": "i",
-    "name": "HitOverhead"
+    "name": "AttackHighAttributeLevel"
   },
   "11037": {
     "format": "i",
-    "name": "HitAirUnblockable"
+    "name": "AttackAirAttributeLevel"
   },
   "11038": {
     "format": "i",
     "size": 8,
-    "name": "LowGuardCrush"
+    "name": "LowGuardBreak"
   },
   "11039": {
     "format": "i",
     "size": 8,
-    "name": "MidGuardCrush"
+    "name": "HighGuardBreak"
   },
   "11040": {
     "format": "i",
     "size": 8,
-    "name": "AirGuardCrush"
+    "name": "AirGuardBreak"
   },
   "11042": {
     "format": "i",
     "size": 8,
-    "name": "CounterHitSetting"
+    "name": "CounterHitType"
   },
   "11043": {
     "format": "i",
     "size": 8,
-    "name": "HeatGainMultiplier"
+    "name": "HeatGainMultiplierDuringState"
   },
   "11044": {
     "format": "i",
     "size": 8,
-    "name": "IgnoreBurst"
+    "name": "AttackIgnoresBurst"
   },
   "11045": {
     "format": "i",
     "size": 8,
-    "name": "PreventAirborneHit"
+    "name": "OnlyHitGround"
   },
   "11046": {
     "format": "i",
     "size": 8,
-    "name": "PreventGroundedHit"
+    "name": "OnlyHitAir"
   },
   "11047": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "GotoStateIfThrow"
+    "name": "EnterStateIfThrow"
   },
   "11048": {
     "format": "i",
@@ -2385,27 +2454,35 @@
   },
   "11049": {
     "format": "i",
+    "size": 8,
     "name": "ChipLifestealOld"
   },
   "11050": {
+    "auto": "autostr",
     "format": "i32s",
+    "size": 40,
     "name": "DamageEffect"
   },
   "11051": {
+    "auto": "autostr",
     "format": "i32s",
+    "size": 40,
     "name": "GuardEffect"
   },
   "11052": {
     "format": "i",
-    "name": "BarrierDepleteOnHit"
+    "size": 8,
+    "name": "BarrierDamageRate"
   },
   "11053": {
     "format": "i",
+    "size": 8,
     "name": "AddMagnetism"
   },
   "11054": {
     "format": "i",
-    "name": "RangeCheck"
+    "size": 8,
+    "name": "AttackDistanceCheck"
   },
   "11055": {
     "format": "i",
@@ -2420,7 +2497,7 @@
   "11057": {
     "format": "i",
     "size": 8,
-    "name": "HitsparkSize"
+    "name": "AttackHitspark"
   },
   "11058": {
     "format": "5i",
@@ -2435,32 +2512,32 @@
   "11060": {
     "format": "i",
     "size": 8,
-    "name": "GuardCrushOld"
+    "name": "LibraAmountOnBlock"
   },
   "11061": {
     "format": "i",
     "size": 8,
-    "name": "CrouchWhiff"
+    "name": "IgnoreCrouchers"
   },
   "11062": {
     "format": "i",
     "size": 8,
-    "name": "OppMovementUnlock"
+    "name": "DisableEnemyExternalForcesOnHit"
   },
   "11063": {
     "format": "i",
     "size": 8,
-    "name": "PreventBlocking"
+    "name": "IgnorePreblock"
   },
   "11064": {
     "format": "i",
     "size": 8,
-    "name": "DefeatOpponentBehavior"
+    "name": "AttackKillType"
   },
   "11065": {
     "format": "i",
     "size": 8,
-    "name": "EnableEmergencyTechAirHit"
+    "name": "DisableAirHardKnockdown"
   },
   "11066": {
     "format": "i",
@@ -2470,7 +2547,7 @@
   "11067": {
     "format": "i",
     "size": 8,
-    "name": "DisableOppPushCollision"
+    "name": "DisableEnemyPushbackOnHit"
   },
   "11068": {
     "format": "i",
@@ -2486,24 +2563,25 @@
   "11070": {
     "format": "i",
     "size": 8,
-    "name": "DisableNonLethalCombo"
+    "name": "NonLethalAttackWhiffs"
   },
   "11071": {
     "format": "i",
     "size": 8,
-    "name": "FinishBG"
+    "name": "AttackFinishBG"
   },
   "11072": {
     "format": "3i",
     "size": 16,
-    "name": "OppPositionOnHit"
+    "name": "EnemyPositionOnHit"
   },
   "11073": {
     "format": "i",
     "size": 8,
-    "name": "KeepBounceGravity"
+    "name": "KeepGravityAfterGroundbounce"
   },
   "11074": {
+    "format": "7i",
     "size": 32,
     "name": "ExtraHitParameters"
   },
@@ -2535,12 +2613,12 @@
   "11080": {
     "format": "i",
     "size": 8,
-    "name": "ShutUp"
+    "name": "DoNotPlayEnemyVoiceline"
   },
   "11081": {
     "format": "i",
     "size": 8,
-    "name": "DollAttackAttributes"
+    "name": "DollAttackAttribute"
   },
   "11082": {
     "format": "i",
@@ -2550,21 +2628,21 @@
   "11083": {
     "format": "i",
     "size": 8,
-    "name": "NoAttackOffset"
+    "name": "NoHitstunAnimation"
   },
   "11084": {
     "format": "i",
     "size": 8,
-    "name": "PassByArmor"
+    "name": "IgnoreArmor"
   },
   "11085": {
     "format": "i",
-    "size": 8,
-    "name": "NextHitAstralOnly"
+    "size": 8
   },
   "11086": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "NextHitAstralOnly"
   },
   "11087": {
     "format": "ii",
@@ -2599,7 +2677,7 @@
   "11093": {
     "format": "i",
     "size": 8,
-    "name": "StickToWall"
+    "name": "AltWallstick"
   },
   "11094": {
     "format": "i",
@@ -2608,7 +2686,8 @@
   },
   "11095": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "EnableCounterhit"
   },
   "11096": {
     "format": "ii",
@@ -2631,25 +2710,29 @@
   },
   "11100": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "IgnoreComboRate"
   },
   "11101": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "DisableAirTech"
   },
   "11102": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "WallbounceOnAllHits"
   },
   "11103": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "OppState"
+    "name": "EnemyState"
   },
   "11104": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "EndAttackAfterFirstHit"
   },
   "11105": {
     "format": "i",
@@ -2658,21 +2741,22 @@
   "11106": {
     "format": "i",
     "size": 8,
-    "name": "OppHeatGainMultiplier"
+    "name": "EnemyHeatGainMultiplierDuringState"
   },
   "11107": {
     "format": "i",
     "size": 8,
-    "name": "OnlyHitIfHitstun"
+    "name": "OnlyHitInHitstun"
   },
   "11108": {
     "format": "i",
     "size": 8,
-    "name": "CHStateIfCHStart"
+    "name": "IfObjectCounterhitApplyCounterhit"
   },
   "11109": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "OnlyHitDuringCombo"
   },
   "12000": {
     "format": "i",
@@ -2684,15 +2768,15 @@
   },
   "12002": {
     "format": "i",
-    "name": "DashFInitialVelocity"
+    "name": "FDashInitialVelocity"
   },
   "12003": {
     "format": "i",
-    "name": "DashFAccel"
+    "name": "FDashAccel"
   },
   "12004": {
     "format": "i",
-    "name": "DashFMaxVelocity"
+    "name": "FDashMaxVelocity"
   },
   "12005": {
     "format": "i",
@@ -2724,7 +2808,7 @@
   },
   "12011": {
     "format": "i",
-    "name": "Gravity",
+    "name": "Weight",
     "size": 8
   },
   "12012": {
@@ -2738,7 +2822,7 @@
   "12014": {
     "format": "i",
     "size": 8,
-    "name": "GroundDashCount"
+    "name": "EnableGroundDash"
   },
   "12015": {
     "format": "i",
@@ -2769,12 +2853,12 @@
   "12021": {
     "format": "i",
     "size": 8,
-    "name": "PushWidth"
+    "name": "ExtendWidth"
   },
   "12022": {
     "format": "i",
     "size": 8,
-    "name": "PushHeight"
+    "name": "ExtendHeight"
   },
   "12023": {
     "format": "i",
@@ -2789,17 +2873,17 @@
   "12025": {
     "format": "i",
     "size": 8,
-    "name": "DashBVelocity"
+    "name": "BDashVelocity"
   },
   "12026": {
     "format": "i",
     "size": 8,
-    "name": "DashBHeight"
+    "name": "BDashHeight"
   },
   "12027": {
     "format": "i",
     "size": 8,
-    "name": "DashBGravity"
+    "name": "BDashGravity"
   },
   "12028": {
     "format": "i",
@@ -2822,12 +2906,12 @@
   "12032": {
     "format": "6i",
     "size": 28,
-    "name": "OldGuardCrushLevelTable"
+    "name": "LibraLevelTable"
   },
   "12033": {
     "format": "i",
     "size": 8,
-    "name": "GuardCrushLibraRate"
+    "name": "LibraResistance"
   },
   "12034": {
     "format": "i",
@@ -2849,15 +2933,16 @@
   },
   "12038": {
     "format": "i",
-    "name": "AirDashFSpeed"
+    "name": "AirFDashSpeed"
   },
   "12039": {
     "format": "i",
-    "name": "AirDashBSpeed"
+    "name": "AirBDashSpeed"
   },
   "12040": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AirDashMinimumHeight"
   },
   "12041": {
     "format": "6i",
@@ -2867,7 +2952,7 @@
   "12042": {
     "format": "i",
     "size": 8,
-    "name": "LandPreJumpActionNormalAttackAvailable"
+    "name": "ComboCorrectionBeginCount"
   },
   "12043": {
     "format": "i",
@@ -2875,17 +2960,18 @@
   },
   "12044": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "GuardPrimers"
   },
   "12045": {
     "format": "16i",
     "size": 68,
-    "name": "SoulEaterMultiplier"
+    "name": "LifestealMultiplier"
   },
   "12046": {
     "format": "i",
     "size": 8,
-    "name": "ExtendCollisionX"
+    "name": "ExtendCollision"
   },
   "12047": {
     "format": "i",
@@ -2894,7 +2980,7 @@
   "12048": {
     "format": "i",
     "size": 8,
-    "name": "EnableFallingAnimation"
+    "name": "DisableFallingAnimation"
   },
   "12049": {
     "format": "i",
@@ -2903,7 +2989,7 @@
   "12050": {
     "format": "i",
     "size": 8,
-    "name": "EnableDashBuffer"
+    "name": "DashBuffer"
   },
   "12051": {
     "format": "i",
@@ -2912,7 +2998,8 @@
   },
   "12052": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "SameMoveProrationAlt"
   },
   "12053": {
     "format": "10i",
@@ -2923,11 +3010,12 @@
   },
   "12055": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "SkipThrowRequirement"
   },
   "12056": {
     "format": "",
-    "name": "TakemikazuchiIntroFlag"
+    "name": "DisableNeutral"
   },
   "13000": {
     "format": "i",
@@ -3027,7 +3115,7 @@
   "13019": {
     "format": "i",
     "size": 8,
-    "name": "WhiffBlockCancel"
+    "name": "WhiffStandingBlockCancel"
   },
   "13021": {
     "format": "i",
@@ -3037,12 +3125,12 @@
   "13022": {
     "format": "i",
     "size": 8,
-    "name": "EndIfChangeFacing"
+    "name": "WhiffDirectionCheckCancel"
   },
   "13024": {
     "format": "i",
     "size": 8,
-    "name": "EnableRapidCancel"
+    "name": "WhiffRapidCancel"
   },
   "13026": {
     "format": "i",
@@ -3131,7 +3219,7 @@
   "13043": {
     "format": "i",
     "size": 8,
-    "name": "ShadowOffsetY"
+    "name": "SetShadowOffsetY"
   },
   "13044": {
     "format": "i",
@@ -3189,12 +3277,12 @@
   "14009": {
     "format": "i",
     "size": 8,
-    "name": "SkillType"
+    "name": "MoveType"
   },
   "14010": {
     "format": "i",
     "size": 8,
-    "name": "SkillCommonInitialize"
+    "name": "MoveCommonRegister"
   },
   "14011": {
     "format": "i",
@@ -3203,72 +3291,72 @@
   "14012": {
     "format": "i",
     "hex": true,
-    "name": "Move_Input_"
+    "name": "Move_Input"
   },
   "14013": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "StateCall"
+    "name": "CallState"
   },
   "14014": {
     "format": "i",
     "size": 8,
-    "name": "StateCallFlag"
+    "name": "MoveFlag"
   },
   "14015": {
     "format": "6i",
-    "name": "SkillEstimateRange"
+    "name": "CPUEstimateRange"
   },
   "14017": {
-    "size": 20,
-    "name": "SkillEstimateDistanceRate"
+    "format": "4i",
+    "name": "CPUEstimateDistanceRate"
   },
   "14018": {
     "format": "3i",
     "size": 16,
-    "name": "IndependentInput"
+    "name": "MoveIndependentInput"
   },
   "14019": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "CallFunction"
+    "name": "MoveFunctionCall"
   },
   "14020": {
     "format": "i",
     "size": 8,
-    "name": "DisallowSameSkill"
+    "name": "MoveDisallowSameSkill"
   },
   "14021": {
     "format": "i",
     "size": 8,
-    "name": "ForceSkillDirection"
+    "name": "MoveDirectionRight"
   },
   "14022": {
     "format": "i",
-    "name": "MoveMaxChainRepeat"
+    "name": "MoveMaxChain"
   },
   "14023": {
     "format": "i",
     "size": 8,
-    "name": "Move_HPThreshold"
+    "name": "MoveEnemyHPPercentageRequirement"
   },
   "14024": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "CallSkillConditions"
+    "name": "MoveConditionFunction"
   },
   "14025": {
     "format": "i",
     "size": 8,
-    "name": "InputDirectionBaseObject"
+    "name": "MoveDirectionFromObject"
   },
   "14026": {
     "format": "i",
     "size": 8,
-    "name": "OldSpecialInput"
+    "name": "SpecialInput"
   },
   "14027": {
     "format": "32s",
@@ -3276,12 +3364,12 @@
   },
   "14029": {
     "format": "i",
-    "size": 8,
-    "name": "AddChain"
+    "size": 8
   },
   "14030": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "HitstunCancelOnly"
   },
   "14033": {
     "format": "i",
@@ -3295,7 +3383,9 @@
     "format": ""
   },
   "14044": {
-    "size": 44
+    "format": "32sii",
+    "size": 44,
+    "name": "CSStylishButtonRegister"
   },
   "14045": {
     "format": "ii",
@@ -3312,7 +3402,7 @@
   "14048": {
     "format": "32sii",
     "hex": true,
-    "name": "StylishModeSpecialButton"
+    "name": "StylishModeButtonRegister"
   },
   "14049": {
     "format": "32s32sii",
@@ -3334,36 +3424,36 @@
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "BeginBuffer"
+    "name": "CancelBufferStart"
   },
   "14071": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "DisallowGoto3"
+    "name": "CancelBufferEnd"
   },
   "14072": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "BufferedOrPressedGoto"
+    "name": "CancelEntryStart"
   },
   "14073": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "DisallowGoto2"
+    "name": "CancelEntryEnd"
   },
   "14074": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "DisallowGoto"
+    "name": "ClearCancelBuffer"
   },
   "14075": {
     "format": "i",
     "size": 8,
-    "name": "RapidCancelTime"
+    "name": "ForceRapidCancelTime"
   },
   "14076": {
     "format": "i",
@@ -3382,7 +3472,7 @@
   },
   "14079": {
     "format": "i",
-    "name": "SpecialCancel",
+    "name": "HitOrBlockSpecialCancel",
     "size": 8
   },
   "14080": {
@@ -3399,33 +3489,35 @@
   "14082": {
     "format": "i",
     "size": 8,
-    "name": "SpecialCancelOnHit"
+    "name": "HitSpecialCancel"
   },
   "14083": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "PreventWhiffCancel"
+    "name": "ClearWhiffCancel"
   },
   "14084": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "AttackOffOrBlockCancel"
+    "name": "ClearOnHitOrBlockCancel"
   },
   "14085": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "AttackOffCancel"
+    "name": "ClearOnHitCancel"
   },
   "14086": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "GroundHitOrBlockSpecialCancel"
   },
   "14087": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "GroundHitSpecialCancel"
   },
   "14089": {
     "format": "",
@@ -3455,7 +3547,7 @@
   "15001": {
     "format": "3i",
     "size": 16,
-    "name": "CPUInput"
+    "name": "CPUAddFlag"
   },
   "15003": {
     "format": "i",
@@ -3465,7 +3557,7 @@
   "15004": {
     "format": "i",
     "size": 8,
-    "name": "SkillRecipe"
+    "name": "MoveRecipe"
   },
   "15005": {
     "format": "i",
@@ -3484,7 +3576,7 @@
   },
   "15008": {
     "format": "",
-    "name": "MoveMid"
+    "name": "MoveHigh"
   },
   "15009": {
     "format": "",
@@ -3502,17 +3594,17 @@
   "15012": {
     "format": "i",
     "size": 8,
-    "name": "GuardStunPriority"
+    "name": "EnemyGuardStunPriority"
   },
   "15013": {
     "format": "i",
     "size": 8,
-    "name": "DamageStunPriority"
+    "name": "EnemyDamageStunPriority"
   },
   "15014": {
     "format": "i",
     "size": 8,
-    "name": "OpponentAttackPriority"
+    "name": "EnemyAttackPriority"
   },
   "15015": {
     "format": "ii",
@@ -3522,7 +3614,7 @@
   "15016": {
     "format": "3i",
     "size": 16,
-    "name": "MoveButtonHoldTime"
+    "name": "MoveHoldTime"
   },
   "15017": {
     "format": "ii",
@@ -3542,16 +3634,16 @@
   "15020": {
     "format": "4i",
     "size": 20,
-    "name": "MoveCPULevel"
+    "name": "CPULevel"
   },
   "15021": {
     "format": "i",
-    "name": "AirborneOpponentPriority"
+    "name": "EnemyAirbornePriority"
   },
   "15022": {
     "format": "4i",
     "size": 20,
-    "name": "MoveHeatValuePriority"
+    "name": "HeatValuePriority"
   },
   "15023": {
     "format": "i",
@@ -3569,7 +3661,8 @@
   },
   "15026": {
     "format": "3i",
-    "size": 16
+    "size": 16,
+    "name": "CPUPressInputDuringFrames"
   },
   "15027": {
     "format": "i",
@@ -3601,11 +3694,11 @@
   },
   "17004": {
     "format": "",
-    "name": "AttackDefaults_StandingDD"
+    "name": "AttackDefaults_StandingSuper"
   },
   "17005": {
     "format": "",
-    "name": "AttackDefaults_AirDD"
+    "name": "AttackDefaults_AirSuper"
   },
   "17006": {
     "format": "",
@@ -3613,7 +3706,7 @@
   },
   "17007": {
     "format": "",
-    "name": "AttackDefaults_GroundedThrow"
+    "name": "AttackDefaults_GroundThrow"
   },
   "17008": {
     "format": "",
@@ -3630,12 +3723,12 @@
   "17011": {
     "format": "32s3i",
     "size": 48,
-    "name": "AttackDefaults_Throw"
+    "name": "AttackDefaults_Grab"
   },
   "17012": {
     "format": "3i",
     "size": 16,
-    "name": "AttackDefaults_SuccessThrow"
+    "name": "AttackDefaults_Throw"
   },
   "17013": {
     "format": "",
@@ -3663,18 +3756,18 @@
   },
   "17019": {
     "format": "",
-    "name": "ScriptEndGroundBounce_"
+    "name": "AttackDefaults_FinishAction"
   },
   "17020": {
     "format": "",
-    "name": "ScriptSameAttackComboNoSpecialCancel"
+    "name": "AttackDefaults_GuardCrush"
   },
   "17021": {
-    "format": "",
+    "size": 4,
     "name": "AttackDefaults_Stage1ExceedAccel"
   },
   "17022": {
-    "format": "",
+    "size": 4,
     "name": "AttackDefaults_Stage2ExceedAccel"
   },
   "18001": {
@@ -3683,6 +3776,7 @@
   },
   "18003": {
     "format": "128s",
+    "size": 132,
     "name": "Mouth"
   },
   "18004": {
@@ -3697,11 +3791,13 @@
   },
   "18006": {
     "format": "ii",
-    "name": "PerPrivateValue"
+    "size": 12,
+    "name": "PrivateValuePercentage"
   },
   "18007": {
     "format": "3i",
-    "name": "RandAddPrivateValue"
+    "size": 16,
+    "name": "RandomAddPrivateValue"
   },
   "18008": {
     "format": "",
@@ -3709,6 +3805,7 @@
   },
   "18009": {
     "format": "i",
+    "size": 8,
     "name": "CrouchState"
   },
   "18010": {
@@ -3717,7 +3814,8 @@
   },
   "18011": {
     "format": "16s128s",
-    "name": "MouthToVoice"
+    "size": 148,
+    "name": "MouthOnVoiceline"
   },
   "19000": {
     "format": "i",
@@ -3740,7 +3838,7 @@
   "19004": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddPositionZ"
+    "name": "RandomAddPositionZ"
   },
   "19005": {
     "format": "i",
@@ -3763,12 +3861,12 @@
   "19009": {
     "format": "i",
     "size": 8,
-    "name": "PerSpeedZ"
+    "name": "SpeedZPercentage"
   },
   "19010": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddSpeedZ"
+    "name": "RandomAddSpeedZ"
   },
   "19011": {
     "format": "i",
@@ -3791,16 +3889,16 @@
   "19015": {
     "format": "i",
     "size": 8,
-    "name": "PerAccelerationZ"
+    "name": "AccelerationZPercentage"
   },
   "19016": {
     "format": "ii",
     "size": 12,
-    "name": "RandAddAccelerationZ"
+    "name": "RandomAddAccelerationZ"
   },
   "20000": {
     "format": "i",
-    "name": "CameraControlEnable",
+    "name": "CameraControl",
     "size": 8
   },
   "20001": {
@@ -3840,36 +3938,38 @@
   },
   "20008": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "CameraBelowFloor"
   },
   "20009": {
     "format": "i",
     "size": 8,
-    "name": "CameraPosition"
+    "name": "CameraZoom"
   },
   "20010": {
     "format": "3i",
-    "size": 16
+    "size": 16,
+    "name": "CameraCoordinates"
   },
   "20011": {
     "format": "ii",
     "size": 12,
-    "name": "CameraFollowTarget"
+    "name": "CameraFollowIfNotWall"
   },
   "21000": {
     "format": "i",
     "size": 8,
-    "name": "AddToCurrentHP"
+    "name": "AddHP"
   },
   "21001": {
     "format": "i",
     "size": 8,
-    "name": "HPManipulationNoKill"
+    "name": "AddHPNoKill"
   },
   "21002": {
     "format": "i",
     "size": 8,
-    "name": "Eff3DEffectResetTime"
+    "name": "LinkModelResetTime"
   },
   "21003": {
     "format": "ii",
@@ -3879,7 +3979,7 @@
   "21004": {
     "format": "i",
     "size": 8,
-    "name": "ColorFromPaletteIndex"
+    "name": "SetColorFromPaletteIndex"
   },
   "21005": {
     "format": "i",
@@ -3889,12 +3989,12 @@
   "21006": {
     "format": "ii",
     "size": 12,
-    "name": "Move2CenterOffset"
+    "name": "MoveToCenterOffset"
   },
   "21007": {
     "format": "ii",
     "size": 12,
-    "name": "ObjectUpon"
+    "name": "TriggerObjectUpon"
   },
   "21008": {
     "format": "i",
@@ -3920,12 +4020,12 @@
     "auto": "autostr",
     "format": "32si",
     "size": 40,
-    "name": "TriggerUponForState"
+    "name": "TriggerUpon"
   },
   "21013": {
     "format": "32si",
     "size": 40,
-    "name": "DisableEffect"
+    "name": "TriggerE0EAUpon"
   },
   "21014": {
     "format": "i",
@@ -3933,26 +4033,26 @@
   },
   "22000": {
     "format": "",
-    "name": "ResetAirJumpCount"
+    "name": "ResetAirJumps"
   },
   "22001": {
     "format": "i",
     "size": 8,
-    "name": "AddAirJumpCount"
+    "name": "AddAirJumps"
   },
   "22002": {
     "format": "",
-    "name": "ResetAirDashCount"
+    "name": "ResetAirDashes"
   },
   "22003": {
     "format": "i",
     "size": 8,
-    "name": "AddAirDashCount"
+    "name": "AddAirDashes"
   },
   "22004": {
     "format": "ii",
     "size": 12,
-    "name": "ForcedLandingRecovery"
+    "name": "LandingRecovery"
   },
   "22005": {
     "auto": "autostr",
@@ -3967,7 +4067,7 @@
   },
   "22007": {
     "format": "i",
-    "name": "setInvincible",
+    "name": "Invincibility",
     "size": 8
   },
   "22008": {
@@ -3978,16 +4078,16 @@
   "22009": {
     "format": "i",
     "size": 8,
-    "name": "InvincibleState"
+    "name": "InvincibleSprite"
   },
   "22019": {
     "format": "5i",
     "size": 24,
-    "name": "SpecificInvincibility"
+    "name": "AttributeInvincibility"
   },
   "22020": {
     "format": "i",
-    "name": "GuardPoint_",
+    "name": "GuardPoint",
     "size": 8
   },
   "22021": {
@@ -3998,7 +4098,7 @@
   "22022": {
     "format": "i",
     "size": 8,
-    "name": "StrikeProjectilesBypass"
+    "name": "StrikeProjectileInvincibility"
   },
   "22023": {
     "format": "i",
@@ -4008,12 +4108,12 @@
   "22024": {
     "format": "i",
     "size": 8,
-    "name": "ArmorHealth"
+    "name": "InvincibilityHealth"
   },
   "22025": {
     "format": "3i",
     "size": 16,
-    "name": "SpecificGuardPoint"
+    "name": "InvincibilityAttributes"
   },
   "22026": {
     "format": "i",
@@ -4023,37 +4123,37 @@
   "22027": {
     "format": "i",
     "size": 8,
-    "name": "BlockMid"
+    "name": "HighInvincibility"
   },
   "22028": {
     "format": "i",
-    "name": "BlockOverhead",
+    "name": "MidInvincibility",
     "size": 8
   },
   "22029": {
     "format": "i",
-    "name": "BlockLow",
+    "name": "LowInvincibility",
     "size": 8
   },
   "22030": {
     "format": "i",
     "size": 8,
-    "name": "GuardpointBlockUnblockable"
+    "name": "UnblockableInvincibility"
   },
   "22031": {
     "format": "ii",
     "size": 12,
-    "name": "GuardpointHitstop"
+    "name": "InvincibilityHitstop"
   },
   "22032": {
     "format": "i",
     "size": 8,
-    "name": "PretendNoGuardPointIfFail"
+    "name": "PretendNoInvincibilityIfFail"
   },
   "22033": {
     "format": "i",
     "size": 8,
-    "name": "ThrowInvincible"
+    "name": "ThrowInvincibility"
   },
   "22034": {
     "format": "i",
@@ -4063,7 +4163,7 @@
   "22035": {
     "format": "i",
     "size": 8,
-    "name": "ArmorChipDamage"
+    "name": "InvincibilityChipDamage"
   },
   "22036": {
     "format": "i",
@@ -4073,7 +4173,7 @@
   "22037": {
     "format": "i",
     "size": 8,
-    "name": "PreventProjectile"
+    "name": "IgnoreProjectile"
   },
   "23000": {
     "format": "3i",
@@ -4096,47 +4196,48 @@
   "23004": {
     "format": "ii",
     "size": 12,
-    "name": "HideResourceGauge"
+    "name": "HideResourceGaugeIfZero"
   },
   "23005": {
     "format": "ii",
     "size": 12,
-    "name": "NumberGauge"
+    "name": "ResourceGaugeDigit"
   },
   "23006": {
     "format": "ii",
     "size": 12,
-    "name": "ResourceBarIcon"
+    "name": "ResourceGaugeIcon"
   },
   "23007": {
     "format": "iI",
+    "hex": [1],
     "size": 12,
-    "name": "ResourceBarColor"
+    "name": "ResourceGaugeColor"
   },
   "23008": {
     "format": "ii",
     "size": 12,
-    "name": "ResourceBarVisibility2"
+    "name": "ResourceGaugeVisibility"
   },
   "23009": {
     "format": "ii",
     "size": 12,
-    "name": "ResourceBarVisibility"
+    "name": "ResourceGaugeVisibility2"
   },
   "23010": {
     "format": "ii",
     "size": 12,
-    "name": "ResourceBarFlashIfFull"
+    "name": "ResourceGaugeFlashIfFull"
   },
   "23011": {
     "format": "i",
     "size": 8,
-    "name": "AddCombo"
+    "name": "AddToComboCounter"
   },
   "23012": {
     "format": "3i",
     "size": 16,
-    "name": "SelfWind"
+    "name": "SelfWindRate"
   },
   "23013": {
     "format": "i",
@@ -4154,32 +4255,32 @@
   },
   "23016": {
     "format": "",
-    "name": "SkeletonPaletteEffectOnNoStopIdling"
+    "name": "SkeletonPaletteEffect"
   },
   "23017": {
     "format": "i",
     "size": 8,
-    "name": "GuardCancel"
+    "name": "ClashCancel"
   },
   "23018": {
     "format": "i",
     "size": 8,
-    "name": "DemoEndOnVoiceEnd"
+    "name": "DemoEndOnVoicelineEnd"
   },
   "23019": {
     "format": "i",
     "size": 8,
-    "name": "PerExternalForces"
+    "name": "ExternalForcesXMultiplier"
   },
   "23020": {
     "format": "i",
     "size": 8,
-    "name": "MaxHP"
+    "name": "SetMaxHP"
   },
   "23021": {
     "format": "i",
     "size": 8,
-    "name": "CurrentHP"
+    "name": "SetCurrentHP"
   },
   "23022": {
     "format": "i",
@@ -4188,7 +4289,7 @@
   },
   "23023": {
     "format": "",
-    "name": "TurnAround"
+    "name": "CopyPlayerDirection"
   },
   "23024": {
     "format": "i",
@@ -4217,11 +4318,12 @@
   "23029": {
     "format": "3i",
     "size": 16,
-    "name": "ObjectUpon2"
+    "name": "SendSignal"
   },
   "23030": {
     "type_check": [1, 3, 5, 7],
     "format": "32s8i",
+    "size": 68,
     "name": "CallPrivateFunction"
   },
   "23031": {
@@ -4232,12 +4334,12 @@
   "23032": {
     "format": "i",
     "size": 8,
-    "name": "SetPosXByScreenPer"
+    "name": "SetPositionXByScreenPercentage"
   },
   "23033": {
     "format": "i",
     "size": 8,
-    "name": "SetPosYByScreenPer"
+    "name": "SetPositionYByScreenPercentage"
   },
   "23034": {
     "format": "i",
@@ -4247,25 +4349,26 @@
   "23035": {
     "format": "i",
     "size": 8,
-    "name": "DoNotResetRotation"
+    "name": "KeepAngle"
   },
   "23036": {
     "format": "",
-    "name": "GuardpointNonProjectileCheck"
+    "name": "GuardPointStrikeProjectileCheck"
   },
   "23037": {
     "format": "",
-    "name": "GuardpointProjectileCheck"
+    "name": "GuardPointProjectileCheck"
   },
   "23038": {
     "format": "iI",
+    "hex": [1],
     "size": 12,
-    "name": "ResourceBarFullColor"
+    "name": "ResourceGaugeFullColor"
   },
   "23039": {
     "format": "ii",
     "size": 12,
-    "name": "ResourceItemAmount"
+    "name": "ResourceStockAmount"
   },
   "23040": {
     "format": "ii",
@@ -4275,30 +4378,31 @@
   "23041": {
     "format": "ii",
     "size": 12,
-    "name": "ResourceGaugeFlash"
+    "name": "ResourceGaugeKeepFlash"
   },
   "23042": {
-    "format": ""
+    "format": "",
+    "name": "PassHitSignalToParentAlt"
   },
   "23043": {
     "format": "3i",
-    "name": "PhysicsPull",
+    "name": "MagneticPull",
     "size": 16
   },
   "23044": {
     "format": "ii",
     "size": 12,
-    "name": "DisableResourceGaugeBar"
+    "name": "RemoveResourceGaugeBG"
   },
   "23045": {
     "format": "i",
     "size": 8,
-    "name": "PrivateFunction5"
+    "name": "XOffsetOnScreenCheck"
   },
   "23046": {
     "format": "i",
     "size": 8,
-    "name": "PrivateFunction4"
+    "name": "YOffsetOnScreenCheck"
   },
   "23047": {
     "format": "ii",
@@ -4307,39 +4411,45 @@
   },
   "23048": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "TrailParameter"
   },
   "23049": {
-    "format": "ii",
-    "size": 12
+    "format": "2I",
+    "hex": true,
+    "size": 12,
+    "name": "TrailColor"
   },
   "23050": {
     "format": "ii",
-    "size": 12
+    "size": 12,
+    "name": "TrailScale"
   },
   "23051": {
     "format": "32s32s",
-    "size": 68
+    "size": 68,
+    "name": "TrailSprite"
   },
   "23052": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "TrailFade"
   },
   "23066": {
     "format": "i",
     "size": 8,
-    "name": "AutoHitSignalSending"
+    "name": "PassHitSignalToParent"
   },
   "23067": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "CallPrivateEffect"
+    "name": "LinkArgumentedParticle"
   },
   "23068": {
     "format": "i",
     "size": 8,
-    "name": "SetAngleByDirSign"
+    "name": "SetAngleByDirectionSign"
   },
   "23069": {
     "format": "i",
@@ -4349,12 +4459,12 @@
   "23070": {
     "format": "i",
     "size": 8,
-    "name": "MovementSeal"
+    "name": "DisableMovement"
   },
   "23071": {
     "format": "i",
     "size": 8,
-    "name": "GuardSeal"
+    "name": "DisableNormalBlock"
   },
   "23072": {
     "format": "",
@@ -4362,7 +4472,7 @@
   },
   "23073": {
     "format": "",
-    "name": "CtrlDirectionVsTarget"
+    "name": "CtrlDirectionTowardsTarget"
   },
   "23074": {
     "format": "",
@@ -4374,7 +4484,7 @@
   },
   "23076": {
     "format": "",
-    "name": "NegativeForBackDash"
+    "name": "AddToNegativePenalty"
   },
   "23077": {
     "format": "i",
@@ -4384,17 +4494,17 @@
   "23078": {
     "format": "i",
     "size": 8,
-    "name": "AutoHitStopSending"
+    "name": "ShareHitstopToParent"
   },
   "23079": {
     "format": "i",
     "size": 8,
-    "name": "HitBackReturnObject"
+    "name": "PushbackAppliesToObject"
   },
   "23080": {
     "format": "3i",
     "size": 16,
-    "name": "ObjectMoveCheck"
+    "name": "SetPreMoveCheckBit"
   },
   "23081": {
     "format": "i",
@@ -4402,33 +4512,33 @@
     "name": "ColorIsAdditive"
   },
   "23082": {
-    "size": 20,
+    "format": "16s",
     "name": "CheckStageName"
   },
   "23083": {
     "format": "i",
     "size": 8,
-    "name": "StopClock"
+    "name": "StopClockDuringState"
   },
   "23084": {
     "format": "i",
     "size": 8,
-    "name": "HUDVisibillity"
+    "name": "HideHUD"
   },
   "23085": {
     "format": "i",
     "size": 8,
-    "name": "TurnLimitByInitialize"
+    "name": "LimitTurnaround"
   },
   "23086": {
     "format": "i",
     "size": 8,
-    "name": "HitBackReturnIgnore"
+    "name": "IgnoreSelfPushback"
   },
   "23087": {
     "format": "i",
     "size": 8,
-    "name": "PushCollisionHeightLow"
+    "name": "IncreaseCollisionDownwards"
   },
   "23088": {
     "format": "ii",
@@ -4437,16 +4547,17 @@
   },
   "23089": {
     "format": "8i",
-    "size": 36,
-    "name": "HitsPerCall"
+    "size": 36
   },
   "23090": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "DisableObjectHitbox"
   },
   "23091": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "DisableHurtboxes"
   },
   "23093": {
     "format": "i",
@@ -4474,94 +4585,112 @@
   },
   "23099": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "SetAbsoluteRed"
   },
   "23100": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AddAbsoluteRed"
   },
   "23101": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AbsoluteRedPercentage"
   },
   "23102": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "SetAbsoluteRedPerFrame"
   },
   "23103": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AddAbsoluteRedPerFrame"
   },
   "23104": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AbsoluteRedPercentagePerFrame"
   },
   "23105": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "SetAbsoluteGreen"
   },
   "23106": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AddAbsoluteGreen"
   },
   "23107": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AbsoluteGreenPercentage"
   },
   "23108": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "SetAbsoluteGreenPerFrame"
   },
   "23109": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AddAbsoluteGreenPerFrame"
   },
   "23110": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AbsoluteGreenPercentagePerFrame"
   },
   "23111": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "SetAbsoluteBlue"
   },
   "23112": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AddAbsoluteBlue"
   },
   "23113": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AbsoluteBluePercentage"
   },
   "23114": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "SetAbsoluteBluePerFrame"
   },
   "23115": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AddAbsoluteBluePerFrame"
   },
   "23116": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "AbsoluteBluePercentagePerFrame"
   },
   "23117": {
-    "format": "ii",
+    "format": "4Bi",
     "size": 12,
-    "name": "CharacterFlash2"
+    "name": "ApplyTintOverDuration"
   },
   "23118": {
     "format": "i",
     "size": 8,
-    "name": "StopCharacterFlash1"
+    "name": "ApplyTint"
   },
   "23119": {
     "format": "3i",
     "size": 16,
-    "name": "CharacterFlash"
+    "name": "ApplyTintAlt"
   },
   "23120": {
     "format": "",
-    "name": "StopCharacterFlash2"
+    "name": "EndTintBlend"
   },
   "23121": {
     "format": "i",
@@ -4569,20 +4698,23 @@
   },
   "23122": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "TintRelativeToPalette"
   },
   "23123": {
     "format": "ii",
-    "size": 12
+    "size": 12,
+    "name": "ReverseApplyTintOverDuration"
   },
   "23124": {
     "format": "i",
     "size": 8,
-    "name": "PreventOppJump"
+    "name": "JumpDisablingField"
   },
   "23130": {
     "format": "3i",
-    "size": 16
+    "size": 16,
+    "name": "ApplyNegativeTint"
   },
   "23131": {
     "format": ""
@@ -4594,15 +4726,17 @@
   "23141": {
     "format": "i",
     "size": 8,
-    "name": "ExtendNonCornerWallbounce"
+    "name": "OverrideAirUntechableTime"
   },
   "23142": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "GuardpointBlockStrikeProjectiles"
   },
   "23143": {
     "format": "3i",
-    "size": 16
+    "size": 16,
+    "name": "TravelFromPointToPoint"
   },
   "23144": {
     "format": "11i",
@@ -4616,7 +4750,8 @@
   },
   "23146": {
     "format": "i32s",
-    "size": 40
+    "size": 40,
+    "name": "IfObjectHitByState"
   },
   "23147": {
     "format": "",
@@ -4631,54 +4766,58 @@
     "size": 8
   },
   "23150": {
-    "format": "i",
-    "size": 8
+    "format": "I",
+    "hex": true,
+    "size": 8,
+    "name": "OutlineFlash"
   },
   "23151": {
     "format": "ii",
     "size": 12,
-    "name": "EffectPosition"
+    "name": "TeleportToSnapPoint"
   },
   "23152": {
     "format": "i",
     "size": 8,
-    "name": "MagatanaGainMultiplier"
+    "name": "HeatGainMultiplier"
   },
   "23153": {
     "format": "i",
     "size": 8,
-    "name": "InitialPush"
+    "name": "PushX"
   },
   "23154": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "PushXAlt"
   },
   "23155": {
     "auto": "autostr",
     "format": "i32si",
     "size": 44,
-    "name": "ObjectGotoState"
+    "name": "SetObjectReferenceName"
   },
   "23156": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "EnteredState"
+    "name": "CheckIfReferencedObjectExists"
   },
   "23157": {
     "format": "i",
     "size": 8,
-    "name": "PlayPlayAstralBGM"
+    "name": "PlayAstralBGM"
   },
   "23158": {
     "format": "3i",
-    "size": 16
+    "size": 16,
+    "name": "MakotoDriveGauge"
   },
   "23159": {
     "auto": "autostr",
     "format": "32s",
     "size": 36,
-    "name": "ComboTrialRefName"
+    "name": "ChallengeModeMarker"
   },
   "23160": {
     "format": "i",
@@ -4687,16 +4826,18 @@
   },
   "23161": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "DisableDash"
   },
   "23162": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "DisableBackdash"
   },
   "23163": {
     "format": "i",
     "size": 8,
-    "name": "DisableOverdrive1"
+    "name": "DisableOverdrive"
   },
   "23164": {
     "format": "i",
@@ -4705,23 +4846,26 @@
   },
   "23165": {
     "format": "",
-    "name": "DisableOverdrive2"
+    "name": "EmptyOverdrive"
   },
   "23166": {
     "auto": "autostr",
     "format": "32s",
-    "name": "OppStateCheck"
+    "size": 36,
+    "name": "OpponentStateCheck"
   },
   "23167": {
     "format": ""
   },
   "23168": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "DisableAllExceptWalk"
   },
   "23169": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "DisableInput"
   },
   "23170": {
     "format": "32s",
@@ -4729,11 +4873,12 @@
   },
   "23177": {
     "format": "",
-    "name": "TimerDepleted"
+    "name": "InNeutral"
   },
   "23178": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "FreezeSprite"
   },
   "23179": {
     "format": "i",
@@ -4741,7 +4886,8 @@
   },
   "23180": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "TurnIntoTransparentShadow"
   },
   "23181": {
     "format": "i",
@@ -4751,22 +4897,20 @@
   "23182": {
     "format": "i",
     "size": 8,
-    "name": "VoodooDamageMultiplier"
+    "name": "SMPHandler"
   },
   "23183": {
-    "type_check": [2],
     "format": "32s3i",
     "size": 48,
     "name": "SpriteCall"
   },
   "30000": {
-    "format": "",
-    "name": "Create3DObject"
+    "format": ""
   },
   "30001": {
     "format": "32si",
     "size": 40,
-    "name": "Char3DAnim"
+    "name": "Char3DAnimation"
   },
   "30002": {
     "format": "3i",
@@ -4785,7 +4929,7 @@
   "30005": {
     "format": "i",
     "size": 8,
-    "name": "Char3DVisibility"
+    "name": "HideChar3D"
   },
   "30006": {
     "format": "3i",
@@ -4793,46 +4937,53 @@
   },
   "30007": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "EnableBloom"
   },
   "30008": {
+    "format": "2i",
     "size": 12
   },
   "30009": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "ApplyBloomToPaletteColor"
   },
   "30010": {
+    "format": "i",
     "size": 8
   },
   "30011": {
-    "size": 4
+    "format": "",
+    "name": "LimitBloomToPalette"
   },
   "30012": {
     "format": "i",
-    "size": 8,
-    "name": "LoadSpritePalette"
+    "size": 8
   },
   "30013": {
     "size": 4,
     "name": "TimestopEffect"
   },
   "30014": {
-    "size": 4
+    "format": "",
+    "name": "EndTimestopEffect"
   },
   "30015": {
-    "size": 4,
-    "name": "StopTimestopEffect"
+    "format": "",
+    "name": "EndTimestopEffectAlt"
   },
   "30016": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "BloomFade"
   },
   "30017": {
     "format": "i",
-    "size": 8
+    "size": 8,
+    "name": "BloomPower"
   },
   "30018": {
-    "size": 4
+    "format": ""
   }
 }

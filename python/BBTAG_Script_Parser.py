@@ -76,9 +76,15 @@ def abstract_slot_0():
 
 def get_move_name(command, cmd_data):
     str_cmd_data = str(cmd_data)
+    # For specials
     if command in [43, 14012]:
-        if str_cmd_data in move_inputs:
-            return move_inputs[str_cmd_data]
+        if "hex" in move_inputs and move_inputs["hex"]:
+            if hex(cmd_data) in move_inputs:
+                return move_inputs[hex(cmd_data)]
+        else:
+            if str_cmd_data in move_inputs:
+                return move_inputs[str_cmd_data]
+    # For normals
     elif command == 14001:
         if str_cmd_data in normal_inputs['grouped_values']:
             return normal_inputs['grouped_values'][str_cmd_data]
@@ -136,7 +142,10 @@ def sanitizer(command):
                     return Name(hex(value))
                 else:
                     return Constant(value)
-            return Name(hex(value))
+            if command_db[str(command)]["hex"]:
+                return Name(hex(value))
+            else:
+                return Constant(value)
         return Constant(value)
 
     return sanitize
@@ -175,6 +184,7 @@ def parse_bbscript_routine(file):
                     cmd_data[i] = v.decode().strip("\x00")
                 except UnicodeDecodeError:
                     # Handles unicode bug if it happens, eg kk400_13
+                    v = v.strip(b"\x00")
                     new_v = ''
                     for j in v:
                         new_v += chr(j)
@@ -298,7 +308,7 @@ def parse_bbscript_routine(file):
             if isinstance(lval, Name) and lval.id == "SLOT_0":
                 slot_0_expr = command
             ast_stack[-1].append(command)
-        elif current_cmd in [11058, 22019]:
+        elif enable_attributes and current_cmd in [11058, 22019]:
             attributes = ""
             if cmd_data[0] == 1:
                 attributes += "H"
@@ -357,8 +367,8 @@ def parse_bbscript(filename, output_path):
 
 
 if __name__ == '__main__':
-    flag_list = "Flags: -h, --no-slot, --no-0, --no-0-command, --raw, --debug"
-    no_slot = no_0 = no_0_command = debug = raw = False
+    flag_list = "Flags: -h, --no-slot, --no-0, --no-0-command, --raw, --attributes, --debug"
+    no_slot = no_0 = no_0_command = debug = raw = enable_attributes = False
     input_file = None
     output_path = None
     for v in sys.argv[1:]:
@@ -370,6 +380,7 @@ if __name__ == '__main__':
             print("--no-0: Delete most instances of SLOT_0 by merging them with commands assigning to SLOT_0")
             print("--no-0-command: Also merge SLOT_0 inside commands")
             print("--raw: Remove all abstraction except states and subroutines, !!!Rebuilding not supported!!!")
+            print("--attributes: Enables the abstraction of commands using attack attributes e.g. SpecificInvincibility('H')")
             print("--debug: Create a scr_xx_error.py file upon crashing")
             sys.exit(0)
         if "--" in v:
@@ -384,6 +395,8 @@ if __name__ == '__main__':
                 debug = True
             elif "--raw" == v:
                 raw = True
+            elif "--attributes" == v:
+                enable_attributes = True
             else:
                 print("Flag " + '"' + v + '"' + " doesn't exist")
                 print(flag_list)
@@ -393,7 +406,7 @@ if __name__ == '__main__':
             input_file = v
         elif output_path is None:
             output_path = v
-            
+
     if not input_file or input_file.split(".")[-1] != "bin":
         print("Usage:" + GAME + "_Script_Parser.py scr_xx.bin outdir")
         print("Default output directory if left blank is the input file's directory.")
@@ -415,7 +428,7 @@ if __name__ == '__main__':
     slot_db = json.loads(json_data)
     json_data = open(os.path.join(pypath, "static_db/" + GAME + "/object_db/global.json")).read()
     object_db = json.loads(json_data)
-    
+
     #Checking for a custom slot/upon db
     character_name = os.path.split(input_file)[-1].replace("scr_", "").split(".")[0]
     if character_name[-2:] == "ea" and len(character_name) > 2:

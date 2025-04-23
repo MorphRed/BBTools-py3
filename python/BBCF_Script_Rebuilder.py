@@ -244,8 +244,8 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             write_command_by_id("15", [decode_upon(node.name)])
             self.visit_body(node.body)
             write_command_by_id("16", [])
-        elif "runonobject" in node.name:
-            write_command_by_id("36", [int(node.name.replace("runonobject_", ""))])
+        elif command_db["36"]["name"] in node.name:
+            write_command_by_id("36", [int(node.name.replace(command_db["36"]["name"] + "_", ""))])
             self.visit_body(node.body)
             write_command_by_id("35", [])
         else:
@@ -380,7 +380,7 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_id("49", op_id + [aval, rval])
             else:
                 # Unknown47 / PrivateFunction
-                write_command_by_id("47", op_id + [aval, lval, rval])
+                write_command_by_id("47", op_id + [lval, rval, aval])
 
     def visit_body(self, nodebody):
         global output_buffer, error
@@ -488,7 +488,8 @@ if __name__ == '__main__':
             command_db_lookup["unknown" + k] = v
     slot_db_lookup = {v.lower(): k for k, v in slot_db.items()}
     for k, v in move_inputs.items():
-        named_value_lookup[v.lower()] = k
+        if v is not True:
+            named_value_lookup[v.lower()] = k
     for k, v in normal_inputs['grouped_values'].items():
         named_value_lookup[v.lower()] = k
     for k, v in normal_inputs['button_byte'].items():
