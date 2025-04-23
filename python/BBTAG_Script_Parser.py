@@ -419,9 +419,9 @@ if __name__ == '__main__':
         if "--" in v:
             if "--no-upon" == v:
                 no_upon = True
-            if "--no-slot" == v:
+            elif "--no-slot" == v:
                 no_slot = True
-            if "--no-animation" == v:
+            elif "--no-animation" == v:
                 no_animation = True
             elif "--no-0" == v:
                 no_0 = True
