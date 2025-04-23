@@ -77,18 +77,16 @@
   "18": {
     "type_check": [1],
     "format": "3i",
-    "name": "GotoIf"
+    "name": "GotoLabelIf"
   },
   "19": {
     "type_check": [1],
     "format": "3i",
-    "size": 16,
-    "name": "GotoIfNot"
+    "name": "GotoLabelIfNot"
   },
   "20": {
     "type_check": [1],
     "format": "3i",
-    "size": 16,
     "name": "ReplaceSpriteIf"
   },
   "21": {
@@ -4674,18 +4672,18 @@
     "name": "AbsoluteBluePercentagePerFrame"
   },
   "23117": {
-    "format": "4Bi",
-    "size": 12,
+    "format": "Ii",
+    "hex": [0],
     "name": "ApplyTintOverDuration"
   },
   "23118": {
-    "format": "i",
-    "size": 8,
+    "format": "I",
+    "hex": true,
     "name": "ApplyTint"
   },
   "23119": {
-    "format": "3i",
-    "size": 16,
+    "format": "I2i",
+    "hex": [0],
     "name": "ApplyTintAlt"
   },
   "23120": {

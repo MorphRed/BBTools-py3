@@ -4,18 +4,21 @@ import os, struct, json, sys, astor
 from ast import *
 
 GAME = "BBCF"
-AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 59, 60, 61, 63, 66, 69, 70, 1116, 2065, 23036, 23037, 23045, 23145, 23146, 23148, 23156, 23166, 23177, 30042]
+AFFECT_SLOT_0 = [39, 40, 42, 43, 44, 45, 46, 59, 60, 61, 63, 66, 69, 70, 1116, 2065, 23036, 23037, 23045, 23145, 23146,
+                 23148, 23156, 23166, 23177, 30042]
 ast_root = Module([], [])
 ast_stack = [ast_root.body]
 slot_0_expr = None
 MODE = "<"
 
+
 def load_json(path_from_static):
-    try: 
-        return json.loads(open(os.path.join(os.path.dirname(sys.argv[0]), "static_db/" + GAME + "/" + path_from_static)).read())
-    except (IOError, json.decoder.JSONDecodeError): 
+    try:
+        return json.loads(
+            open(os.path.join(os.path.dirname(sys.argv[0]), "static_db/" + GAME + "/" + path_from_static)).read())
+    except (IOError, json.decoder.JSONDecodeError):
         return {}
-        
+
 
 def get_operation(operation_id):
     if operation_id == 0:
@@ -55,14 +58,15 @@ def get_operation(operation_id):
 
     return op
 
+
 def slot_handler(command, cmd_data):
     str_command = str(command)
     tmp = []
     for i, v in enumerate(cmd_data):
         if i in command_db[str_command]['type_check']:
             continue
-        elif i-1 in command_db[str_command]['type_check']:
-            if cmd_data[i-1] == 0:
+        elif i - 1 in command_db[str_command]['type_check']:
+            if cmd_data[i - 1] == 0:
                 tmp.append(Constant(v))
             else:
                 if no_0_command and cmd_data[i] == 0 and int(command) not in [40, 41, 47, 49]:
@@ -74,12 +78,14 @@ def slot_handler(command, cmd_data):
 
     return tmp
 
+
 def abstract_slot_0():
     if len(ast_stack[-1]) > 0 and ast_stack[-1][-1] == slot_0_expr and no_0:
         ast_stack[-1].pop()
         return slot_0_expr.value
     else:
         return get_slot_name(0)
+
 
 def get_input_name(command, cmd_data):
     str_cmd_data = str(cmd_data)
@@ -105,29 +111,34 @@ def get_input_name(command, cmd_data):
         motion = str_cmd_data
     return "INPUT_" + motion
 
+
 def get_animation_name(cmd_data):
     str_cmd_data = str(cmd_data)
     if str_cmd_data in animation_db:
         return Name(animation_db[str_cmd_data])
     return Constant(cmd_data)
 
+
 def get_move_condition(cmd_data):
     str_cmd_data = str(cmd_data)
     if str_cmd_data in move_condition_db:
         return Name(move_condition_db[str_cmd_data])
     return Constant(cmd_data)
-        
+
+
 def get_upon_name(cmd_data):
     str_cmd_data = str(cmd_data)
     if str_cmd_data in upon_db:
         str_cmd_data = upon_db[str_cmd_data]
     return Name("upon_" + str_cmd_data)
 
+
 def get_slot_name(cmd_data):
     str_cmd_data = str(cmd_data)
     if str_cmd_data in slot_db:
         str_cmd_data = slot_db[str_cmd_data]
     return Name("SLOT_" + str_cmd_data)
+
 
 # Not used yet
 def get_object_name(cmd_data):
@@ -148,7 +159,7 @@ def sanitizer(command):
             pass
         elif command in [43, 14001, 14012] and isinstance(value, int):
             value = Name(get_input_name(command, value))
-        elif command in [17, 29, 30] and i == 0:
+        elif command in [17, 28, 29, 30, 31] and i == 0:
             value = get_upon_name(value)
         elif command in [21007] and i == 1:
             value = get_upon_name(value)
@@ -158,7 +169,8 @@ def sanitizer(command):
             value = get_move_condition(value)
         else:
             value = Constant(value)
-        if "hex" in command_db[str(command)] and command_db[str(command)]["hex"] and (isinstance(value, Constant) and isinstance(value.value, int)):
+        if "hex" in command_db[str(command)] and command_db[str(command)]["hex"] and (
+                isinstance(value, Constant) and isinstance(value.value, int)):
             if command_db[str(command)]["hex"] == True or i in command_db[str(command)]["hex"]:
                 if isinstance(value, int):
                     value = Name(hex(value))
@@ -177,6 +189,7 @@ def function_clean(command):
     if command[0].isdigit():
         command = "__" + command
     return command
+
 
 def parse_bbscript_routine(file):
     global slot_0_expr, debug
@@ -210,7 +223,8 @@ def parse_bbscript_routine(file):
                         new_v += chr(j)
                     cmd_data[i] = new_v
         if raw and current_cmd not in [0, 1, 8, 9]:
-            command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+            command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))),
+                                keywords=[]))
             ast_stack[-1].append(command)
             continue
         # AST STUFF
@@ -235,7 +249,9 @@ def parse_bbscript_routine(file):
             ast_stack.append(ast_stack[-1][-1].body)
         # 14001 is Move_Register
         elif current_cmd == 14001:
-            command = FunctionDef(function_clean(cmd_data[0]), arguments(args=[arg(get_input_name(current_cmd, cmd_data[1]))]), [], [Name(id="StateRegister")])
+            command = FunctionDef(function_clean(cmd_data[0]),
+                                  arguments(args=[arg(get_input_name(current_cmd, cmd_data[1]))]), [],
+                                  [Name(id="StateRegister")])
             ast_stack[-1].append(command)
             ast_stack.append(ast_stack[-1][-1].body)
         # 4 is if, 54 is ifNot
@@ -258,18 +274,6 @@ def parse_bbscript_routine(file):
             except Exception as _:
                 # When arcsys puts a random else bracket in the code that does nothing :)
                 ast_stack.append([])
-        # 18 is ifSlotSendTolabel, 19 is ifNotSlotSendTolabel
-        elif current_cmd in [18, 19]:
-            cmd_data = slot_handler(current_cmd, cmd_data)
-            condition = cmd_data[1]
-            if isinstance(condition, Name) and condition.id == "SLOT_0":
-                condition = abstract_slot_0()
-            if current_cmd == 18:
-                command = If(condition, [], [])
-            elif current_cmd == 19:
-                command = If(UnaryOp(Not(), condition), [], [])
-            ast_stack[-1].append(command)
-            ast_stack[-1][-1].body.append(Expr(Call(Name(id=db_data["name"]), [cmd_data[0]], [])))
         # 36 is apply function to Object
         elif current_cmd == 36:
             ast_stack[-1].append(
@@ -311,7 +315,9 @@ def parse_bbscript_routine(file):
             else:
                 raise Exception("Unhandled operation")
             if isinstance(aval, Constant):
-                command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+                command = Expr(
+                    Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))),
+                         keywords=[]))
             else:
                 command = Assign([aval], tmp)
             if isinstance(aval, Name) and aval.id == "SLOT_0":
@@ -349,7 +355,9 @@ def parse_bbscript_routine(file):
             if len(ast_stack) > 1:
                 astor_handler = ast_stack.pop()
             else:
-                command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+                command = Expr(
+                    Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))),
+                         keywords=[]))
                 ast_stack[-1][-1].body.append(command)
 
             # Flag stuff
@@ -359,7 +367,8 @@ def parse_bbscript_routine(file):
         else:
             if 'type_check' in command_db[str(current_cmd)]:
                 cmd_data = slot_handler(current_cmd, cmd_data)
-            command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))), keywords=[]))
+            command = Expr(Call(Name(id=db_data["name"]), args=list(map(sanitizer(current_cmd), enumerate(cmd_data))),
+                                keywords=[]))
             # Things that affect slot_0
             if current_cmd in AFFECT_SLOT_0:
                 slot_0_expr = Assign([get_slot_name(0)], command.value)
@@ -369,14 +378,15 @@ def parse_bbscript_routine(file):
                 ast_stack.append(astor_handler)
             ast_stack[-1].append(command)
 
-
     return ast_root
+
 
 def parse_bbscript(filename, output_path):
     global debug_file
     file = open(filename, 'rb')
     if debug:
-        debug_file = open(os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + "_error.py"), "w", encoding="utf-8")
+        debug_file = open(os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + "_error.py"), "w",
+                          encoding="utf-8")
     ast_root = parse_bbscript_routine(file)
     output = os.path.join(output_path, os.path.split(filename)[1].split('.')[0] + ".py")
     py = open(output, "w", encoding="utf-8")
@@ -387,8 +397,8 @@ def parse_bbscript(filename, output_path):
 
 
 if __name__ == '__main__':
-    flag_list = "Flags: -h, --no-slot, --no-0, --no-0-command, --raw, --attributes, --debug"
-    no_slot = no_0 = no_0_command = debug = raw = enable_attributes = False
+    flag_list = "Flags: -h, --no-upon, --no-slot, --no-animation, --no-0, --no-0-command, --attributes, --raw, --debug"
+    no_upon = no_slot = no_0 = no_0_command = debug = raw = enable_attributes = no_animation = False
     input_file = None
     output_path = None
     for v in sys.argv[1:]:
@@ -396,16 +406,23 @@ if __name__ == '__main__':
             print("Usage:" + GAME + "_Script_Parser.py scr_xx.bin outdir")
             print("Default output directory if left blank is the input file's directory.")
             print(flag_list)
+            print("--no-upon: Disable aliasing of upons")
             print("--no-slot: Disable aliasing of slots")
+            print("--no-animation: Disable aliasing of hit animations")
             print("--no-0: Delete most instances of SLOT_0 by merging them with commands assigning to SLOT_0")
             print("--no-0-command: Also merge SLOT_0 inside commands")
-            print("--raw: Remove all abstraction except states and subroutines, !!!Rebuilding not supported!!!")
-            print("--attributes: Enables the abstraction of commands using attack attributes e.g. SpecificInvincibility('H')")
-            print("--debug: Create a scr_xx_error.py file upon crashing")
+            print(
+                "--attributes: Enables the abstraction of commands using attack attributes e.g. SpecificInvincibility('H')")
+            print("--raw: Remove all abstraction except states and subroutines, !!!Rebuilding not supported!!! but might work")
+            print("--debug: Create a scr_xx_error.py file upon crashing, file is generated state/subroutine by state/subroutine")
             sys.exit(0)
         if "--" in v:
+            if "--no-upon" == v:
+                no_upon = True
             if "--no-slot" == v:
                 no_slot = True
+            if "--no-animation" == v:
+                no_animation = True
             elif "--no-0" == v:
                 no_0 = True
             elif "--no-0-command" == v:
@@ -416,7 +433,7 @@ if __name__ == '__main__':
             elif "--raw" == v:
                 raw = True
             elif "--attributes" == v:
-                enable_attributes = True   
+                enable_attributes = True
             else:
                 print("Flag " + '"' + v + '"' + " doesn't exist")
                 print(flag_list)
@@ -451,6 +468,10 @@ if __name__ == '__main__':
 
     if no_slot:
         slot_db = {}
+    if no_upon:
+        upon_db = {}
+    if no_animation:
+        animation_db = {}
     if output_path is None:
         parse_bbscript(input_file, os.path.split(input_file)[0])
     else:

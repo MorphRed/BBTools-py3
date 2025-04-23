@@ -77,12 +77,12 @@
   "18": {
     "type_check": [1],
     "format": "3i",
-    "name": "conditionalSendToLabel"
+    "name": "GotoLabelIf"
   },
   "19": {
     "type_check": [1],
     "format": "3i",
-    "name": "conditionalSendToLabel"
+    "name": "GotoLabelIfNot"
   },
   "20": {
     "type_check": [1],

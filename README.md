@@ -5,11 +5,12 @@ Based on https://github.com/dantarion/bbtools, this version updates the code to 
 **Other changes include:** <br/>
 database update <br/>
 asterror fixes <br/>
-auto upon and slot naming in commands <br/>
+auto upon, slot, hit animation, move condition and motion input naming in commands <br/>
 support for character specific slots and upons <br/>
 case insensitivity for commands within the main functions<br/>
 and fixes for various other command related bugs <br/>
 
+credits to Vermoonie for making a bunch of updates to the database
 ## Details
 ### Case insensitivity
 Python syntax stays case sensitive, like `if`, `else`, `def`, `not` etc
@@ -17,20 +18,20 @@ Python syntax stays case sensitive, like `if`, `else`, `def`, `not` etc
 @State                  <-- Case insensitive 
 def NmlAtk6D():         !!! <-- Case sensitive
 
-    def upon_IMmeDIaTE():           <-- Case insensitive
+    def upon_On_IniTIALize():           <-- Case insensitive
         Attackdefaults_StanDInGNormal()         <-- Case insensitive
-        AttackLevel_(4)
+        AttackLevel(4)
         Damage(350)
         AirUntechableTime(60)
         AttackP2(100)
         ...
 
-        def upon_STATE_END():
+        def upon_End_State():
             SetZVal(0)
 
-        def upon_OPPONENT_HIT():
-            clearUponHandler(OppONENT_HIT)      <-- OPPONENT_HIT case insensitive
-            if SLOT_19 <= 400000:           
+        def upon_Successful_Hit():
+            ClearUpon(upon_SucceSSFul_Hit)      <-- upon_Successful_Hit also case insensitive
+            if SLOT_XRelativeToOpponent <= 400000:           
                 AirPushbackY(8000)
                 PushbackX(-6000)
                 if SLOT_51:
