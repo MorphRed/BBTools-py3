@@ -91,20 +91,20 @@ def get_input_name(command, cmd_data):
     str_cmd_data = str(cmd_data)
     # For specials
     if command in [43, 14012]:
-        if "hex" in move_inputs and move_inputs["hex"]:
-            if hex(cmd_data) in move_inputs:
-                return move_inputs[hex(cmd_data)]
+        if "hex" in move_inputs_db and move_inputs_db["hex"]:
+            if hex(cmd_data) in move_inputs_db:
+                return move_inputs_db[hex(cmd_data)]
         else:
-            if str_cmd_data in move_inputs:
-                return move_inputs[str_cmd_data]
+            if str_cmd_data in move_inputs_db:
+                return move_inputs_db[str_cmd_data]
     # For normals
     elif command == 14001:
-        if str_cmd_data in normal_inputs['grouped_values']:
-            return normal_inputs['grouped_values'][str_cmd_data]
+        if str_cmd_data in normal_inputs_db['grouped_values']:
+            return normal_inputs_db['grouped_values'][str_cmd_data]
         s = struct.pack('>H', cmd_data)
         button_byte, dir_byte = struct.unpack('>BB', s)
-        if str(button_byte) in normal_inputs['button_byte'] and str(dir_byte) in normal_inputs['direction_byte']:
-            return normal_inputs['direction_byte'][str(dir_byte)] + normal_inputs['button_byte'][str(button_byte)]
+        if str(button_byte) in normal_inputs_db['button_byte'] and str(dir_byte) in normal_inputs_db['direction_byte']:
+            return normal_inputs_db['direction_byte'][str(dir_byte)] + normal_inputs_db['button_byte'][str(button_byte)]
     if "hex" in command_db[str(command)] and command_db[str(command)]['hex']:
         motion = hex(cmd_data)
     else:
@@ -247,7 +247,7 @@ def parse_bbscript_routine(file):
             command = FunctionDef(get_upon_name(cmd_data[0]).id, empty_args, [], [])
             ast_stack[-1].append(command)
             ast_stack.append(ast_stack[-1][-1].body)
-        # 14001 is Move_Register
+        # 14001 is Move_Register/StateRegister
         elif current_cmd == 14001:
             command = FunctionDef(function_clean(cmd_data[0]),
                                   arguments(args=[arg(get_input_name(current_cmd, cmd_data[1]))]), [],
@@ -410,11 +410,11 @@ if __name__ == '__main__':
             print("--no-slot: Disable aliasing of slots")
             print("--no-animation: Disable aliasing of hit animations")
             print("--no-0: Delete most instances of SLOT_0 by merging them with commands assigning to SLOT_0")
-            print("--no-0-command: Also merge SLOT_0 inside commands")
+            print("--no-0-command: Also merge SLOT_0 used inside of commands")
             print(
                 "--attributes: Enables the abstraction of commands using attack attributes e.g. SpecificInvincibility('H')")
             print("--raw: Remove all abstraction except states and subroutines, !!!Rebuilding not supported!!! but might work")
-            print("--debug: Create a scr_xx_error.py file upon crashing, file is generated state/subroutine by state/subroutine")
+            print("--debug: Create a scr_xx_error.py file upon crashing, file is generated state/subroutine by state/subroutine instead of all at once")
             sys.exit(0)
         if "--" in v:
             if "--no-upon" == v:
@@ -451,13 +451,13 @@ if __name__ == '__main__':
         sys.exit(1)
 
     command_db = load_json("command_db.json")
-    move_inputs = load_json("named_values/move_inputs.json")
-    normal_inputs = load_json("named_values/normal_inputs.json")
+    move_inputs_db = load_json("named_values/move_inputs.json")
+    normal_inputs_db = load_json("named_values/normal_inputs.json")
     animation_db = load_json("named_values/hit_animation.json")
-    move_condition_db = load_json("named_values/move_condition.json")
+    move_condition_db = load_json("named_values/move_condition.json")    
+    object_db = load_json("named_values/object.json")
     upon_db = load_json("upon_db/global.json")
     slot_db = load_json("slot_db/global.json")
-    object_db = load_json("object_db/global.json")
 
     #Checking for a custom slot/upon db
     character_name = os.path.split(input_file)[-1].replace("scr_", "").split(".")[0]

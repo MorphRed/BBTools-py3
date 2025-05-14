@@ -455,9 +455,9 @@ if __name__ == '__main__':
     normal_inputs = load_json("named_values/normal_inputs.json")
     animation_db = load_json("named_values/hit_animation.json")
     move_condition_db = load_json("named_values/move_condition.json")
+    object_db = load_json("named_values/object.json")
     upon_db = load_json("upon_db/global.json")
     slot_db = load_json("slot_db/global.json")
-    object_db = load_json("object_db/global.json")
 
     #Checking for a custom slot/upon db
     character_name = os.path.split(input_file)[-1].replace("scr_", "").split(".")[0]
