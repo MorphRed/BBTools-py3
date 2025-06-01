@@ -1,4 +1,4 @@
-import astor_install
+import astor_check
 
 import os, struct, json, sys, astor
 from ast import *
@@ -412,7 +412,7 @@ if __name__ == '__main__':
             print("--no-0: Delete most instances of SLOT_0 by merging them with commands assigning to SLOT_0")
             print("--no-0-command: Also merge SLOT_0 used inside of commands")
             print(
-                "--attributes: Enables the abstraction of commands using attack attributes e.g. SpecificInvincibility('H')")
+                "--attributes: Enable the abstraction of commands using attack attributes e.g. SpecificInvincibility('H')")
             print("--raw: Remove all abstraction except states and subroutines, !!!Rebuilding not supported!!! but might work")
             print("--debug: Create a scr_xx_error.py file upon crashing, file is generated state/subroutine by state/subroutine instead of all at once")
             sys.exit(0)

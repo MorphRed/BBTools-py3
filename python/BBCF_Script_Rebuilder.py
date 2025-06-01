@@ -1,4 +1,4 @@
-import astor_install
+import astor_check
 
 import os, struct, json, sys, astor
 from ast import *
