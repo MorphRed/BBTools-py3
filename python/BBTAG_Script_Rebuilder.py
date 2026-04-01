@@ -1,7 +1,8 @@
 import module.astor as astor
 
-import os, struct, json, sys
+import os, struct, json, sys, copy, itertools
 from ast import *
+import operator as pyOperator
 from BBTAG_Script_Parser import input_san, upon_0, upon_1, animation_san, condition_san
 upon_san = upon_0 + upon_1
 
@@ -19,6 +20,8 @@ move_condition_db_lookup = {}
 
 MODE = "<"
 error = False
+
+sys.setrecursionlimit(20000000)
 
 def load_json(path_from_static):
     try:
@@ -178,7 +181,219 @@ def write_command_by_id(command, params):
 def is_operation(value):
     return isinstance(value, Compare) or isinstance(value, BinOp) or isinstance(value, BoolOp) or (isinstance(value, UnaryOp) and isinstance(value.op, Invert))
 
+class MacroExpander(NodeTransformer):
+    def __init__(self, argdict):
+        self.argdict = argdict
+        self.OpToFunc = {
+
+                # boolOps dont have functions and are handled separately
+
+                # binOp:
+                Add: pyOperator.add,
+                Sub: pyOperator.sub,
+                Mult: pyOperator.mul,
+                # MatMult: pyOperator.matmul,
+                Div: pyOperator.floordiv, # docs state this should be truediv, which allows floating points, but this matches the games functionality closer
+                Mod: pyOperator.mod,
+                Pow: pyOperator.pow,
+                LShift: pyOperator.lshift,
+                RShift: pyOperator.rshift,
+                BitOr: pyOperator.or_,
+                BitXor: pyOperator.xor,
+                BitAnd: pyOperator.and_,
+                # FloorDiv: pyOperator.floordiv
+
+                # unaryOp:
+
+                Invert: pyOperator.invert,
+                Not: pyOperator.not_,
+                USub: pyOperator.neg,
+                UAdd: pyOperator.pos,
+
+
+                # cmpOp
+
+                Eq: pyOperator.eq,
+                NotEq: pyOperator.ne,
+                Lt: pyOperator.lt,
+                LtE: pyOperator.le,
+                Gt: pyOperator.gt,
+                GtE: pyOperator.ge,
+                # Is: pyOperator.is_,
+                # IsNot: pyOperator.is_not,
+                # In: pyOperator.in_,
+                # NotIn: pyOperator.notin,
+
+            }
+
+    def visit_Name(self, node):
+        if node.id in self.argdict:
+            return self.argdict[node.id]
+        return node
+
+    def visit_BoolOp(self, node):
+        node = self.generic_visit(node)
+
+        if not isinstance(node.values[0], Constant) or not isinstance(node.values[1], Constant):
+            return node
+
+        # apparently this isnt actually how python handles bool comparisons but 
+        # i dont care because its shit
+        if isinstance(node.op, And):
+            return Constant(pyOperator.truth(node.values[0].value) and pyOperator.truth(node.values[1].value))
+        else:
+            return Constant(pyOperator.truth(node.values[0].value) or pyOperator.truth(node.values[1].value))
+
+    # was worried this wouldn't follow order of operations but it just
+    # kinda somehow does idk im not going to question it
+    def visit_BinOp(self, node):
+        node = self.generic_visit(node)
+
+        if not isinstance(node.left, Constant) or not isinstance(node.right, Constant):
+            return node
+
+        node = Constant(self.OpToFunc[type(node.op)](node.left.value, node.right.value))
+
+        return node
+
+    def visit_UnaryOp(self, node):
+        node = self.generic_visit(node)
+
+        if not isinstance(node.operand, Constant):
+            return node
+
+        node = Constant(self.OpToFunc[type(node.op)](node.operand))
+        return node
+
+    def resolve_Is(self, a, b):
+        return Constant(a.__class__.__name__ == b.id)
+    def resolve_IsNot(self, a, b):
+        return Constant(a.__class__.__name__ != b.id)
+
+    def visit_Compare(self, node):
+        node = self.generic_visit(node)
+
+        left = node.left
+
+        if len(node.ops) == 1 and isinstance(node.comparators[0], Name):
+            if isinstance(node.ops[0], Is):
+                return self.resolve_Is(left, node.comparators[0])
+            elif isinstance(node.ops[0], IsNot):
+                return self.resolve_IsNot(left, node.comparators[0])
+
+        if (not isinstance(left, Constant)):
+            return node
+
+        result = 1
+
+        for i, right in node.comparators:
+
+            # this can technically be simplified even with a constant 
+            # but i dont wanna write that code
+            if not isinstance(right, Constant):
+                return node
+
+            result = result and self.OpToFunc[type(node.ops[i])](left.value, right.value)
+            if not result:
+                break
+
+            left = right
+            i+=1
+
+        return Constant(result)
+
+    def visit_For(self, node):
+
+        # do this check first or it will be replaced with a constant
+        # and give unhelpful error messages
+        Name = node.target.id
+        if Name in self.argdict.keys():
+            raise Exception("Variable name " + Name + " already used in macro context", node)
+
+        # iter will be replaced with the actual varargs list here if its valid
+        node = self.generic_visit(node)
+
+        if (not isinstance(node.iter, list)):
+            raise Exception("Variable " + node.iter.id + " is not a compile-time constant list, for loops are only supported at compiletime for iterating varargs in Macro's.", node)
+
+        retnodes = []
+        
+        for i, val in enumerate(node.iter):
+            body = copy.deepcopy(node.body)
+            self.argdict[Name] = val
+            for k, val2 in enumerate(body):
+                retval = self.visit(val2)
+                if isinstance(retval, list):
+                    retnodes += retval
+                else:
+                    retnodes.append(retval)
+
+        del self.argdict[Name]
+
+        return retnodes
+
+    def visit_While(self, node):
+
+
+        if (not isinstance(node.test, Compare) or len(node.test.ops) != 1):
+            raise Exception("Unsupported test on Macro while statement, while statements should always be formatted: 'while i < n' where i is a variable name to store the current number of iterations, and n is a compiletime constant number (or an expression that evaluates to such) representing the amount of iterations to generate", node)
+
+        if (node.test.left.id in self.argdict.keys()):
+            raise Exception("Variable " + node.test.left.id + " already used in macro context", node)
+
+        node = self.generic_visit(node)
+
+        if (not isinstance(node.test.ops[0], Lt)):
+            raise Exception("Unsupported Operator In While Loop Condition", node)
+
+        if (not isinstance(node.test.comparators[0], Constant)):
+            raise Exception("Iterator is being compared against a value that is not a compiletime constant, we dont know how many iterations to generate", node)
+
+        retnodes = []
+
+        i = 0
+        while i < node.test.comparators[0].value:
+            print(i, node.test.comparators[0].value)
+            body = copy.deepcopy(node.body)
+            self.argdict[node.test.left.id] = Constant(i)
+            
+            for k, val in enumerate(body):
+                retval = self.visit(val)
+                if isinstance(retval, list):
+                    retnodes += retval
+                else:
+                    retnodes.append(retval)
+            
+            i+=1
+
+        del self.argdict[node.test.left.id]
+        return retnodes
+
+
+    def visit_If(self, node):
+        node = self.generic_visit(node)
+        if isinstance(node.test, Constant) and not pyOperator.truth(node.test.value):
+            return node.orelse
+        elif isinstance(node.test, Constant) and pyOperator.truth(node.test.value):
+            return node.body
+
+        return node
+
+    def visit_Call(self, node):
+        node = self.generic_visit(node)
+
+        if (node.func.id == "str" and len(node.args) == 1):
+            if isinstance(node.args[0], Constant):
+                return Constant(str(node.args[0].value))
+            elif isinstance(node.args[0], Name):
+                return Constant(node.args[0].id)
+            else:
+                return Constant(astor.to_source(node.args[0])[:-1]) # to_source always adds a newline to the end of its strings
+        
+        return node
+
 class Rebuilder(astor.ExplicitNodeVisitor):
+    MacroDict = {}
 
     def visit_Module(self, node):
         global output_buffer, root
@@ -229,6 +444,14 @@ class Rebuilder(astor.ExplicitNodeVisitor):
                 write_command_by_id("8", [node.name])
                 self.visit_body(node.body)
                 write_command_by_id("9", [])
+            elif node.decorator_list[0].id.lower() == "macro":
+                if (node.name.lower() in self.MacroDict.keys()):
+                    raise Exception("Redefinition of macro " + node.name, node)
+                if (node.name.lower() in command_db_lookup):
+                    raise Exception("Name of macro " + node.name + " conflicts with name of regular command with id " + command_db_lookup[node.name.lower()]["id"], node)
+                self.MacroDict[node.name.lower()] = node
+            else:
+                raise Exception("Unrecognized/Unsupported decorator: " + node.decorator_list[0].id.lower(), node)
         else:
             raise Exception("Root functions must have a decorator", node)
 
@@ -247,8 +470,11 @@ class Rebuilder(astor.ExplicitNodeVisitor):
             cmd_id = node.func.id.replace("unknown", "")
         elif node.func.id in command_db_lookup:
             cmd_id = command_db_lookup[node.func.id]["id"]
+        elif node.func.id in self.MacroDict.keys():
+            self.visit_MacroCall(node)
+            return
         else:
-            raise Exception("Unknown command", node)
+            raise Exception("Unknown command or macro", node)
         write_command_by_id(cmd_id, node.args)
 
     # Concerns def upon_ and applyFunctionToObject
@@ -384,6 +610,39 @@ class Rebuilder(astor.ExplicitNodeVisitor):
 
     def visit_Expr(self, node):
         self.visit(node.value)
+
+    def visit_MacroCall(self, node):
+        Macro = copy.deepcopy(self.MacroDict[node.func.id])
+
+        if len(node.args) < len(Macro.args.args) or (len(node.args) > len(Macro.args.args) and Macro.args.vararg is None):
+            raise Exception("Macro " + Macro.name + 
+                            " called with incorrect number of arguments (expected " + 
+                            str(len(Macro.args.args)) + ", got " + str(len(node.args)) + ")", node)
+
+        ArgDict = {}
+
+        if Macro.args.vararg is not None:
+            ArgDict[Macro.args.vararg.arg] = []
+
+        for i, val in enumerate(Macro.args.args):
+            ArgDict[val.arg] = node.args[i]
+
+        if Macro.args.vararg is not None:
+            ArgDict[Macro.args.vararg.arg] = node.args[len(Macro.args.args):]
+
+
+        ME = MacroExpander(ArgDict)
+
+        for i, v, in enumerate(Macro.body):
+            result = ME.visit(v)
+
+            if (isinstance(result, list)):
+                    Macro.body = list(itertools.chain(Macro.body[:i], result, Macro.body[i + 1:]))
+                    i += len(result)
+            else:
+                Macro.body[i] = result
+
+        self.visit_body(Macro.body)
 
     def generic_visit(self, node):
         print(type(node).__name__)
