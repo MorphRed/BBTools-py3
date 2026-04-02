@@ -298,7 +298,6 @@ class MacroExpander(NodeTransformer):
                 break
 
             left = right
-            i+=1
 
         return Constant(result)
 
@@ -306,21 +305,19 @@ class MacroExpander(NodeTransformer):
 
         # do this check first or it will be replaced with a constant
         # and give unhelpful error messages
-        Name = node.target.id
-        if Name in self.argdict.keys():
-            raise Exception("Variable name " + Name + " already used in macro context", node)
+        VarName = node.target.id
+        if VarName in self.argdict.keys():
+            raise Exception("Variable name " + VarName + " already used in macro context", node)
 
-        # iter will be replaced with the actual varargs list here if its valid
-        node = self.generic_visit(node)
+        if (not (isinstance(node.iter, Name) and node.iter.id in self.argdict.keys())):
+            raise Exception("Attempt to iterate over something other than a vararg list, this is unsupported", node)
 
-        if (not isinstance(node.iter, list)):
-            raise Exception("Variable " + node.iter.id + " is not a compile-time constant list, for loops are only supported at compiletime for iterating varargs in Macro's.", node)
-
+        node.iter = self.argdict[node.iter.id]
         retnodes = []
         
         for i, val in enumerate(node.iter):
             body = copy.deepcopy(node.body)
-            self.argdict[Name] = val
+            self.argdict[VarName] = val
             for k, val2 in enumerate(body):
                 retval = self.visit(val2)
                 if isinstance(retval, list):
@@ -328,7 +325,7 @@ class MacroExpander(NodeTransformer):
                 else:
                     retnodes.append(retval)
 
-        del self.argdict[Name]
+        del self.argdict[VarName]
 
         return retnodes
 
@@ -340,7 +337,7 @@ class MacroExpander(NodeTransformer):
         if (node.test.left.id in self.argdict.keys()):
             raise Exception("Variable " + node.test.left.id + " already used in macro context", node)
 
-        node = self.generic_visit(node)
+        node.test = self.generic_visit(node.test)
 
         if (not isinstance(node.test.ops[0], Lt)):
             raise Exception("Unsupported Operator In While Loop Condition", node)
@@ -350,8 +347,7 @@ class MacroExpander(NodeTransformer):
 
         retnodes = []
 
-        i = 0
-        while i < node.test.comparators[0].value:
+        for i in range(0, node.test.comparators[0].value):
             body = copy.deepcopy(node.body)
             self.argdict[node.test.left.id] = Constant(i)
 
@@ -361,8 +357,6 @@ class MacroExpander(NodeTransformer):
                     retnodes += retval
                 else:
                     retnodes.append(retval)
-            
-            i+=1
 
         del self.argdict[node.test.left.id]
         return retnodes
